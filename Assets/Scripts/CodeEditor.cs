@@ -39,6 +39,10 @@ public class CodeEditor : MonoBehaviour
 {
     private TMP_InputField codeField;
     private Button submitButton;
+    public TextAsset codeFile;
+
+    private string challengeCode;
+    private string testCode;
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +50,11 @@ public class CodeEditor : MonoBehaviour
         codeField = GetComponentInChildren<TMP_InputField>();
         submitButton = GetComponentInChildren<Button>();
         submitButton.onClick.AddListener(CallJDoodle);
+
+        challengeCode = codeFile.text.Split("-- TEST CODE", StringSplitOptions.None)[0];
+        testCode = codeFile.text.Split("-- TEST CODE", StringSplitOptions.None)[1];
+
+        codeField.text = challengeCode;
     }
 
     // Update is called once per frame
@@ -55,7 +64,7 @@ public class CodeEditor : MonoBehaviour
     }
 
     void CallJDoodle() {
-        string script = codeField.text;
+        string script = codeField.text + testCode;
 
         try {
             string url = "https://api.jdoodle.com/v1/execute";
@@ -80,13 +89,16 @@ public class CodeEditor : MonoBehaviour
                 throw new Exception("Please check your inputs : HTTP error code : " + (int)response.StatusCode);
             }
 
+            JDoodleResponse outputResponse;
             using (Stream dataStream = response.GetResponseStream())
             using (StreamReader reader = new StreamReader(dataStream))
             {
                 string output = reader.ReadToEnd();
-                JDoodleResponse outputResponse = JsonUtility.FromJson<JDoodleResponse>(output);
-                Debug.Log("Output from JDoodle ...." + output);
+                outputResponse = JsonUtility.FromJson<JDoodleResponse>(output);
+                // Debug.Log("Output from JDoodle ...." + output);
             }
+            string result = outputResponse.output.Split('\n')[2];
+            Debug.Log(result);
 
             response.Close();
         }
