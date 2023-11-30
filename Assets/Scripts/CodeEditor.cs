@@ -95,7 +95,7 @@ public class CodeEditor : MonoBehaviour
             {
                 string output = reader.ReadToEnd();
                 outputResponse = JsonUtility.FromJson<JDoodleResponse>(output);
-                // Debug.Log("Output from JDoodle ...." + output);
+                Debug.Log("Output from JDoodle ...." + output);
             }
             string result = outputResponse.output.Split('\n')[2];
             Debug.Log(result);
