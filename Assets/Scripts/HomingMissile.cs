@@ -1,35 +1,51 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class HomingMissile : MonoBehaviour
 {
     public Transform target;
-    public float speed = 2.5f;
+    public float speed = 1f;
     public float rotateSpeed = 10f; // rotation speed in radians/second
+    public float lockDelay = 1f;
+
+    private bool missileLocked = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartCoroutine(missileLockDelay());
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 targetDir = target.position - transform.position;
+        if (!missileLocked) {
+            Vector3 targetDir = target.position - transform.position;
 
-        float singleStep = rotateSpeed * Time.deltaTime;
+            float singleStep = rotateSpeed * Time.deltaTime;
 
-        Vector3 newDirection = Vector3.RotateTowards(transform.up, targetDir, singleStep, 0.0f);
+            Vector3 newDirection = Vector3.RotateTowards(transform.up, targetDir, singleStep, 0.0f);
 
-        transform.rotation = Quaternion.LookRotation(transform.forward, newDirection);
+            transform.rotation = Quaternion.LookRotation(transform.forward, newDirection);
+        }
         transform.position += transform.up * Time.deltaTime * speed;
     }
 
+    IEnumerator missileLockDelay() {
+        yield return new WaitForSeconds(lockDelay);
+        missileLocked = true;
+    }
+
+    public void SetTarget(Transform target) {
+        this.target = target;
+    }
+
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.gameObject.tag == "Player") {
-            Debug.Log("Player hit!");
-            Destroy(gameObject);
-        }
+        // if (other.gameObject.tag == "Player") {
+        //     Debug.Log("Player hit!");
+        Destroy(gameObject);
+        // }
     }
 }

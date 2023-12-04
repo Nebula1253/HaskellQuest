@@ -40,6 +40,7 @@ public class CodeEditor : MonoBehaviour
     private TMP_InputField codeField;
     private Button submitButton;
     public TextAsset codeFile;
+    public MissileController mc;
 
     private string challengeCode;
     private string testCode;
@@ -95,10 +96,16 @@ public class CodeEditor : MonoBehaviour
             {
                 string output = reader.ReadToEnd();
                 outputResponse = JsonUtility.FromJson<JDoodleResponse>(output);
-                Debug.Log("Output from JDoodle ...." + output);
+                // Debug.Log("Output from JDoodle ...." + output);
             }
             string result = outputResponse.output.Split('\n')[2];
             Debug.Log(result);
+
+            if (result == "True") {
+                mc.Trigger(true); 
+            } else {
+                mc.Trigger(false);
+            }
 
             response.Close();
         }
