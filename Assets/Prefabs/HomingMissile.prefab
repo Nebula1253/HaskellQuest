@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -2052225323220560537}
   m_Layer: 0
   m_Name: HomingMissile
-  m_TagString: Enemy
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,6 +101,7 @@ MonoBehaviour:
   target: {fileID: 0}
   speed: 3
   rotateSpeed: 3
+  lockDelay: 1
 --- !u!61 &-2052225323220560537
 BoxCollider2D:
   m_ObjectHideFlags: 0

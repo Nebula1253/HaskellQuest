@@ -40,7 +40,7 @@ public class CodeEditor : MonoBehaviour
     private TMP_InputField codeField;
     private Button submitButton;
     public TextAsset codeFile;
-    public MissileController mc;
+    private EnemyController controller;
 
     private string challengeCode;
     private string testCode;
@@ -50,18 +50,34 @@ public class CodeEditor : MonoBehaviour
     {
         codeField = GetComponentInChildren<TMP_InputField>();
         submitButton = GetComponentInChildren<Button>();
-        submitButton.onClick.AddListener(CallJDoodle);
+        submitButton.onClick.AddListener(Submit);
 
         challengeCode = codeFile.text.Split("-- TEST CODE", StringSplitOptions.None)[0];
         testCode = codeFile.text.Split("-- TEST CODE", StringSplitOptions.None)[1];
 
         codeField.text = challengeCode;
+
+        controller = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyController>();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void Submit() {
+        CallJDoodle();
+        StartCoroutine(RenderInactive());
+    }
+
+    IEnumerator RenderInactive() {
+        codeField.interactable = false;
+        // codeField.GetComponent<TextMeshProUGUI>().color = Color.gray;
+        codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
+        yield return new WaitForSeconds(5);
+        codeField.interactable = true;
+        codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.white;
     }
 
     void CallJDoodle() {
@@ -102,9 +118,9 @@ public class CodeEditor : MonoBehaviour
             Debug.Log(result);
 
             if (result == "True") {
-                mc.Trigger(true); 
+                controller.Trigger(true); 
             } else {
-                mc.Trigger(false);
+                controller.Trigger(false);
             }
 
             response.Close();

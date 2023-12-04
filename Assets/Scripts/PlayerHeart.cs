@@ -40,7 +40,7 @@ public class PlayerHeart : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.gameObject.tag == "Enemy") {
+        if (other.gameObject.tag == "Projectile") {
             health -= 10;
             playerHealthBar.setHealth(health, maxHealth);
             // if (health <= 0) {
