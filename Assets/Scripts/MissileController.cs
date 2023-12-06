@@ -8,13 +8,15 @@ public class MissileController : EnemyController
     public int nrMissiles;
     public float missileSpeed, missileRotateSpeed, missileLockDelay;
     public float missileAngleRange;
-    private Transform target;
+    private Transform target, playerTransform, enemyTransform;
     private GameObject gameField;
     
     // Start is called before the first frame update
     void Start()
     {
         gameField = GameObject.FindGameObjectWithTag("GameField");
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        enemyTransform = GameObject.FindGameObjectWithTag("Enemy").transform;
     }
 
     public override void Trigger(bool result) {
@@ -29,7 +31,7 @@ public class MissileController : EnemyController
         StartCoroutine(fireMissiles(result));
     }
 
-    private void InstantiateMissile(Vector3 position, Transform target) {
+    private GameObject InstantiateMissile(Vector3 position, Transform target) {
         var missileAngle = 180 + Random.Range(-missileAngleRange, missileAngleRange);
         Debug.Log(missileAngle);
         var missileRotation = Quaternion.AngleAxis(missileAngle, Vector3.forward.normalized);
@@ -40,19 +42,18 @@ public class MissileController : EnemyController
         newMissile.GetComponent<HomingMissile>().SetSpeed(missileSpeed);
         newMissile.GetComponent<HomingMissile>().SetRotateSpeed(missileRotateSpeed);
         newMissile.GetComponent<HomingMissile>().SetLockDelay(missileLockDelay);
+
+        return newMissile;
     }
 
     IEnumerator fireMissiles(bool redirect = false) {
-        target = GameObject.FindGameObjectWithTag("Player").transform;
         yield return new WaitForSeconds(1f);
         for (int i=0; i < nrMissiles; i++) {
-            InstantiateMissile(transform.position, target);
+            target = playerTransform;
+            var missile = InstantiateMissile(transform.position, target);
             yield return new WaitForSeconds(0.5f);
-        }
-        if (redirect) {
-            target = GameObject.FindGameObjectWithTag("Enemy").transform;
-            var missiles = GameObject.FindGameObjectsWithTag("Projectile");
-            foreach (var missile in missiles) {
+            if (redirect) {
+                target = enemyTransform;
                 missile.GetComponent<HomingMissile>().SetTarget(target);
             }
         }

@@ -1332,9 +1332,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   missile: {fileID: 5016011231314811185, guid: d47bf506abba72844ba087aba89f1e8a, type: 3}
   nrMissiles: 5
-  missileSpeed: 2.5
+  missileSpeed: 3.5
   missileRotateSpeed: 2.5
-  missileLockDelay: 1.5
+  missileLockDelay: 3
   missileAngleRange: 30
 --- !u!1 &939236811
 GameObject:
