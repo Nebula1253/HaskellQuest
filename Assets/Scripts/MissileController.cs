@@ -4,46 +4,65 @@ using UnityEngine;
 
 public class MissileController : EnemyController
 {
-    // Start is called before the first frame update
     public GameObject missile;
     public int nrMissiles;
-    public float missileCircleRadius, missileSpawnDelay, missileSpeed, missileRotateSpeed, missileLockDelay;
-    public Vector3 firstMissilePos;
-
-    private float missileDegreeIncrement;
+    public float missileSpeed, missileRotateSpeed, missileLockDelay;
+    public float missileAngleRange;
     private Transform target;
-
+    private GameObject gameField;
+    
+    // Start is called before the first frame update
     void Start()
     {
-        missileDegreeIncrement = 360f / nrMissiles;
+        gameField = GameObject.FindGameObjectWithTag("GameField");
     }
 
     public override void Trigger(bool result) {
-        if (result) {
-            target = GameObject.FindGameObjectWithTag("Enemy").transform;
-        } else {
-            target = GameObject.FindGameObjectWithTag("Player").transform;
-        }
-        StartCoroutine(fireMissiles());
+        // if (result) {
+        //     target = transform;
+        //     StartCoroutine(fireMissiles(true));
+        // }
+        // else {
+        //     target = GameObject.FindGameObjectWithTag("Player").transform;
+        //     StartCoroutine(fireMissiles());
+        // }
+        StartCoroutine(fireMissiles(result));
     }
 
-    private void InstantiateMissile(Vector3 position, Transform target, float speed, float rotateSpeed, float lockDelay) {
-        GameObject newMissile = Instantiate(missile, position, Quaternion.identity);
+    private void InstantiateMissile(Vector3 position, Transform target) {
+        var missileAngle = 180 + Random.Range(-missileAngleRange, missileAngleRange);
+        Debug.Log(missileAngle);
+        var missileRotation = Quaternion.AngleAxis(missileAngle, Vector3.forward.normalized);
+        Vector3 missileStartOffset = missileRotation * new Vector3(0, 1.5f, 0);
+
+        GameObject newMissile = Instantiate(missile, position + missileStartOffset, missileRotation, gameField.transform);
         newMissile.GetComponent<HomingMissile>().SetTarget(target);
-        newMissile.GetComponent<HomingMissile>().SetSpeed(speed);
-        newMissile.GetComponent<HomingMissile>().SetRotateSpeed(rotateSpeed);
-        newMissile.GetComponent<HomingMissile>().SetLockDelay(lockDelay);
+        newMissile.GetComponent<HomingMissile>().SetSpeed(missileSpeed);
+        newMissile.GetComponent<HomingMissile>().SetRotateSpeed(missileRotateSpeed);
+        newMissile.GetComponent<HomingMissile>().SetLockDelay(missileLockDelay);
     }
-    IEnumerator fireMissiles() {
-        Vector3 currMissilePos;
-        for (int i=0; i < nrMissiles; i++) {
-            // find current missile position using missileDegreeIncrement, missileCircleRadius and firstMissilePos
-            currMissilePos = new Vector3(firstMissilePos.x + missileCircleRadius * Mathf.Cos(missileDegreeIncrement * i * Mathf.Deg2Rad), 
-                                        firstMissilePos.y + missileCircleRadius * Mathf.Sin(missileDegreeIncrement * i * Mathf.Deg2Rad), 
-                                        firstMissilePos.z);
 
-            InstantiateMissile(currMissilePos, target, missileSpeed, missileRotateSpeed, missileLockDelay);
-            yield return new WaitForSeconds(missileSpawnDelay);
+    IEnumerator fireMissiles(bool redirect = false) {
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+        yield return new WaitForSeconds(1f);
+        for (int i=0; i < nrMissiles; i++) {
+            InstantiateMissile(transform.position, target);
+            yield return new WaitForSeconds(0.5f);
+        }
+        if (redirect) {
+            target = GameObject.FindGameObjectWithTag("Enemy").transform;
+            var missiles = GameObject.FindGameObjectsWithTag("Projectile");
+            foreach (var missile in missiles) {
+                missile.GetComponent<HomingMissile>().SetTarget(target);
+            }
         }
     }
+
+    // IEnumerator redirectMissiles() {
+    //     yield return new WaitForSeconds(1f);
+    //     var missiles = GameObject.FindGameObjectsWithTag("Missile");
+    //     foreach (var missile in missiles) {
+    //         missile.GetComponent<HomingMissile>().SetTarget(target);
+    //     }
+    // }
 }

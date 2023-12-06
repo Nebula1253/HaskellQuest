@@ -44,6 +44,7 @@ public class CodeEditor : MonoBehaviour
 
     private string challengeCode;
     private string testCode;
+    public GameObject gameField;
 
     // Start is called before the first frame update
     void Start()
@@ -56,8 +57,6 @@ public class CodeEditor : MonoBehaviour
         testCode = codeFile.text.Split("-- TEST CODE", StringSplitOptions.None)[1];
 
         codeField.text = challengeCode;
-
-        controller = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyController>();
     }
 
     // Update is called once per frame
@@ -73,11 +72,12 @@ public class CodeEditor : MonoBehaviour
 
     IEnumerator RenderInactive() {
         codeField.interactable = false;
-        // codeField.GetComponent<TextMeshProUGUI>().color = Color.gray;
         codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
+
         yield return new WaitForSeconds(5);
         codeField.interactable = true;
         codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.white;
+        gameField.SetActive(false);
     }
 
     void CallJDoodle() {
@@ -112,22 +112,24 @@ public class CodeEditor : MonoBehaviour
             {
                 string output = reader.ReadToEnd();
                 outputResponse = JsonUtility.FromJson<JDoodleResponse>(output);
-                // Debug.Log("Output from JDoodle ...." + output);
             }
             string result = outputResponse.output.Split('\n')[2];
             Debug.Log(result);
+
+            gameField.SetActive(true);
+            controller = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyController>();
+
+            response.Close();
 
             if (result == "True") {
                 controller.Trigger(true); 
             } else {
                 controller.Trigger(false);
             }
-
-            response.Close();
         }
         catch (WebException e)
         {
             Debug.Log(e.ToString());
         }
-    }   
+    } 
 }

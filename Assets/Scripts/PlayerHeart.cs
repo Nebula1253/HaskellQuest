@@ -11,18 +11,20 @@ public class PlayerHeart : MonoBehaviour
     public HealthBar playerHealthBar;
     void Start()
     {
-        var boxSize = transform.parent.GetComponent<Renderer>().bounds.size;
+        // var boxSize = transform.parent.GetComponent<Renderer>().bounds.size;
+        var boxSize = transform.parent.GetChild(0).GetComponent<Renderer>().bounds.size;
         var spriteSize = GetComponent<SpriteRenderer>().bounds.size;
+        var boxCentre = transform.parent.position;
 
         var boxSizeXOffset = boxSize.x / 2;
         var boxSizeYOffset = boxSize.y / 2;
         var spriteSizeXOffset = spriteSize.x / 2;
         var spriteSizeYOffset = spriteSize.y / 2;
 
-        minX = -boxSizeXOffset + transform.position.x + spriteSizeXOffset;
-        minY = -boxSizeYOffset + transform.position.y + spriteSizeYOffset;
-        maxX = boxSizeXOffset + transform.position.x - spriteSizeXOffset;
-        maxY = boxSizeYOffset + transform.position.y - spriteSizeYOffset;
+        minX = -boxSizeXOffset + boxCentre.x + spriteSizeXOffset;
+        minY = -boxSizeYOffset + boxCentre.y + spriteSizeYOffset;
+        maxX = boxSizeXOffset + boxCentre.x - spriteSizeXOffset;
+        maxY = boxSizeYOffset + boxCentre.y - spriteSizeYOffset;
 
         playerHealthBar.setHealth(health, maxHealth);
     }
@@ -43,9 +45,6 @@ public class PlayerHeart : MonoBehaviour
         if (other.gameObject.tag == "Projectile") {
             health -= 10;
             playerHealthBar.setHealth(health, maxHealth);
-            // if (health <= 0) {
-            //     Destroy(gameObject);
-            // }
         }
     }
 }

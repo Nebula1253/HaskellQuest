@@ -56,8 +56,9 @@ public class HomingMissile : MonoBehaviour
     
 
     void OnTriggerEnter2D(Collider2D other) {
-        // if (other.gameObject.tag == "Player") {
-        //     Debug.Log("Player hit!");
+        if (other.gameObject.tag == "Player") {
+            Debug.Log("Player hit!");
+        }
         Destroy(gameObject);
         // }
     }
