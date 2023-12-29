@@ -47,6 +47,7 @@ public class CodeEditor : MonoBehaviour
     private bool interactable = true;
     public GameObject gameField;
     public Color commentColor;
+    private string colorCode;
     private float codeEditorXPos;
 
     // Start is called before the first frame update
@@ -60,6 +61,7 @@ public class CodeEditor : MonoBehaviour
         testCode = codeFile.text.Split("-- TEST CODE", StringSplitOptions.None)[1];
 
         codeField.text = challengeCode;
+        colorCode = "#" + ColorUtility.ToHtmlStringRGB(commentColor);
 
         codeEditorXPos = GetComponent<RectTransform>().anchoredPosition.x;
         Debug.Log("Transform position x at start:" + transform.position.x);
@@ -71,7 +73,7 @@ public class CodeEditor : MonoBehaviour
         if (interactable) {
             var codeText = codeField.text.Split('\n');
             string newCode = "";
-            string colorCode = "#" + ColorUtility.ToHtmlStringRGB(commentColor);
+            
             for (int i = 0; i < codeText.Length; i++) {
                 string line = codeText[i];
                 if (line.Contains("--") && !line.Contains("<color=" + colorCode + ">")) {
@@ -123,7 +125,7 @@ public class CodeEditor : MonoBehaviour
     }
     
     private string CleanColorFormatting(string code) {
-        return code.Replace("<color=green>", "").Replace("</color>", "");
+        return code.Replace("<color=" + colorCode + ">", "").Replace("</color>", "");
     }
     void CallJDoodle() {
         string script = CleanColorFormatting(codeField.text) + testCode;
