@@ -44,6 +44,7 @@ public class CodeEditor : MonoBehaviour
 
     private string challengeCode;
     private string testCode;
+    private bool interactable = true;
     public GameObject gameField;
 
     // Start is called before the first frame update
@@ -62,7 +63,19 @@ public class CodeEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (interactable) {
+            var codeText = codeField.text.Split('\n');
+            string newCode = "";
+            for (int i = 0; i < codeText.Length; i++) {
+                string line = codeText[i];
+                if (line.Contains("--") && !line.Contains("<color=green>")) {
+                    line = line.Replace("--", "<color=green>--");
+                    line += "</color>";
+                }
+                newCode += line + "\n";
+            }
+            codeField.text = newCode;
+        }
     }
 
     void Submit() {
@@ -71,6 +84,7 @@ public class CodeEditor : MonoBehaviour
     }
 
     IEnumerator RenderInactive() {
+        interactable = false;
         codeField.interactable = false;
         codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
 
@@ -79,12 +93,15 @@ public class CodeEditor : MonoBehaviour
         }
         
         codeField.interactable = true;
+        interactable = true;
         codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.white;
         gameField.SetActive(false);
     }
-
+    private string CleanColorFormatting(string code) {
+        return code.Replace("<color=green>", "").Replace("</color>", "");
+    }
     void CallJDoodle() {
-        string script = codeField.text + testCode;
+        string script = CleanColorFormatting(codeField.text) + testCode;
 
         try {
             string url = "https://api.jdoodle.com/v1/execute";
