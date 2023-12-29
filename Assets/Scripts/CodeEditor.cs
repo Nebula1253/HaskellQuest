@@ -46,6 +46,8 @@ public class CodeEditor : MonoBehaviour
     private string testCode;
     private bool interactable = true;
     public GameObject gameField;
+    public Color commentColor;
+    private float codeEditorXPos;
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +60,9 @@ public class CodeEditor : MonoBehaviour
         testCode = codeFile.text.Split("-- TEST CODE", StringSplitOptions.None)[1];
 
         codeField.text = challengeCode;
+
+        codeEditorXPos = GetComponent<RectTransform>().anchoredPosition.x;
+        Debug.Log("Transform position x at start:" + transform.position.x);
     }
 
     // Update is called once per frame
@@ -66,10 +71,11 @@ public class CodeEditor : MonoBehaviour
         if (interactable) {
             var codeText = codeField.text.Split('\n');
             string newCode = "";
+            string colorCode = "#" + ColorUtility.ToHtmlStringRGB(commentColor);
             for (int i = 0; i < codeText.Length; i++) {
                 string line = codeText[i];
-                if (line.Contains("--") && !line.Contains("<color=green>")) {
-                    line = line.Replace("--", "<color=green>--");
+                if (line.Contains("--") && !line.Contains("<color=" + colorCode + ">")) {
+                    line = line.Replace("--", "<color=" + colorCode + ">--");
                     line += "</color>";
                 }
                 newCode += line + "\n";
@@ -84,19 +90,38 @@ public class CodeEditor : MonoBehaviour
     }
 
     IEnumerator RenderInactive() {
-        interactable = false;
-        codeField.interactable = false;
-        codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
+        StartCoroutine(MoveOffScreen());
 
         while (!controller.AttackEnd()) {
             yield return null;
         }
         
+        StartCoroutine(MoveOnScreen());
+    }
+
+    IEnumerator MoveOffScreen() {
+        interactable = false;
+        codeField.interactable = false;
+        codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
+
+        while (GetComponent<RectTransform>().anchoredPosition.x <= 0) {
+            GetComponent<RectTransform>().anchoredPosition += new Vector2(1, 0) * 5;
+            yield return null;
+        }
+    }
+
+    IEnumerator MoveOnScreen() {
+        while (GetComponent<RectTransform>().anchoredPosition.x >= codeEditorXPos) {
+            GetComponent<RectTransform>().anchoredPosition -= new Vector2(1, 0) * 5;
+            yield return null;
+        }
+
         codeField.interactable = true;
         interactable = true;
         codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.white;
         gameField.SetActive(false);
     }
+    
     private string CleanColorFormatting(string code) {
         return code.Replace("<color=green>", "").Replace("</color>", "");
     }
