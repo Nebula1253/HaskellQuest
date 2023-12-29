@@ -11,7 +11,7 @@ using TMPro;
 
 public class JDoodleRequest {
     public string clientId = "190c8528c5ed8a609a6322fb00818260";
-    public string clientSecret = "feab49325586de1e07f91127b9680952abdaf9de99bd7bb6f959508cdd904d84";
+    public string clientSecret = "f61f2873be5015e976b49dc18c4f33ce45133494fc1dafeb60480fc20b9f40ac";
     public string script;
     public string language = "haskell";
     public string versionIndex = "3";
@@ -74,7 +74,10 @@ public class CodeEditor : MonoBehaviour
         codeField.interactable = false;
         codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
 
-        yield return new WaitForSeconds(5);
+        while (!controller.AttackEnd()) {
+            yield return null;
+        }
+        
         codeField.interactable = true;
         codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.white;
         gameField.SetActive(false);
@@ -112,9 +115,10 @@ public class CodeEditor : MonoBehaviour
             {
                 string output = reader.ReadToEnd();
                 outputResponse = JsonUtility.FromJson<JDoodleResponse>(output);
+                Debug.Log(output);
             }
             string result = outputResponse.output.Split('\n')[2];
-            Debug.Log(result);
+            // Debug.Log(result);
 
             gameField.SetActive(true);
             controller = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyController>();

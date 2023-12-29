@@ -1,21 +1,23 @@
-type Size = Int
-type Damage = Int
+-- Code snippet starts here
 type Target = String
 
-data Bullet = Bullet Size Damage Target
+data Missile = Missile Target Bool -- the bool is whether the missile has been launched or not
 
-retarget :: Bullet -> Target -> Bullet
-retarget (Bullet s d _) t = Bullet s d t
+prepareMissiles :: Target -> [Missile]
+prepareMissiles t = [Missile t False | _ <- [1..5]]
 
--- write a function to retarget all bullets in a list!
-retargetAll :: [Bullet] -> Target -> [Bullet]
+launchAll :: Target -> [Missile]
+launchAll t = retargetAll [Missile t True | (Missile t _) <- prepareMissiles t]
 
+-- write a function to retarget all missiles - we'll be using this to interfere with the launch!
+-- NOTE: make sure that the missiles are still launched
+retargetAll :: [Missile] -> Target -> [Missile]
+retargetAll missiles t = -- INPUT HERE --
 
 -- TEST CODE
 main :: IO()
 main = do
-  let bullets = [Bullet 10 5 "player", Bullet 5 10 "player", Bullet 20 1 "player"]
-  let newBullets = retargetAll bullets "enemy"
-  let retargetCheck = and [t == "enemy" | (Bullet _ _ t) <- newBullets]
+  let missiles = prepareMissiles "player"
+  let newMissiles = retargetAll missiles "enemy"
+  let retargetCheck = and [t == "enemy" | (Missile t b) <- newMissiles, b]
   print(retargetCheck)
-  -- [Bullet 10 5 "friend", Bullet 5 10 "friend", Bullet 20 1 "friend"]

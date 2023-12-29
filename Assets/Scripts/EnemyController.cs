@@ -5,4 +5,6 @@ using UnityEngine;
 public abstract class EnemyController : MonoBehaviour
 {
     public abstract void Trigger(bool result);
+
+    public abstract bool AttackEnd();
 }

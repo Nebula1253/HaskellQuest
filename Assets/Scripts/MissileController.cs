@@ -10,6 +10,7 @@ public class MissileController : EnemyController
     public float missileAngleRange;
     private Transform target, playerTransform, enemyTransform;
     private GameObject gameField;
+    private bool missilesFired = false;
     
     // Start is called before the first frame update
     void Start()
@@ -20,14 +21,6 @@ public class MissileController : EnemyController
     }
 
     public override void Trigger(bool result) {
-        // if (result) {
-        //     target = transform;
-        //     StartCoroutine(fireMissiles(true));
-        // }
-        // else {
-        //     target = GameObject.FindGameObjectWithTag("Player").transform;
-        //     StartCoroutine(fireMissiles());
-        // }
         StartCoroutine(fireMissiles(result));
     }
 
@@ -57,13 +50,18 @@ public class MissileController : EnemyController
                 missile.GetComponent<HomingMissile>().SetTarget(target);
             }
         }
+        missilesFired = true;
     }
 
-    // IEnumerator redirectMissiles() {
-    //     yield return new WaitForSeconds(1f);
-    //     var missiles = GameObject.FindGameObjectsWithTag("Missile");
-    //     foreach (var missile in missiles) {
-    //         missile.GetComponent<HomingMissile>().SetTarget(target);
-    //     }
-    // }
+    public override bool AttackEnd() {
+        if (missilesFired) {
+            if (GameObject.FindGameObjectsWithTag("Projectile").Length == 0) {
+                missilesFired = false;
+            }
+            return GameObject.FindGameObjectsWithTag("Projectile").Length == 0;
+        }
+        else {
+            return false;
+        }
+    }
 }

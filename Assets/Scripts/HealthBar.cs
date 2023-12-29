@@ -6,6 +6,11 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
     // Start is called before the first frame update
+    void Start()
+    {
+        setHealth(100, 100);
+    }
+
     public Slider slider;
     // public Text healthText;
     public TMPro.TextMeshProUGUI healthTextMesh;
