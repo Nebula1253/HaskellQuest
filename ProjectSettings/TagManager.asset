@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - Projectile
   - GameField
+  - CodeEditor
   layers:
   - Default
   - TransparentFX

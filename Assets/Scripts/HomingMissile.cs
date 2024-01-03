@@ -58,9 +58,9 @@ public class HomingMissile : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.tag == "Player") {
             Debug.Log("Player hit!");
+            other.gameObject.GetComponent<PlayerHeart>().TakeDamage(10);
         }
         Destroy(gameObject);
-        // }
     }
 
     void OnBecameInvisible() {

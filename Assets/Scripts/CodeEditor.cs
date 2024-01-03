@@ -39,7 +39,7 @@ public class CodeEditor : MonoBehaviour
 {
     private TMP_InputField codeField;
     private Button submitButton;
-    public TextAsset codeFile;
+    public TextAsset[] codeFile;
     private EnemyController controller;
 
     private string challengeCode;
@@ -57,14 +57,18 @@ public class CodeEditor : MonoBehaviour
         submitButton = GetComponentInChildren<Button>();
         submitButton.onClick.AddListener(Submit);
 
-        challengeCode = codeFile.text.Split("-- TEST CODE", StringSplitOptions.None)[0];
-        testCode = codeFile.text.Split("-- TEST CODE", StringSplitOptions.None)[1];
+        challengeCode = codeFile[0].text.Split("-- TEST CODE", StringSplitOptions.None)[0];
+        testCode = codeFile[0].text.Split("-- TEST CODE", StringSplitOptions.None)[1];
 
         codeField.text = challengeCode;
         colorCode = "#" + ColorUtility.ToHtmlStringRGB(commentColor);
 
-        codeEditorXPos = GetComponent<RectTransform>().anchoredPosition.x;
-        Debug.Log("Transform position x at start:" + transform.position.x);
+        codeEditorXPos = -964;
+        // Debug.Log("Transform position x at start:" + transform.position.x);
+
+        interactable = false;
+        codeField.interactable = false;
+        codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
     }
 
     // Update is called once per frame
@@ -88,7 +92,6 @@ public class CodeEditor : MonoBehaviour
 
     void Submit() {
         CallJDoodle();
-        StartCoroutine(RenderInactive());
     }
 
     IEnumerator RenderInactive() {
@@ -110,6 +113,10 @@ public class CodeEditor : MonoBehaviour
             GetComponent<RectTransform>().anchoredPosition += new Vector2(1, 0) * 5;
             yield return null;
         }
+    }
+
+    public void MoveOnScreenDummy() {
+        StartCoroutine(MoveOnScreen());
     }
 
     IEnumerator MoveOnScreen() {
@@ -136,7 +143,7 @@ public class CodeEditor : MonoBehaviour
             request.Method = "POST";
             request.ContentType = "application/json";
 
-            JDoodleRequest inputRequest= new JDoodleRequest(script);
+            JDoodleRequest inputRequest = new JDoodleRequest(script);
             string input = JsonUtility.ToJson(inputRequest);
 
             using (StreamWriter streamWriter = new StreamWriter(request.GetRequestStream()))
@@ -161,19 +168,24 @@ public class CodeEditor : MonoBehaviour
                 outputResponse = JsonUtility.FromJson<JDoodleResponse>(output);
                 Debug.Log(output);
             }
-            string result = outputResponse.output.Split('\n')[2];
-            // Debug.Log(result);
-
-            gameField.SetActive(true);
-            controller = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyController>();
-
-            response.Close();
-
-            if (result == "True") {
-                controller.Trigger(true); 
-            } else {
-                controller.Trigger(false);
+            //
+            if (outputResponse.output.Contains("Timeout")) {
+                // ask player to try again, see if they've got an infinite loop, and then do nothing
             }
+            else if (outputResponse.output.Contains("error")) {
+                // put error details on screen, trigger enemy fire
+            }
+            else {
+                string result = outputResponse.output.Split('\n')[2];
+
+                gameField.SetActive(true);
+
+                controller = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyController>();
+                controller.Trigger(result == "True");
+
+                StartCoroutine(RenderInactive());
+            }
+            response.Close();
         }
         catch (WebException e)
         {

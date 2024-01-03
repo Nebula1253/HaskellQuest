@@ -41,10 +41,8 @@ public class PlayerHeart : MonoBehaviour
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, minX, maxX), Mathf.Clamp(transform.position.y, minY, maxY), transform.position.z);
     }
 
-    void OnTriggerEnter2D(Collider2D other) {
-        if (other.gameObject.tag == "Projectile") {
-            health -= 10;
-            playerHealthBar.setHealth(health, maxHealth);
-        }
+    public void TakeDamage(int damage) {
+        health -= damage;
+        playerHealthBar.setHealth(health, maxHealth);
     }
 }

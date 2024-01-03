@@ -21,5 +21,5 @@ main :: IO()
 main = do
   let missiles = prepareMissiles "player"
   let newMissiles = retargetAll missiles "enemy"
-  let retargetCheck = and [t == "enemy" | (Missile t b) <- newMissiles, b]
+  let retargetCheck = and [t == "enemy" | (Missile t b) <- newMissiles, (Missile _ b') <- missiles, b == b']
   print(retargetCheck)
