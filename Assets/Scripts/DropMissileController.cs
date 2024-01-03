@@ -44,16 +44,16 @@ public class DropMissileController : EnemyController
         var missileXInc = (maxX - minX) / (nrMissiles - 1);
         float missileX = 0;
 
-        // randomly choose a missile to do damage
-        int missileToDamage = Random.Range(0, nrMissiles);
+        // randomly choose a missile to not do damage
+        int safeMissile = Random.Range(0, nrMissiles);
         for (int i = 0; i < nrMissiles; i++) {
             GameObject currMissile = Instantiate(missile, new Vector3(minX + missileX, transform.position.y, transform.position.z), Quaternion.identity, transform.parent);
             currMissile.GetComponent<DropMissile>().setSpeed(missileSpeed);
-            if (i == missileToDamage) {
-                currMissile.GetComponent<DropMissile>().setDoesDamage(true);
+            if (i == safeMissile) {
+                currMissile.GetComponent<DropMissile>().setDoesDamage(false);
             }
             else {
-                currMissile.GetComponent<DropMissile>().setDoesDamage(false);
+                currMissile.GetComponent<DropMissile>().setDoesDamage(true);
             }
         }
     }
