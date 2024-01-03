@@ -269,6 +269,7 @@ GameObject:
   - component: {fileID: 71980940}
   - component: {fileID: 71980939}
   - component: {fileID: 71980938}
+  - component: {fileID: 71980941}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -378,6 +379,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 71980936}
   m_CullTransparentMesh: 1
+--- !u!114 &71980941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71980936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21a3a27ae1bb6b344bbb99b2b26dd618, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &220795406
 GameObject:
   m_ObjectHideFlags: 0
@@ -1548,6 +1561,7 @@ GameObject:
   - component: {fileID: 841421627}
   - component: {fileID: 841421626}
   - component: {fileID: 841421631}
+  - component: {fileID: 841421632}
   - component: {fileID: 841421629}
   - component: {fileID: 841421630}
   m_Layer: 0
@@ -1703,7 +1717,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841421625}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1fa302ddd0259aa429c3b8cbe269ea2f, type: 3}
   m_Name: 
@@ -1714,6 +1728,53 @@ MonoBehaviour:
   missileRotateSpeed: 2.5
   missileLockDelay: 3
   missileAngleRange: 30
+--- !u!114 &841421632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841421625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66c88f66a4db9246abedfc4bc190af2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  missile: {fileID: 5016011231314811185, guid: 80539cc9aae1f3545aab0f4227714a02, type: 3}
+  nrMissiles: 7
+  missileSpeed: 4
+  missileBorderGap: 0.1
+--- !u!1 &906775887
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 906775888}
+  m_Layer: 0
+  m_Name: StateController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &906775888
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 906775887}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &939236811
 GameObject:
   m_ObjectHideFlags: 0
@@ -2128,7 +2189,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1234470214
 Transform:
   m_ObjectHideFlags: 0
@@ -2377,7 +2438,7 @@ GameObject:
   - component: {fileID: 1793123914}
   m_Layer: 5
   m_Name: CodeEditor
-  m_TagString: Untagged
+  m_TagString: CodeEditor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2400,7 +2461,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -964, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1793123914
@@ -2415,7 +2476,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d631ed13c134e7c44aee4a3c1302ca71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  codeFile: {fileID: 4900000, guid: 6ca01349b5fe12c41850fb53789f77b9, type: 3}
+  codeFile:
+  - {fileID: 4900000, guid: 6ca01349b5fe12c41850fb53789f77b9, type: 3}
   gameField: {fileID: 1234470213}
   commentColor: {r: 0.4156863, g: 0.6, b: 0.33333334, a: 0}
 --- !u!1 &1912585591
@@ -2808,3 +2870,4 @@ SceneRoots:
   - {fileID: 220795409}
   - {fileID: 992452627}
   - {fileID: 1234470214}
+  - {fileID: 906775888}
