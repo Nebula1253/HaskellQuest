@@ -17,6 +17,6 @@ public class HackButton : MonoBehaviour
 
     void OnClick() {
         Debug.Log("lol");
-        editor.MoveOnScreenDummy();
+        editor.RenderActive();
     }
 }

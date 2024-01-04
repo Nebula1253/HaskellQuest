@@ -38,9 +38,9 @@ public class JDoodleResponse {
 public class CodeEditor : MonoBehaviour
 {
     private TMP_InputField codeField;
-    private Button submitButton;
-    public TextAsset[] codeFile;
-    private EnemyController controller;
+    private Button submitButton, resetButton;
+    public TextAsset[] codeFiles;
+    private EnemyController[] controllers;
 
     private string challengeCode;
     private string testCode;
@@ -49,16 +49,21 @@ public class CodeEditor : MonoBehaviour
     public Color commentColor;
     private string colorCode;
     private float codeEditorXPos;
+    public int currentScript = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         codeField = GetComponentInChildren<TMP_InputField>();
-        submitButton = GetComponentInChildren<Button>();
+        
+        submitButton = GameObject.FindGameObjectWithTag("Submit").GetComponent<Button>();
         submitButton.onClick.AddListener(Submit);
 
-        challengeCode = codeFile[0].text.Split("-- TEST CODE", StringSplitOptions.None)[0];
-        testCode = codeFile[0].text.Split("-- TEST CODE", StringSplitOptions.None)[1];
+        resetButton = GameObject.FindGameObjectWithTag("Reset").GetComponent<Button>();
+        resetButton.onClick.AddListener(Reset);
+
+        challengeCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[0];
+        testCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[1];
 
         codeField.text = challengeCode;
         colorCode = "#" + ColorUtility.ToHtmlStringRGB(commentColor);
@@ -94,28 +99,42 @@ public class CodeEditor : MonoBehaviour
         CallJDoodle();
     }
 
-    IEnumerator RenderInactive() {
-        StartCoroutine(MoveOffScreen());
-
-        while (!controller.AttackEnd()) {
-            yield return null;
-        }
-        
-        StartCoroutine(MoveOnScreen());
+    void Reset() {
+        codeField.text = challengeCode;
     }
 
-    IEnumerator MoveOffScreen() {
+    IEnumerator RenderInactive(bool phaseOver) {
         interactable = false;
         codeField.interactable = false;
         codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
+
+        submitButton.interactable = false;
+        resetButton.interactable = false;
+
+        while (!controllers[currentScript].AttackEnd()) {
+            yield return null;
+        }
+
+        gameField.SetActive(false);
 
         while (GetComponent<RectTransform>().anchoredPosition.x <= 0) {
             GetComponent<RectTransform>().anchoredPosition += new Vector2(1, 0) * 5;
             yield return null;
         }
+
+        if (phaseOver) {
+            currentScript++;
+            challengeCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[0];
+            testCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[1];
+
+            codeField.text = challengeCode;
+            if (currentScript >= codeFiles.Length) {
+                // CONGRATS YOU WON!!!!!
+            }
+        }
     }
 
-    public void MoveOnScreenDummy() {
+    public void RenderActive() {
         StartCoroutine(MoveOnScreen());
     }
 
@@ -128,7 +147,9 @@ public class CodeEditor : MonoBehaviour
         codeField.interactable = true;
         interactable = true;
         codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.white;
-        gameField.SetActive(false);
+
+        submitButton.interactable = true;
+        resetButton.interactable = true;
     }
     
     private string CleanColorFormatting(string code) {
@@ -180,10 +201,10 @@ public class CodeEditor : MonoBehaviour
 
                 gameField.SetActive(true);
 
-                controller = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyController>();
-                controller.Trigger(result == "True");
+                controllers = GameObject.FindGameObjectWithTag("Enemy").GetComponents<EnemyController>();
+                controllers[currentScript].Trigger(result == "True");
 
-                StartCoroutine(RenderInactive());
+                StartCoroutine(RenderInactive(result == "True"));
             }
             response.Close();
         }

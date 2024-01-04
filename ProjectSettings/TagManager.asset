@@ -8,6 +8,8 @@ TagManager:
   - Projectile
   - GameField
   - CodeEditor
+  - Reset
+  - Submit
   layers:
   - Default
   - TransparentFX
