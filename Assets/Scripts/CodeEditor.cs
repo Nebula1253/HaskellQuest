@@ -45,7 +45,8 @@ public class CodeEditor : MonoBehaviour
     private string challengeCode;
     private string testCode;
     private bool interactable = true;
-    public GameObject gameField;
+    public GameObject gameField, mainBattle;
+    private MainBattle mainBattleScript;
     public Color commentColor;
     private string colorCode;
     private float codeEditorXPos;
@@ -74,6 +75,8 @@ public class CodeEditor : MonoBehaviour
         interactable = false;
         codeField.interactable = false;
         codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
+
+        mainBattleScript = mainBattle.GetComponent<MainBattle>();
     }
 
     // Update is called once per frame
@@ -117,6 +120,8 @@ public class CodeEditor : MonoBehaviour
 
         gameField.SetActive(false);
 
+        mainBattleScript.moveToCentreCall();
+
         while (GetComponent<RectTransform>().anchoredPosition.x <= 0) {
             GetComponent<RectTransform>().anchoredPosition += new Vector2(1, 0) * 5;
             yield return null;
@@ -136,6 +141,7 @@ public class CodeEditor : MonoBehaviour
 
     public void RenderActive() {
         StartCoroutine(MoveOnScreen());
+        mainBattleScript.moveToTurnPosCall();
     }
 
     IEnumerator MoveOnScreen() {
