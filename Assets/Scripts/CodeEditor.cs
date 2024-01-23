@@ -38,6 +38,7 @@ public class JDoodleResponse {
 public class CodeEditor : MonoBehaviour
 {
     private TMP_InputField codeField;
+    private TMP_Text statusDisplay;
     private Button submitButton, resetButton;
     public TextAsset[] codeFiles;
     private EnemyController[] controllers;
@@ -52,10 +53,13 @@ public class CodeEditor : MonoBehaviour
     private float codeEditorXPos;
     public int currentScript = 0;
 
+    public GameObject statusDisplayText;
+
     // Start is called before the first frame update
     void Start()
     {
         codeField = GetComponentInChildren<TMP_InputField>();
+        statusDisplay = statusDisplayText.GetComponent<TMP_Text>();
         
         submitButton = GameObject.FindGameObjectWithTag("Submit").GetComponent<Button>();
         submitButton.onClick.AddListener(Submit);
@@ -95,6 +99,10 @@ public class CodeEditor : MonoBehaviour
                 newCode += line + "\n";
             }
             codeField.text = newCode;
+
+            if (Input.GetKeyDown(KeyCode.Escape)) {
+                StartCoroutine(RenderInactiveEscape());
+            }
         }
     }
 
@@ -104,6 +112,24 @@ public class CodeEditor : MonoBehaviour
 
     void Reset() {
         codeField.text = challengeCode;
+    }
+
+    IEnumerator RenderInactiveEscape() {
+        interactable = false;
+        codeField.interactable = false;
+        codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
+
+        submitButton.interactable = false;
+        resetButton.interactable = false;
+
+        statusDisplay.text = "";
+
+        mainBattleScript.moveToCentreCall();
+
+        while (GetComponent<RectTransform>().anchoredPosition.x <= 0) {
+            GetComponent<RectTransform>().anchoredPosition += new Vector2(1, 0) * 5;
+            yield return null;
+        }
     }
 
     IEnumerator RenderInactive(bool phaseOver) {
@@ -119,6 +145,8 @@ public class CodeEditor : MonoBehaviour
         }
 
         gameField.SetActive(false);
+
+        statusDisplay.text = "";
 
         mainBattleScript.moveToCentreCall();
 
@@ -197,20 +225,44 @@ public class CodeEditor : MonoBehaviour
             }
             //
             if (outputResponse.output.Contains("Timeout")) {
-                // ask player to try again, see if they've got an infinite loop, and then do nothing
+                // ask player to "try again - see if they've got an infinite loop": do nothing other than that, because 
+                // this could just be JDoodle screwing around
+                statusDisplay.color = Color.yellow;
+                statusDisplay.text = "Your code timed out! Try again - see if you've got an infinite loop.";
             }
             else if (outputResponse.output.Contains("error")) {
                 // put error details on screen, trigger enemy fire
-            }
-            else {
-                string result = outputResponse.output.Split('\n')[2];
+                var error = outputResponse.output.Split('\n')[4];
+
+                statusDisplay.color = Color.red;
+                statusDisplay.text = error;
 
                 gameField.SetActive(true);
 
                 controllers = GameObject.FindGameObjectWithTag("Enemy").GetComponents<EnemyController>();
-                controllers[currentScript].Trigger(result == "True");
+                controllers[currentScript].Trigger(false);
 
-                StartCoroutine(RenderInactive(result == "True"));
+                StartCoroutine(RenderInactive(false));
+            }
+            else {
+                // trigger enemy fire depending on whether the code passed the test
+                string result = outputResponse.output.Split('\n')[2];
+                bool resultBool = result == "True";
+                if (resultBool) {
+                    statusDisplay.color = Color.green;
+                    statusDisplay.text = "Test passed!";
+                }
+                else {
+                    statusDisplay.color = Color.red;
+                    statusDisplay.text = "Test failed!";
+                }
+
+                gameField.SetActive(true);
+
+                controllers = GameObject.FindGameObjectWithTag("Enemy").GetComponents<EnemyController>();
+                controllers[currentScript].Trigger(resultBool);
+
+                StartCoroutine(RenderInactive(resultBool));
             }
             response.Close();
         }
