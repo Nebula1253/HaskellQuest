@@ -2614,6 +2614,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initXPos: 0
   turnXPos: -470
+  hack: {fileID: 71980936}
+  items: {fileID: 365362279}
 --- !u!1 &1558389835
 GameObject:
   m_ObjectHideFlags: 0
