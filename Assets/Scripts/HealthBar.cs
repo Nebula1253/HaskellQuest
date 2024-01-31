@@ -5,18 +5,25 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
+    private PlayerState player;
     // Start is called before the first frame update
     void Start()
     {
-        setHealth(100, 100);
+        player = GameObject.Find("PlayerState").GetComponent<PlayerState>();
+        setHealth(player.health, player.maxHealth);
     }
 
     public Slider slider;
-    // public Text healthText;
     public TMPro.TextMeshProUGUI healthTextMesh;
 
-    public void setHealth(int health, int maxHealth) {
+    private void setHealth(int health, int maxHealth) {
         slider.value = (float) health / maxHealth;
         healthTextMesh.text = health + "/" + maxHealth;
+    }
+
+    public void updateHealth(int healthDelta) {
+        player.health = Mathf.Clamp(player.health + healthDelta, 0, player.maxHealth);
+        setHealth(player.health, player.maxHealth);
+        // setHealth(player.health, player.maxHealth);
     }
 }

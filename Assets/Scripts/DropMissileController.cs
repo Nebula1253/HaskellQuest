@@ -48,7 +48,7 @@ public class DropMissileController : EnemyController
         StartCoroutine(DropMissiles(result));
     }
 
-    IEnumerator DropMissiles(bool highlight) {
+    IEnumerator DropMissiles(bool filter) {
         float missileXInc = (maxX - minX) / (nrMissiles - 1);
         float missileX;
 
@@ -57,16 +57,29 @@ public class DropMissileController : EnemyController
             missileX = 0;
             int safeMissile = Random.Range(0, nrMissiles);
             for (int i = 0; i < nrMissiles; i++) {
-                GameObject currMissile = Instantiate(missile, new Vector3(minX + missileX, transform.position.y, transform.position.z), Quaternion.identity, transform.parent);
-                currMissile.GetComponent<DropMissile>().setSpeed(missileSpeed);
+                // GameObject currMissile = Instantiate(missile, new Vector3(minX + missileX, transform.position.y, transform.position.z), Quaternion.identity, transform.parent);
+                // currMissile.GetComponent<DropMissile>().setSpeed(missileSpeed);
+                // if (i == safeMissile) {
+                //     currMissile.GetComponent<DropMissile>().setDoesDamage(false);
+                //     if (highlight) {
+                //         currMissile.GetComponent<SpriteRenderer>().color = Color.green;
+                //     }
+                // }
+                // else {
+                //     currMissile.GetComponent<DropMissile>().setDoesDamage(true);
+                // }
+                // missileX += missileXInc;
                 if (i == safeMissile) {
+                    GameObject currMissile = Instantiate(missile, new Vector3(minX + missileX, transform.position.y, transform.position.z), Quaternion.identity, transform.parent);
+                    currMissile.GetComponent<DropMissile>().setSpeed(missileSpeed);
                     currMissile.GetComponent<DropMissile>().setDoesDamage(false);
-                    if (highlight) {
-                        currMissile.GetComponent<SpriteRenderer>().color = Color.green;
-                    }
                 }
                 else {
-                    currMissile.GetComponent<DropMissile>().setDoesDamage(true);
+                    if (!filter) {
+                        GameObject currMissile = Instantiate(missile, new Vector3(minX + missileX, transform.position.y, transform.position.z), Quaternion.identity, transform.parent);
+                        currMissile.GetComponent<DropMissile>().setSpeed(missileSpeed);
+                        currMissile.GetComponent<DropMissile>().setDoesDamage(true);
+                    }
                 }
                 missileX += missileXInc;
             }

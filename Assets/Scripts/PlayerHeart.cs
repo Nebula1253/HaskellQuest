@@ -5,13 +5,15 @@ using UnityEngine;
 public class PlayerHeart : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int health = 100;
-    public int maxHealth = 100;
+    // private int health, maxHealth;
+    // public int health = 100;
+    // public int maxHealth = 100;
     float minX, minY, maxX, maxY;
     public HealthBar playerHealthBar;
     void Start()
     {
-        // var boxSize = transform.parent.GetComponent<Renderer>().bounds.size;
+        // var boxSize = transform.parent.GetComponent<Renderer>().bounds.size
+
         var boxSize = transform.parent.GetChild(0).GetComponent<Renderer>().bounds.size;
         var spriteSize = GetComponent<SpriteRenderer>().bounds.size;
         var boxCentre = transform.parent.position;
@@ -25,8 +27,6 @@ public class PlayerHeart : MonoBehaviour
         minY = -boxSizeYOffset + boxCentre.y + spriteSizeYOffset;
         maxX = boxSizeXOffset + boxCentre.x - spriteSizeXOffset;
         maxY = boxSizeYOffset + boxCentre.y - spriteSizeYOffset;
-
-        playerHealthBar.setHealth(health, maxHealth);
     }
 
     // Update is called once per frame
@@ -42,7 +42,9 @@ public class PlayerHeart : MonoBehaviour
     }
 
     public void TakeDamage(int damage) {
-        health -= damage;
-        playerHealthBar.setHealth(health, maxHealth);
+        // health -= damage;
+        // playerController.health -= damage;
+        // playerHealthBar.setHealth(health, maxHealth);
+        playerHealthBar.updateHealth(-damage);
     }
 }
