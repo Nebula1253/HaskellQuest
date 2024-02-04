@@ -93,7 +93,8 @@ public class CodeEditor : MonoBehaviour
 
         distanceDelta = Mathf.Abs(codeEditorXPos) / time;
 
-        // codeField.onValueChanged.AddListener(delegate {CommentHighlighting(); });
+        CommentHighlighting();
+        codeField.onValueChanged.AddListener(delegate {CommentHighlighting(); });
 
         filename.GetComponent<TMP_Text>().text = codeFiles[currentScript].name + ".hs";
     }
@@ -102,7 +103,7 @@ public class CodeEditor : MonoBehaviour
     void Update()
     {
         if (interactable) {
-            CommentHighlighting();
+            // CommentHighlighting();
 
             if (Input.GetKeyDown(KeyCode.Escape)) {
                 DisableEditor();
@@ -187,6 +188,7 @@ public class CodeEditor : MonoBehaviour
         while (!controllers[currentScript].AttackEnd()) {
             yield return null;
         }
+        yield return new WaitForSeconds(1);
 
         StartCoroutine(MoveOffScreen(phaseOver));
     }

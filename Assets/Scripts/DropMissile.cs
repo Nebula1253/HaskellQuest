@@ -27,8 +27,8 @@ public class DropMissile : MonoBehaviour
             if (doesDamage) {
                 other.gameObject.GetComponent<PlayerHeart>().TakeDamage(10);
             }
-            Destroy(gameObject);
         }
+        Destroy(gameObject);
     }
 
     void OnBecameInvisible() {

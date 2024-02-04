@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerHeart : MonoBehaviour
@@ -10,6 +11,7 @@ public class PlayerHeart : MonoBehaviour
     // public int maxHealth = 100;
     float minX, minY, maxX, maxY;
     public HealthBar playerHealthBar;
+    private Rigidbody2D rb;
     void Start()
     {
         // var boxSize = transform.parent.GetComponent<Renderer>().bounds.size
@@ -27,6 +29,8 @@ public class PlayerHeart : MonoBehaviour
         minY = -boxSizeYOffset + boxCentre.y + spriteSizeYOffset;
         maxX = boxSizeXOffset + boxCentre.x - spriteSizeXOffset;
         maxY = boxSizeYOffset + boxCentre.y - spriteSizeYOffset;
+
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -35,7 +39,8 @@ public class PlayerHeart : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        transform.position += new Vector3(horizontalInput, verticalInput, 0) * Time.deltaTime * 5;
+        // transform.position += new Vector3(horizontalInput, verticalInput, 0) * Time.deltaTime * 5;
+        rb.velocity = new Vector2(horizontalInput, verticalInput) * 5;
 
         // make sure the player stays within the bounds of the box
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, minX, maxX), Mathf.Clamp(transform.position.y, minY, maxY), transform.position.z);
@@ -47,4 +52,5 @@ public class PlayerHeart : MonoBehaviour
         // playerHealthBar.setHealth(health, maxHealth);
         playerHealthBar.updateHealth(-damage);
     }
+
 }

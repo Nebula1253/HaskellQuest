@@ -10,6 +10,7 @@ TagManager:
   - CodeEditor
   - Reset
   - Submit
+  - MaybeProjectile
   layers:
   - Default
   - TransparentFX
