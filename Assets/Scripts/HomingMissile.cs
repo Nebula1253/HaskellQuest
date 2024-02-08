@@ -53,12 +53,18 @@ public class HomingMissile : MonoBehaviour
         missileLocked = true;
     }
 
+    public void resetTarget(Transform newTarget) {
+        target = newTarget;
+        missileLocked = false;
+        StartCoroutine(missileLockDelay());
+    }
+
     
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.tag == "Player") {
             Debug.Log("Player hit!");
-            other.gameObject.GetComponent<PlayerHeart>().TakeDamage(10);
+            other.gameObject.GetComponent<PlayerHeart>().TakeDamage(5);
         }
         Destroy(gameObject);
     }

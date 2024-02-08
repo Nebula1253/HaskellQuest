@@ -44,7 +44,7 @@ public class CodeEditor : MonoBehaviour
     private TMP_Text statusDisplay;
     private Button submitButton, resetButton;
     public TextAsset[] codeFiles;
-    private EnemyController[] controllers;
+    private AttackController[] controllers;
 
     private string challengeCode;
     private string testCode;
@@ -53,6 +53,7 @@ public class CodeEditor : MonoBehaviour
     private GameObject dialog, filename;
     private MainBattle mainBattleScript;
     public Color commentColor;
+    public bool commentHighlighting;
     private string colorCode;
     private float codeEditorXPos;
     public int currentScript = 0;
@@ -60,6 +61,8 @@ public class CodeEditor : MonoBehaviour
     public GameObject statusDisplayText;
     public float time;
     private float distanceDelta;
+
+    private PlayerState playerState;
 
     // Start is called before the first frame update
     void Start()
@@ -73,7 +76,7 @@ public class CodeEditor : MonoBehaviour
         resetButton = GameObject.FindGameObjectWithTag("Reset").GetComponent<Button>();
         resetButton.onClick.AddListener(Reset);
 
-        Debug.Log(codeFiles[currentScript].name);
+        // Debug.Log(codeFiles[currentScript].name);
 
         challengeCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[0];
         testCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[1];
@@ -93,10 +96,14 @@ public class CodeEditor : MonoBehaviour
 
         distanceDelta = Mathf.Abs(codeEditorXPos) / time;
 
-        CommentHighlighting();
-        codeField.onValueChanged.AddListener(delegate {CommentHighlighting(); });
+        if (commentHighlighting) {
+            CommentHighlighting();
+            codeField.onValueChanged.AddListener(delegate {CommentHighlighting(); });
+        }
 
         filename.GetComponent<TMP_Text>().text = codeFiles[currentScript].name + ".hs";
+
+        playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
     }
 
     // Update is called once per frame
@@ -110,12 +117,16 @@ public class CodeEditor : MonoBehaviour
                 StartCoroutine(MoveOffScreen(false));
             }
         }
+
+        // Debug.Log("Caret position = " + codeField.caretPosition);
     }
 
     private void CommentHighlighting() {
         bool commentChanged = false;
         var codeText = codeField.text.Split('\n');
         string newCode = "";
+
+        int oldCaretPosition = codeField.caretPosition;
 
         for (int i = 0; i < codeText.Length; i++) {
             string line = codeText[i];
@@ -134,7 +145,12 @@ public class CodeEditor : MonoBehaviour
             }
             newCode += line + "\n";
         }
-        if (commentChanged) codeField.text = newCode;
+        if (commentChanged) {
+            codeField.text = newCode;
+            Debug.Log(oldCaretPosition + " " + codeField.caretPosition);
+            codeField.caretPosition = oldCaretPosition;
+            Debug.Log(oldCaretPosition + " " + codeField.caretPosition);
+        }
     }
 
     void Submit() {
@@ -158,7 +174,11 @@ public class CodeEditor : MonoBehaviour
         gameField.SetActive(false);
         statusDisplay.text = "";
 
-        mainBattleScript.moveToCentreCall();
+        bool wonBattle = false;
+        if (changeScript) {
+           wonBattle = (currentScript + 1) >= codeFiles.Length; 
+        }
+        mainBattleScript.moveToCentreCall(wonBattle);
 
         while (GetComponent<RectTransform>().anchoredPosition.x < 0) {
             var newX = Mathf.Min(0, GetComponent<RectTransform>().anchoredPosition.x + distanceDelta * Time.deltaTime);
@@ -166,19 +186,17 @@ public class CodeEditor : MonoBehaviour
             yield return null;
         }
 
-        if (changeScript) {
+        if (wonBattle) {
+            playerState.DisplayScore();
+        }
+        else if (changeScript) {
             currentScript++;
-            if (currentScript >= codeFiles.Length) {
-                // CONGRATS YOU WON!!!!!
-                dialog.transform.Find("Text").GetComponent<TMP_Text>().text = "CONGRATULATIONS! YOU WON!";
-            }
-            else {
-                challengeCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[0];
-                testCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[1];
+            
+            challengeCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[0];
+            testCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[1];
 
-                codeField.text = challengeCode;
-                filename.GetComponent<TMP_Text>().text = codeFiles[currentScript].name + ".hs";
-            }
+            codeField.text = challengeCode;
+            filename.GetComponent<TMP_Text>().text = codeFiles[currentScript].name + ".hs";
         }
     }
 
@@ -200,7 +218,7 @@ public class CodeEditor : MonoBehaviour
     private void EnemyMoveTrigger(bool result) {
         gameField.SetActive(true);
 
-        controllers = GameObject.FindGameObjectWithTag("Enemy").GetComponents<EnemyController>();
+        controllers = GameObject.FindGameObjectWithTag("Enemy").GetComponents<AttackController>();
         controllers[currentScript].Trigger(result);
 
         StartCoroutine(EnemyMove(result));
@@ -241,6 +259,7 @@ public class CodeEditor : MonoBehaviour
 
             statusDisplay.color = Color.red;
             statusDisplay.text = error;
+            playerState.CodePenalty();
 
             EnemyMoveTrigger(false);
         }
@@ -255,6 +274,7 @@ public class CodeEditor : MonoBehaviour
             else {
                 statusDisplay.color = Color.red;
                 statusDisplay.text = "Test failed!";
+                playerState.CodePenalty();
             }
 
             EnemyMoveTrigger(resultBool);
@@ -263,7 +283,7 @@ public class CodeEditor : MonoBehaviour
 
     void CallJDoodle() {
         string script = CleanColorFormatting(codeField.text) + testCode;
-        Debug.Log(script);
+        // Debug.Log(script);
 
         try {
             string url = "https://api.jdoodle.com/v1/execute";

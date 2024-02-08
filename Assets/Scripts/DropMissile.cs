@@ -25,8 +25,11 @@ public class DropMissile : MonoBehaviour
         if (other.gameObject.tag == "Player") {
             Debug.Log("Player hit!");
             if (doesDamage) {
-                other.gameObject.GetComponent<PlayerHeart>().TakeDamage(10);
+                other.gameObject.GetComponent<PlayerHeart>().TakeDamage(5);
             }
+        }
+        else if (other.gameObject.tag == "Projectile") {
+            Destroy(other.gameObject);
         }
         Destroy(gameObject);
     }

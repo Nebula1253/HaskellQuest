@@ -10,7 +10,8 @@ public class PlayerHeart : MonoBehaviour
     // public int health = 100;
     // public int maxHealth = 100;
     float minX, minY, maxX, maxY;
-    public HealthBar playerHealthBar;
+
+    private PlayerState playerState;
     private Rigidbody2D rb;
     void Start()
     {
@@ -31,6 +32,8 @@ public class PlayerHeart : MonoBehaviour
         maxY = boxSizeYOffset + boxCentre.y - spriteSizeYOffset;
 
         rb = GetComponent<Rigidbody2D>();
+
+        playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
     }
 
     // Update is called once per frame
@@ -50,7 +53,8 @@ public class PlayerHeart : MonoBehaviour
         // health -= damage;
         // playerController.health -= damage;
         // playerHealthBar.setHealth(health, maxHealth);
-        playerHealthBar.updateHealth(-damage);
+        playerState.updateHealth(-damage);
+        playerState.DamagePenalty();
     }
 
 }

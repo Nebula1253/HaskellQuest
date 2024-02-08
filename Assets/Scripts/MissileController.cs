@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MissileController : EnemyController
+public class MissileController : AttackController
 {
     public GameObject missile;
     public int nrMissiles;

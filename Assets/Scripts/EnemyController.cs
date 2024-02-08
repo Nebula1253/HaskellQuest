@@ -2,9 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour
 {
-    public abstract void Trigger(bool result);
+    private GameObject enemySprite, background;
+    // Start is called before the first frame update
+    void Start()
+    {
+        enemySprite = transform.Find("EnemySprite").gameObject;
+        background = transform.Find("Background").gameObject;
+    }
 
-    public abstract bool AttackEnd();
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public void Esplode() {
+        enemySprite.SetActive(false);
+    }
 }
