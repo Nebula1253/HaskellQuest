@@ -50,7 +50,7 @@ public class CodeEditor : MonoBehaviour
     private string testCode;
     private bool interactable = true;
     public GameObject gameField, mainBattle;
-    private GameObject dialog, filename;
+    private GameObject filename;
     private MainBattle mainBattleScript;
     public Color commentColor;
     public bool commentHighlighting;
@@ -63,6 +63,7 @@ public class CodeEditor : MonoBehaviour
     private float distanceDelta;
 
     private PlayerState playerState;
+    private bool gameOver = false;
 
     // Start is called before the first frame update
     void Start()
@@ -90,8 +91,6 @@ public class CodeEditor : MonoBehaviour
 
         mainBattleScript = mainBattle.GetComponent<MainBattle>();
 
-        // dialog = transform.Find("DialogBox").gameObject;
-        dialog = GameObject.Find("DialogBox");
         filename = GameObject.Find("Filename");
 
         distanceDelta = Mathf.Abs(codeEditorXPos) / time;
@@ -178,8 +177,10 @@ public class CodeEditor : MonoBehaviour
         if (changeScript) {
            wonBattle = (currentScript + 1) >= codeFiles.Length; 
         }
-        mainBattleScript.moveToCentreCall(wonBattle);
-
+        if (!gameOver) {
+            mainBattleScript.moveToCentreCall(wonBattle);
+        }
+        
         while (GetComponent<RectTransform>().anchoredPosition.x < 0) {
             var newX = Mathf.Min(0, GetComponent<RectTransform>().anchoredPosition.x + distanceDelta * Time.deltaTime);
             GetComponent<RectTransform>().anchoredPosition = new Vector2(newX, GetComponent<RectTransform>().anchoredPosition.y);
@@ -208,7 +209,14 @@ public class CodeEditor : MonoBehaviour
         }
         yield return new WaitForSeconds(1);
 
-        StartCoroutine(MoveOffScreen(phaseOver));
+        if (!gameOver) {
+            StartCoroutine(MoveOffScreen(phaseOver));
+        }
+    }
+
+    public void MoveOffScreenGameOver() {
+        gameOver = true;
+        StartCoroutine(MoveOffScreen(false));
     }
 
     public void ActivateEditor() {

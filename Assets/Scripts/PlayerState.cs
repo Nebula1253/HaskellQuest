@@ -9,13 +9,14 @@ public class PlayerState : MonoBehaviour
     public int codeScore = 5000, damageScore = 5000;
     public int incorrectCodePenalty, damagePenalty;
     private HealthBar playerHealthBar;
-    public TMP_Text scoreText;
+    public GameObject scoreDisplay, gameOverOverlay;
     private 
 
     // Start is called before the first frame update
     void Start()
     {
         playerHealthBar = GameObject.Find("HealthBar").GetComponent<HealthBar>();
+        Debug.Log(gameOverOverlay);
         health = maxHealth;
         playerHealthBar.setHealth(health, maxHealth);
     }
@@ -31,8 +32,18 @@ public class PlayerState : MonoBehaviour
         playerHealthBar.setHealth(health, maxHealth);
         
         if (health <= 0) {
-            Debug.Log("Game Over");
+            GameOver();
         }
+    }
+
+    private void GameOver() {
+        var mainBattle = GameObject.Find("MainBattle").GetComponent<MainBattle>();
+        mainBattle.moveToCentreCall(false, true);
+
+        var codeEditor = GameObject.Find("CodeEditor").GetComponent<CodeEditor>();
+        codeEditor.MoveOffScreenGameOver();
+
+        gameOverOverlay.SetActive(true);
     }
 
     public void CodePenalty() {
@@ -44,7 +55,23 @@ public class PlayerState : MonoBehaviour
     }
 
     public void DisplayScore() {
-        scoreText.gameObject.SetActive(true);
-        scoreText.text = "Code Score: " + codeScore + "\nDamage Score: " + damageScore + "\nFinal Score: " + (codeScore + damageScore); 
+        StartCoroutine(DisplayScoreCoroutine());
+    }
+
+    IEnumerator DisplayScoreCoroutine() {
+        scoreDisplay.SetActive(true);
+        var codeScore = scoreDisplay.transform.Find("CodeScore").GetComponent<TextMeshProUGUI>();
+        Debug.Log(codeScore);
+        var damageScore = scoreDisplay.transform.Find("DamageScore").GetComponent<TextMeshProUGUI>();
+        var finalScore = scoreDisplay.transform.Find("FinalScore").GetComponent<TextMeshProUGUI>();
+
+        codeScore.text = "CODE SCORE: " + this.codeScore;
+        yield return new WaitForSeconds(0.3f);
+
+        damageScore.text = "DAMAGE SCORE: " + this.damageScore;
+        yield return new WaitForSeconds(0.3f);
+        
+        finalScore.text = "FINAL SCORE: " + (this.codeScore + this.damageScore);
+        yield return new WaitForSeconds(0.3f);
     }
 }

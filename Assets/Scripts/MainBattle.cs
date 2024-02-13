@@ -38,24 +38,25 @@ public class MainBattle : MonoBehaviour
         spriteDistanceDelta = Mathf.Abs(spriteInitXPos - spriteTurnXPos) / time;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    IEnumerator moveToCentre(bool wonBattle, bool gameOver) {
+        if (gameOver) {
+            hackButton.gameObject.SetActive(false);
+            itemsButton.gameObject.SetActive(false);
+            dialog.SetActive(false);
+        }
 
-    IEnumerator moveToCentre(bool wonBattle = false) {
         while (GetComponent<RectTransform>().anchoredPosition.x < UIinitXPos) {
             var newX = Mathf.Min(UIinitXPos, GetComponent<RectTransform>().anchoredPosition.x + uiDistanceDelta * Time.deltaTime);
             GetComponent<RectTransform>().anchoredPosition = new Vector2(newX, GetComponent<RectTransform>().anchoredPosition.y);
             yield return null;
         }
         
-        if (!wonBattle) {
+        if (!gameOver & !wonBattle) {
             hackButton.interactable = true;
             itemsButton.interactable = true;
             dialog.SetActive(true);
         }
+
     }
 
     IEnumerator moveSpriteToCentre(bool wonBattle = false) {
@@ -65,7 +66,10 @@ public class MainBattle : MonoBehaviour
             yield return null;
         }
 
+        Debug.Log("wonBattle: " + wonBattle);
+
         if (wonBattle) {
+            Debug.Log("Esplode");
             enemyView.GetComponent<EnemyController>().Esplode();
         }
     }
@@ -91,9 +95,9 @@ public class MainBattle : MonoBehaviour
         }
     }
 
-    public void moveToCentreCall(bool wonBattle = false) {
-        StartCoroutine(moveToCentre(wonBattle));
-        StartCoroutine(moveSpriteToCentre());
+    public void moveToCentreCall(bool wonBattle = false, bool gameOver = false) {
+        StartCoroutine(moveToCentre(wonBattle, gameOver));
+        StartCoroutine(moveSpriteToCentre(wonBattle));
     }
 
     private void PlayerActionHack() {
