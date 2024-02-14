@@ -64,6 +64,7 @@ public class CodeEditor : MonoBehaviour
 
     private PlayerState playerState;
     private bool gameOver = false;
+    private EnemyController enemyController;
 
     // Start is called before the first frame update
     void Start()
@@ -103,6 +104,8 @@ public class CodeEditor : MonoBehaviour
         filename.GetComponent<TMP_Text>().text = codeFiles[currentScript].name + ".hs";
 
         playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
+
+        enemyController = GameObject.Find("EnemyView").GetComponent<EnemyController>();
     }
 
     // Update is called once per frame
@@ -197,7 +200,9 @@ public class CodeEditor : MonoBehaviour
             testCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[1];
 
             codeField.text = challengeCode;
+            
             filename.GetComponent<TMP_Text>().text = codeFiles[currentScript].name + ".hs";
+            enemyController.PhaseTransition(currentScript);
         }
     }
 

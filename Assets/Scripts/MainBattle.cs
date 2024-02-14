@@ -9,22 +9,20 @@ public class MainBattle : MonoBehaviour
     private float spriteInitXPos, spriteTurnXPos;
     public float time;
     private float uiDistanceDelta, spriteDistanceDelta;
-    private GameObject hack, items, dialog, enemyView;
-    private Button hackButton, itemsButton;
+    private GameObject hack, dialog, enemyView;
+    private Button hackButton;
     private CodeEditor editor;
 
     // Start is called before the first frame update
     void Start()
     {
         hack = transform.Find("HackButton").gameObject;
-        items = transform.Find("ItemButton").gameObject;
         dialog = transform.Find("DialogBox").gameObject;
         enemyView = GameObject.Find("EnemyView");
 
         editor = GameObject.FindGameObjectWithTag("CodeEditor").GetComponent<CodeEditor>();
 
         hackButton = hack.GetComponent<Button>();
-        itemsButton = items.GetComponent<Button>();
 
         hackButton.onClick.AddListener(PlayerActionHack);
 
@@ -41,7 +39,6 @@ public class MainBattle : MonoBehaviour
     IEnumerator moveToCentre(bool wonBattle, bool gameOver) {
         if (gameOver) {
             hackButton.gameObject.SetActive(false);
-            itemsButton.gameObject.SetActive(false);
             dialog.SetActive(false);
         }
 
@@ -53,7 +50,6 @@ public class MainBattle : MonoBehaviour
         
         if (!gameOver & !wonBattle) {
             hackButton.interactable = true;
-            itemsButton.interactable = true;
             dialog.SetActive(true);
         }
 
@@ -76,7 +72,6 @@ public class MainBattle : MonoBehaviour
 
     IEnumerator moveToTurnPos() {
         hackButton.interactable = false;
-        itemsButton.interactable = false;
         dialog.SetActive(false);
 
         while (GetComponent<RectTransform>().anchoredPosition.x > UIturnXPos) {

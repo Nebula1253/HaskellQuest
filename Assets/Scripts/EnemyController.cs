@@ -21,4 +21,8 @@ public class EnemyController : MonoBehaviour
     public void Esplode() {
         enemySprite.SetActive(false);
     }
+
+    public virtual void PhaseTransition(int phase) {
+        Debug.Log("Current phase:" + phase);
+    }
 }
