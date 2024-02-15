@@ -12,9 +12,11 @@ public class DialogBox : MonoBehaviour
 
     private string[] dialogueLines;
     private Color nameColor;
+    private Button hackButton;
     private string characterName; 
     private int lineCounter = 0;
     private bool advanceEnabled = false;
+    private bool dialogueComplete = false;
     
 
 
@@ -27,6 +29,8 @@ public class DialogBox : MonoBehaviour
         dialogText = GetComponentInChildren<TMP_Text>();
 
         advanceArrow = transform.Find("AdvanceArrow").gameObject;
+
+        hackButton = GameObject.Find("HackButton").GetComponent<Button>();
     }
 
     // Update is called once per frame
@@ -35,9 +39,19 @@ public class DialogBox : MonoBehaviour
         
     }
 
+    public bool GetDialogueComplete() {
+        return dialogueComplete;
+    }
+
     public void StartDialogue(TextAsset dialogue) {
+        Start();
+
+        gameObject.SetActive(true);
+        hackButton.interactable = false;
         dialogueLines = dialogue.text.Split('\n');
         lineCounter = 0;
+        dialogueComplete = false;
+        
         StartCoroutine(runThruDialogue());
     }
 
@@ -52,6 +66,8 @@ public class DialogBox : MonoBehaviour
             lineCounter++;
             if (lineCounter >= dialogueLines.Length) {
                 gameObject.SetActive(false);
+                dialogueComplete = true;
+                hackButton.interactable = true;
             }
             else {
                 advanceEnabled = false;
@@ -63,12 +79,12 @@ public class DialogBox : MonoBehaviour
 
     IEnumerator runThruDialogue() {
         if (nameColor != null && characterName != "") {
-            dialogText.text = characterName.ToUpper();
+            dialogText.text = "<color=#" + ColorUtility.ToHtmlStringRGB(nameColor) + ">" + characterName.ToUpper() + "</color>: ";
         }
         foreach (char c in dialogueLines[lineCounter])
         {
             dialogText.text += c;
-            yield return null;
+            yield return new WaitForSeconds(0.015f);
         }
         advanceArrow.SetActive(true);
         advanceEnabled = true;

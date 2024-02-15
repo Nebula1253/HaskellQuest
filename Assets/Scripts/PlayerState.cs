@@ -16,7 +16,7 @@ public class PlayerState : MonoBehaviour
     void Start()
     {
         playerHealthBar = GameObject.Find("HealthBar").GetComponent<HealthBar>();
-        Debug.Log(gameOverOverlay);
+        // Debug.Log(gameOverOverlay);
         health = maxHealth;
         playerHealthBar.setHealth(health, maxHealth);
     }

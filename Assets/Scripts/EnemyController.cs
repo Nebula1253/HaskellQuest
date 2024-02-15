@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    private GameObject enemySprite, background;
+    protected GameObject enemySprite, background;
     // Start is called before the first frame update
     void Start()
     {
@@ -12,13 +12,7 @@ public class EnemyController : MonoBehaviour
         background = transform.Find("Background").gameObject;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void Esplode() {
+    public virtual void Esplode() {
         enemySprite.SetActive(false);
     }
 

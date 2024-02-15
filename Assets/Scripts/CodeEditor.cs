@@ -238,6 +238,7 @@ public class CodeEditor : MonoBehaviour
     }
 
     IEnumerator MoveOnScreen() {
+        Debug.Log("moving on screen");
         while (GetComponent<RectTransform>().anchoredPosition.x > codeEditorXPos) {
             var newX = GetComponent<RectTransform>().anchoredPosition.x - distanceDelta * Time.deltaTime;
             if (newX < codeEditorXPos) {

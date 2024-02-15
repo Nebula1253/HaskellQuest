@@ -39,7 +39,7 @@ public class MainBattle : MonoBehaviour
     IEnumerator moveToCentre(bool wonBattle, bool gameOver) {
         if (gameOver) {
             hackButton.gameObject.SetActive(false);
-            dialog.SetActive(false);
+            // dialog.SetActive(false);
         }
 
         while (GetComponent<RectTransform>().anchoredPosition.x < UIinitXPos) {
@@ -50,7 +50,7 @@ public class MainBattle : MonoBehaviour
         
         if (!gameOver & !wonBattle) {
             hackButton.interactable = true;
-            dialog.SetActive(true);
+            // dialog.SetActive(true);
         }
 
     }

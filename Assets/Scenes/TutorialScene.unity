@@ -898,7 +898,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 393423115}
-  - component: {fileID: 393423116}
+  - component: {fileID: 393423117}
   m_Layer: 0
   m_Name: EnemyView
   m_TagString: Untagged
@@ -923,7 +923,7 @@ Transform:
   - {fileID: 1648886430}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &393423116
+--- !u!114 &393423117
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -932,9 +932,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 393423114}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09742348ed25ac3449c1099839b3e465, type: 3}
+  m_Script: {fileID: 11500000, guid: daeb518228f41444195ddd224ae4aaab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialog: {fileID: 1616352856}
+  phaseZeroText: {fileID: 4900000, guid: 7683cb74e920d0b44980d43058c41174, type: 3}
+  phaseOneText: {fileID: 4900000, guid: 81d80f6b51a95ba4fa1068c44a9f6712, type: 3}
 --- !u!1 &409935218
 GameObject:
   m_ObjectHideFlags: 0
@@ -2505,7 +2508,7 @@ GameObject:
   - component: {fileID: 873477551}
   - component: {fileID: 873477550}
   m_Layer: 0
-  m_Name: DialogArrow
+  m_Name: AdvanceArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4532,8 +4535,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 939236812}
-  - {fileID: 71980937}
   - {fileID: 1616352857}
+  - {fileID: 71980937}
   m_Father: {fileID: 519671305}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -4688,13 +4691,14 @@ GameObject:
   - component: {fileID: 1616352857}
   - component: {fileID: 1616352859}
   - component: {fileID: 1616352858}
+  - component: {fileID: 1616352860}
   m_Layer: 5
   m_Name: DialogBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1616352857
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4755,6 +4759,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616352856}
   m_CullTransparentMesh: 1
+--- !u!114 &1616352860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1616352856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb5538616b8231641add483616a2aa2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1634099127
 GameObject:
   m_ObjectHideFlags: 0
@@ -4834,7 +4850,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.4999998, y: 2.4999998, z: 2.4999998}
+  m_LocalScale: {x: 0.9375, y: 0.9375, z: 0.9375}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 393423115}
@@ -4880,7 +4896,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 387909c2ca253de4981ad6c797752b4c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1d26ae5ab7c208d41b69f42b9b109f31, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5187,9 +5203,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeFiles:
-  - {fileID: 4900000, guid: 6ca01349b5fe12c41850fb53789f77b9, type: 3}
-  - {fileID: 4900000, guid: 004dc776e7bf5f14297c92bcd4a85928, type: 3}
-  - {fileID: 4900000, guid: 47f6fe1b41808b84da315a8eab27cbf6, type: 3}
+  - {fileID: 4900000, guid: 6a6a7a91cb048404599ef904dd5d9ed8, type: 3}
+  - {fileID: 4900000, guid: 6a6a7a91cb048404599ef904dd5d9ed8, type: 3}
   gameField: {fileID: 1234470213}
   mainBattle: {fileID: 1552646435}
   commentColor: {r: 0.49803925, g: 0.65882355, b: 0.89019614, a: 0}
