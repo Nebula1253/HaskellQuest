@@ -11,6 +11,7 @@ using System.Runtime.ConstrainedExecution;
 using TMPro;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using UnityEngine.AI;
 
 public class JDoodleRequest {
     public string clientId = "190c8528c5ed8a609a6322fb00818260";
@@ -269,7 +270,18 @@ public class CodeEditor : MonoBehaviour
         }
         else if (output.Contains("error")) {
             // put error details on screen, trigger enemy fire
-            var error = output.Split('\n')[4];
+            
+            var outputSplit = output.Split('\n');
+            var error = "DUMMY: SHOULD NEVER BE DISPLAYED";
+            if (outputSplit[2].Contains("error")) { // custom error messages
+                error = outputSplit[2].Replace("\"", "");
+            }
+            else if (outputSplit[3].Contains("error")) { // JDoodle-provided error messages
+                if (outputSplit[4].Contains("parse")) {
+                    error = "Parse error: you may have a missing function body";
+                }
+                else error = outputSplit[4];
+            }
 
             statusDisplay.color = Color.red;
             statusDisplay.text = error;
