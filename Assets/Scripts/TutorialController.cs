@@ -8,8 +8,9 @@ public class TutorialController : EnemyController
     private DialogBox dbox;
     public TextAsset phaseZeroText, phaseOneText;
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
+        base.Start();
         dbox = dialog.GetComponent<DialogBox>();
         PhaseTransition(0);
     }
@@ -22,13 +23,12 @@ public class TutorialController : EnemyController
 
     public override void PhaseTransition(int phase)
     {
-        base.PhaseTransition(phase);
         switch(phase) {
             case 0:
-                dbox.StartDialogue(phaseZeroText, Color.blue, "LAMBDA-MAN");
+                dbox.StartDialogue(phaseZeroText, Color.cyan, "LAMBDA-MAN");
                 break;
             case 1:
-                dbox.StartDialogue(phaseOneText, Color.blue, "LAMBDA-MAN");
+                dbox.StartDialogue(phaseOneText, Color.cyan, "LAMBDA-MAN");
                 break;
             case 2:
                 break;

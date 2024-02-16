@@ -150,9 +150,9 @@ public class CodeEditor : MonoBehaviour
         }
         if (commentChanged) {
             codeField.text = newCode;
-            Debug.Log(oldCaretPosition + " " + codeField.caretPosition);
-            codeField.caretPosition = oldCaretPosition;
-            Debug.Log(oldCaretPosition + " " + codeField.caretPosition);
+            // Debug.Log(oldCaretPosition + " " + codeField.caretPosition);
+            // codeField.caretPosition = oldCaretPosition;
+            // Debug.Log(oldCaretPosition + " " + codeField.caretPosition);
         }
     }
 
@@ -229,11 +229,16 @@ public class CodeEditor : MonoBehaviour
         StartCoroutine(MoveOnScreen());
     }
 
-    private void EnemyMoveTrigger(bool result) {
+    private void EnemyMoveTrigger(bool result, string additionalConditions) {
         gameField.SetActive(true);
 
         controllers = GameObject.FindGameObjectWithTag("Enemy").GetComponents<AttackController>();
-        controllers[currentScript].Trigger(result);
+        if (additionalConditions == "") {
+            controllers[currentScript].Trigger(result);
+        }
+        else {
+            controllers[currentScript].Trigger(result, additionalConditions);
+        }
 
         StartCoroutine(EnemyMove(result));
     }
@@ -262,6 +267,12 @@ public class CodeEditor : MonoBehaviour
     }
 
     private void EvaluateResult(string output) {
+        string additional = "";
+        if (output.Contains("Additional: ")) {
+            additional = output.Split('\n')[3].Remove(0,13);
+            additional = additional.Remove(additional.Length - 1, 1);
+        }
+        
         if (output.Contains("Timeout") || output == null) {
             // ask player to "try again - see if they've got an infinite loop": do nothing other than that, because 
             // this could just be JDoodle screwing around
@@ -287,7 +298,7 @@ public class CodeEditor : MonoBehaviour
             statusDisplay.text = error;
             playerState.CodePenalty();
 
-            EnemyMoveTrigger(false);
+            EnemyMoveTrigger(false, additional);
         }
         else {
             // trigger enemy fire depending on whether the code passed the test
@@ -303,7 +314,7 @@ public class CodeEditor : MonoBehaviour
                 playerState.CodePenalty();
             }
 
-            EnemyMoveTrigger(resultBool);
+            EnemyMoveTrigger(resultBool, additional);
         }
     }
 

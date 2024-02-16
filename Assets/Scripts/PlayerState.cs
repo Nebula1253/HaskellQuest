@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerState : MonoBehaviour
 {
@@ -72,6 +73,7 @@ public class PlayerState : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         
         finalScore.text = "FINAL SCORE: " + (this.codeScore + this.damageScore);
-        yield return new WaitForSeconds(0.3f);
+
+        // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

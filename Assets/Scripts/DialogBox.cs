@@ -17,26 +17,32 @@ public class DialogBox : MonoBehaviour
     private int lineCounter = 0;
     private bool advanceEnabled = false;
     private bool dialogueComplete = false;
+    private bool startCalled = false; // rot in hell
     
 
 
     // Start is called before the first frame update
     void Start()
     {
-        advanceButton = GetComponentInChildren<Button>();
-        advanceButton.onClick.AddListener(AdvanceDialogue);
+        // dumbest fucking bug ever
+        if (!startCalled) {
+            advanceButton = GetComponentInChildren<Button>();
+            advanceButton.onClick.AddListener(AdvanceDialogue);
 
-        dialogText = GetComponentInChildren<TMP_Text>();
+            dialogText = GetComponentInChildren<TMP_Text>();
 
-        advanceArrow = transform.Find("AdvanceArrow").gameObject;
+            advanceArrow = transform.Find("AdvanceArrow").gameObject;
 
-        hackButton = GameObject.Find("HackButton").GetComponent<Button>();
+            hackButton = GameObject.Find("HackButton").GetComponent<Button>();
+
+            startCalled = true;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public bool GetDialogueComplete() {
@@ -44,6 +50,9 @@ public class DialogBox : MonoBehaviour
     }
 
     public void StartDialogue(TextAsset dialogue) {
+        // despite changing the order directly in build settings, the script calling StartDialogue has its Start() method called BEFORE the actual DialogueBox Start()
+        // so basically the StartDialogue() code executes before the Start() code does
+        // I'm force-calling Start() here and have added a stupid bool to make sure it doesn't get called a second time
         Start();
 
         gameObject.SetActive(true);
@@ -75,16 +84,44 @@ public class DialogBox : MonoBehaviour
                 advanceArrow.SetActive(false);
             }
         }
+        else {
+            // complete the line flat out and allow the player to move forward
+            StopAllCoroutines();
+
+            if (nameColor != null && characterName != "") {
+                dialogText.text = "<color=#" + ColorUtility.ToHtmlStringRGB(nameColor) + ">" + characterName.ToUpper() + "</color>: ";
+            }
+            dialogText.text += dialogueLines[lineCounter];
+            
+            advanceArrow.SetActive(true);
+            advanceEnabled = true;
+        }
     }
 
     IEnumerator runThruDialogue() {
         if (nameColor != null && characterName != "") {
             dialogText.text = "<color=#" + ColorUtility.ToHtmlStringRGB(nameColor) + ">" + characterName.ToUpper() + "</color>: ";
         }
-        foreach (char c in dialogueLines[lineCounter])
-        {
-            dialogText.text += c;
-            yield return new WaitForSeconds(0.015f);
+
+        char[] line = dialogueLines[lineCounter].ToCharArray();
+
+        int i = 0;
+        while (i < line.Length) {
+            char c = dialogueLines[lineCounter].ToCharArray()[i];
+       
+            // handling of tags
+            if (c == '<') {
+                while (c != '>') {
+                    dialogText.text += c;
+                    c = line[++i];
+                }
+                dialogText.text += '>';
+            }
+            else {
+                dialogText.text += c;
+                yield return new WaitForSeconds(0.015f);
+            }
+            i++;
         }
         advanceArrow.SetActive(true);
         advanceEnabled = true;

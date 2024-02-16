@@ -1,28 +1,25 @@
-It all begins... with types and expressions...
+It all begins with <i>types</i> and <i>expressions</i>...
 Types, as you can guess, are how Haskell describes the kind of data you're working with. There are a few standard types in Haskell:
-1) Int: an integer within the range -2^29 to (2^29 - 1)
+1) Int: an integer within the range -2<sup>29</sup> to (2<sup>29</sup> - 1)
 2) Integer: an unbounded integer
-3) Float: a floating-point number
-4) Double: a double-precision floating-point number
-5) Char: a single character (e.g. 'a', '1', '£')
-6) Bool: a boolean value, either True or False
+3) Float: a floating-point number, and Double: a double-precision float
+4) Char: a single character (e.g. 'a', '1', '£')
+5) Bool: a boolean value, either True or False
 Expressions, meanwhile, are sections of code that can be evaluated to produce a value.
-It's similar to the mathematical definition: 2 + 2 is an expression that evaluates to 4.
+It's like the mathematical definition: 2 + 2 is an expression that yields the value 4.
 In Haskell, expressions can be as simple as a single value or as complex as a function call with multiple arguments.
-Types and expressions on their own aren't of much use, however, as Haskell doesn't have conventional 'variables'.
-This brings us to the building block of Haskell: functions.
-Functions are similar to the mathematical definition: they take one or more inputs and return an output value.
-Within Haskell, functions need to follow a very specific format. For example:
-incrementInt :: Int -> Int (This is the function's type signature. Int -> Int is the type of the function: takes an Int as input and returns an Int.)
-incrementInt x = x + 1 (This is the function declaration: x is the input parameter and x + 1 is the expression (body) that defines the output.)
-A function can also have multiple inputs in Haskell:
-addInts :: Int -> Int -> Int (Here, since the last type has to be the output, the first two are correctly parsed as the required input types.)
+Types and expressions on their own aren't of much use, however, as Haskell doesn't have conventional 'variables': this brings us to functions.
+Functions are also like the mathematical definition: they take one or more inputs and return an output value.
+Within Haskell, functions need to follow a very specific format.
+They need to include a type signature e.g. "incrementInt :: Int -> Int". Here, "Int -> Int" is the function's type: takes an Tnt and returns an Int.
+You'd also need to define what the function does in the declaration, e.g. "incrementInt x = x + 1".
+A function can also have multiple inputs in Haskell. An example would be "addInts :: Int -> Int -> Int". 
+There, since the last type has to be the output, you can tell that the function has two Int inputs.
 The function declaration is then, logically, "addInts x y = x + y".
-A brief note here: "Int -> Int" and "Int -> Int -> Int" are, in themselves, unique types. The implications of this will be explored later.
 Now, for your journey.
 There are going to be obstacles in your path.
 Monsters and adversaries that have perverted the power of Haskell for their own gain.
 They're going to try and attack you, and you're going to have to learn to defend yourself.
 Fortunately, you've been granted the power of the Lambda Gauntlet. 
-You can examine the code within your opponents and, most importantly, you can *change it*.
+You can examine the code within your opponents and, most importantly, you can <i>change it</i>.
 Use the gauntlet now, and make sure you escape my attack!

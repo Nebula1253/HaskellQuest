@@ -6,7 +6,7 @@ public class EnemyController : MonoBehaviour
 {
     protected GameObject enemySprite, background;
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         enemySprite = transform.Find("EnemySprite").gameObject;
         background = transform.Find("Background").gameObject;

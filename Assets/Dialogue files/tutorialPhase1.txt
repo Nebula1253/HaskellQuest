@@ -1,1 +1,7 @@
--- DEBUG TO MAKE SURE CALLBACK WORKS AS EXPECTED --
+Good job! Now, let's move on and talk about <i>lists</i> and <i>tuples</i>.
+Lists and tuples are Haskell's fundamental structures for managing multiple values.
+You might be familiar with them if you've used something like Python before, but let's recap.
+Lists, bounded by '[' and ']' store multiple values of the same type, and are freely extensible i.e. there's no limit to the number of elements.
+Tuples, meanwhile, are bounded by '(' and ')', and can store values of different types, but you can't add more elements to them once declared.
+Since lists and tuples are distinct types, lists can contain lists, tuples can contain tuples, lists can contain tuples and vice versa.
+A note: Haskell does have a String type, but that's basically an alias for a list of Chars.

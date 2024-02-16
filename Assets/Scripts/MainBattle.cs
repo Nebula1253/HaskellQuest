@@ -30,8 +30,8 @@ public class MainBattle : MonoBehaviour
         spriteInitXPos = 0f;
         spriteTurnXPos = -8.88889f / 2;
 
-        Debug.Log("UIinitXPos: " + UIinitXPos + " UIturnXPos: " + UIturnXPos);
-        Debug.Log("spriteInitXPos: " + spriteInitXPos + " spriteTurnXPos: " + spriteTurnXPos);
+        // Debug.Log("UIinitXPos: " + UIinitXPos + " UIturnXPos: " + UIturnXPos);
+        // Debug.Log("spriteInitXPos: " + spriteInitXPos + " spriteTurnXPos: " + spriteTurnXPos);
 
         spriteDistanceDelta = Mathf.Abs(spriteInitXPos - spriteTurnXPos) / time;
     }
