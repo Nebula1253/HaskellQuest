@@ -1,0 +1,6 @@
+Yeah, exactly. That's going to be a common pattern in Haskell: think about the mathematical basis of things.
+In Haskell, expressions can be as simple as a single value or as complex as a function call with multiple arguments.
+Types and expressions on their own aren't of much use, however. This brings us to functions.
+Functions are also like the mathematical definition: they take one or more inputs and return an output value.
+Within Haskell, functions need to follow a very specific format.
+They need to include a <i>type signature</i> e.g. "incrementInt :: Int -> Int". Here, "Int -> Int" is the function's type: takes an Int and returns an Int.

@@ -1,0 +1,1 @@
+And I'm assuming the next line is what the function does, like "incrementInt x = x + 1"?

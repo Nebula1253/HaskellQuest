@@ -73,7 +73,8 @@ public class PlayerState : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         
         finalScore.text = "FINAL SCORE: " + (this.codeScore + this.damageScore);
+        yield return new WaitForSeconds(2f);
 
-        // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

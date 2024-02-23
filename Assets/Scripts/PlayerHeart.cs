@@ -5,14 +5,16 @@ using UnityEngine;
 
 public class PlayerHeart : MonoBehaviour
 {
-    // Start is called before the first frame update
-    // private int health, maxHealth;
-    // public int health = 100;
-    // public int maxHealth = 100;
+    
     float minX, minY, maxX, maxY;
 
     private PlayerState playerState;
     private Rigidbody2D rb;
+    private Vector2 movementDir;
+    private Animator animator;
+    public float playerSpeed;
+    public float movementMagnitude;
+
     void Start()
     {
         // var boxSize = transform.parent.GetComponent<Renderer>().bounds.size
@@ -34,16 +36,24 @@ public class PlayerHeart : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
+
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        movementDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        movementDir.Normalize();
+        movementMagnitude = movementDir.magnitude;
 
-        // transform.position += new Vector3(horizontalInput, verticalInput, 0) * Time.deltaTime * 5;
-        rb.velocity = new Vector2(horizontalInput, verticalInput) * 5;
+        rb.velocity = movementDir * playerSpeed;
+
+        if (movementDir != Vector2.zero) {
+            animator.SetFloat("Horizontal", movementDir.x);
+            animator.SetFloat("Vertical", movementDir.y);
+        }
+        animator.SetFloat("Speed", movementMagnitude);
 
         // make sure the player stays within the bounds of the box
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, minX, maxX), Mathf.Clamp(transform.position.y, minY, maxY), transform.position.z);

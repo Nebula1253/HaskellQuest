@@ -1,0 +1,8 @@
+Yes, but you're gonna have to learn how to use it.
+It all begins with <i>types</i> and <i>expressions</i>...
+Types, as you can guess, are how Haskell describes the kind of data you're working with. There are a few standard types in Haskell:
+1) Int: an integer within the range -2<sup>29</sup> to (2<sup>29</sup> - 1), and Integer: an unbounded integer
+2) Float: a floating-point number, and Double: a double-precision float
+3) Char: a single character (e.g. 'a', '1', '$')
+4) Bool: a boolean value, either True or False
+Expressions, meanwhile, are sections of code that can be evaluated to produce a value.

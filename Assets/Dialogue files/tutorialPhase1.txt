@@ -1,7 +1,44 @@
-Good job! Now, let's move on and talk about <i>lists</i> and <i>tuples</i>.
+Good job! I've healed you up to full health, just in case you took any damage from that.
+
+Phew, thanks a bunch!
+
+Now, let's move on and talk about <i>lists</i> and <i>tuples</i>.
 Lists and tuples are Haskell's fundamental structures for managing multiple values.
-You might be familiar with them if you've used something like Python before, but let's recap.
-Lists, bounded by '[' and ']' store multiple values of the same type, and are freely extensible i.e. there's no limit to the number of elements.
+Lists, bounded by '[' and ']' store multiple values of the same type, and they have no limit to the number of elements.
+You can add elements to lists by using the ':' operator - the value on the right has to be a list, though, like '1:[2,3]', not '[1,2]:3'.
+You can also concatenate two lists to form a single list by using the '++' operator.
+Haskell also has in-built 'length' and 'reverse' functions for lists, which...
+
+Do exactly what they say on the tin?
+
+...yeah, pretty much.
+I didn't mention earlier: Haskell has a 'String' type, but that's basically an alias for '[Char]', so these operators apply there too.
 Tuples, meanwhile, are bounded by '(' and ')', and can store values of different types, but you can't add more elements to them once declared.
 Since lists and tuples are distinct types, lists can contain lists, tuples can contain tuples, lists can contain tuples and vice versa.
-A note: Haskell does have a String type, but that's basically an alias for a list of Chars.
+
+But how would you get elements from these structures? They don't seem like much use if I can only store data...
+
+You can, of course, get the elements using pattern-matching, but there are some custom functions that Haskell defines.
+Tuples have 'fst' and 'snd', which return the first and second elements of a tuple respectively, but they don't define equivalent functions for longer tuples.
+Lists, meanwhile, have the '!!' operator, that allows you to retrieve the element of a specific index. 
+For example, '[1,2,3] !! 0' would result in 1, since lists are zero-indexed.
+You can also retrieve multiple elements from the start of a list with 'take', and delete those same elements with 'drop'.
+Now, for the real meat of this. How about if you wanted to construct a list, based on the elements of another list?
+
+Oh, is that like set comprehension? LIke, if I wanted a set of the first 10 natural numbers, I'd write that as {x | x ∈ ℕ, x <= 10}.
+ℕ is a large set of all the natural numbers, and I'd be constructing a more specific set.
+
+Yes, exactly! It's the same idea here: in Haskell, that list would be [x | x <- [1..], x <= 10].
+Here, 'x <- [1..]' is a <i>generator</i>: it feeds each element of the list to the left-hand expression.
+
+And I guess the 'x <= 10' is a predicate? 
+
+Yeah, or a <i>guard</i>: it's an expression evaluating to a Bool used to filter the elements of the list.
+You can have multiple generators. This'd be an acceptable list comprehension, for example: [(i,j) | i <- [1,2,3], j <- [1,2]]
+With that though, the result would be [(1,1),(1,2),(2,1)...]; the second generator has priority.
+
+What if I wanted to go through both lists simultaneously?
+
+If you want to do that, you can use the 'zip' function; it takes two lists and returns a list of tuples.
+'zip [1,2,3] [1,2]' would return [(1,1), (2,2)]: it's limited by the smaller list.
+You can also use a new feature called <b>parallel list comprehension</b>: [(i,j) | i <- [1,2,3] | j <- [1,2]] would return the same thing as zip.

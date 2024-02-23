@@ -1,0 +1,6 @@
+You can, of course, get the elements using pattern-matching, but there are some custom functions that Haskell defines.
+Tuples have 'fst' and 'snd', which return the first and second elements of a tuple respectively, but they don't define equivalent functions for longer tuples.
+Lists, meanwhile, have the '!!' operator, that allows you to retrieve the element of a specific index. 
+For example, '[1,2,3] !! 0' would result in 1, since lists are zero-indexed.
+You can also retrieve multiple elements from the start of a list with 'take', and delete those same elements with 'drop'.
+Now, for the real meat of this. How about if you wanted to construct a list, based on the elements of another list?

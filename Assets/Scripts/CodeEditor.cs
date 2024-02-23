@@ -107,6 +107,8 @@ public class CodeEditor : MonoBehaviour
         playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
 
         enemyController = GameObject.Find("EnemyView").GetComponent<EnemyController>();
+
+        enemyController.PhaseTransition(currentScript);
     }
 
     // Update is called once per frame

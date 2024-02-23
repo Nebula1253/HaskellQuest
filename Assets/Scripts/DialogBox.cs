@@ -60,6 +60,9 @@ public class DialogBox : MonoBehaviour
         dialogueLines = dialogue.text.Split('\n');
         lineCounter = 0;
         dialogueComplete = false;
+
+        advanceArrow.SetActive(false);
+        advanceEnabled = false;
         
         StartCoroutine(runThruDialogue());
     }
@@ -73,13 +76,14 @@ public class DialogBox : MonoBehaviour
     private void AdvanceDialogue() {
         if (advanceEnabled) {
             lineCounter++;
-            if (lineCounter >= dialogueLines.Length) {
+            advanceEnabled = false;
+
+            if (lineCounter > dialogueLines.Length - 1) {
                 gameObject.SetActive(false);
                 dialogueComplete = true;
                 hackButton.interactable = true;
             }
             else {
-                advanceEnabled = false;
                 StartCoroutine(runThruDialogue());
                 advanceArrow.SetActive(false);
             }
@@ -113,13 +117,14 @@ public class DialogBox : MonoBehaviour
             if (c == '<') {
                 while (c != '>') {
                     dialogText.text += c;
-                    c = line[++i];
+                    i++;
+                    c = line[i];
                 }
                 dialogText.text += '>';
             }
             else {
                 dialogText.text += c;
-                yield return new WaitForSeconds(0.015f);
+                yield return new WaitForSeconds(0.03f);
             }
             i++;
         }

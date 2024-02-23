@@ -1,0 +1,2 @@
+Oh, is that like set comprehension? LIke, if I wanted a set of the first 10 natural numbers, I'd write that as {x | x ∈ ℕ, x <= 10}.
+ℕ is a large set of all the natural numbers, and I'd be constructing a more specific set.
