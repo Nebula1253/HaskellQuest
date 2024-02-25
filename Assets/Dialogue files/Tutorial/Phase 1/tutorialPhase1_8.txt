@@ -1,2 +1,2 @@
-Oh, is that like set comprehension? LIke, if I wanted a set of the first 10 natural numbers, I'd write that as {x | x ∈ ℕ, x <= 10}.
-ℕ is a large set of all the natural numbers, and I'd be constructing a more specific set.
+Oh, is that like set comprehension? LIke, if I wanted a set of the even numbers below 50, I could write that as {x | x ∈ {1..50}, x % 2 = 0}.
+{1..50} is a large set, and I'd be constructing a more specific one.

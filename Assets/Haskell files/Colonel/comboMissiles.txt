@@ -1,6 +1,3 @@
-{-# LANGUAGE ParallelListComp #-}
-
--- Code snippet starts here
 type Position = Int
 type ID = String
 
@@ -23,8 +20,6 @@ retarget (HomingMissile _ a) t = HomingMissile t a
 -- write a function to make the homing missiles target the regular missiles
 backfire :: [Missile] -> [HomingMissile] -> [HomingMissile]
 backfire missiles homingMissiles = -- INPUT HERE --
-
--- Code snippet ends here
 
 -- TEST CODE
 angleGen :: Int -> Float

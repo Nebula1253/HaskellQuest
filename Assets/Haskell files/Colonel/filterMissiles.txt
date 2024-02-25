@@ -1,4 +1,3 @@
--- Code snippet starts here
 type Position = Int
 
 data Missile = Missile Position Bool -- represents a missile, the bool is whether the missile is active or not
@@ -10,8 +9,6 @@ launchMissiles nrMissiles = [Missile i (randomGen i) | i <- [1..nrMissiles]]
 -- write a function to include only the INACTIVE missiles: we'll be using this to interfere with the attack!
 filterMissiles :: [Missile] -> [Missile]
 filterMissiles missiles = -- INPUT HERE --
-
--- Code snippet ends here
 
 -- TEST CODE
 randomGen :: Int -> Bool

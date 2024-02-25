@@ -11,6 +11,7 @@ TagManager:
   - Reset
   - Submit
   - MaybeProjectile
+  - EffectUI
   layers:
   - Default
   - TransparentFX

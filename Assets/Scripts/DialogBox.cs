@@ -18,6 +18,8 @@ public class DialogBox : MonoBehaviour
     private bool advanceEnabled = false;
     private bool dialogueComplete = false;
     private bool startCalled = false; // rot in hell
+    private AudioSource source;
+    private AudioClip clip;
     
 
 
@@ -26,7 +28,7 @@ public class DialogBox : MonoBehaviour
     {
         // dumbest fucking bug ever
         if (!startCalled) {
-            advanceButton = GetComponentInChildren<Button>();
+            advanceButton = GameObject.Find("ScreenClick").GetComponent<Button>();
             advanceButton.onClick.AddListener(AdvanceDialogue);
 
             dialogText = GetComponentInChildren<TMP_Text>();
@@ -34,6 +36,7 @@ public class DialogBox : MonoBehaviour
             advanceArrow = transform.Find("AdvanceArrow").gameObject;
 
             hackButton = GameObject.Find("HackButton").GetComponent<Button>();
+            source = GetComponent<AudioSource>();
 
             startCalled = true;
         }
@@ -67,38 +70,41 @@ public class DialogBox : MonoBehaviour
         StartCoroutine(runThruDialogue());
     }
 
-    public void StartDialogue(TextAsset dialogue, Color nameColor, string characterName) {
+    public void StartDialogue(TextAsset dialogue, Color nameColor, string characterName, AudioClip clip) {
         this.nameColor = nameColor;
         this.characterName = characterName;
+        this.clip = clip;
         StartDialogue(dialogue);
     }
 
     private void AdvanceDialogue() {
-        if (advanceEnabled) {
-            lineCounter++;
-            advanceEnabled = false;
+        if (!dialogueComplete) {
+            if (advanceEnabled) {
+                lineCounter++;
+                advanceEnabled = false;
 
-            if (lineCounter > dialogueLines.Length - 1) {
-                gameObject.SetActive(false);
-                dialogueComplete = true;
-                hackButton.interactable = true;
+                if (lineCounter > dialogueLines.Length - 1) {
+                    gameObject.SetActive(false);
+                    dialogueComplete = true;
+                    hackButton.interactable = true;
+                }
+                else {
+                    StartCoroutine(runThruDialogue());
+                    advanceArrow.SetActive(false);
+                }
             }
             else {
-                StartCoroutine(runThruDialogue());
-                advanceArrow.SetActive(false);
-            }
-        }
-        else {
-            // complete the line flat out and allow the player to move forward
-            StopAllCoroutines();
+                // complete the line flat out and allow the player to move forward
+                StopAllCoroutines();
 
-            if (nameColor != null && characterName != "") {
-                dialogText.text = "<color=#" + ColorUtility.ToHtmlStringRGB(nameColor) + ">" + characterName.ToUpper() + "</color>: ";
+                if (nameColor != null && characterName != "") {
+                    dialogText.text = "<color=#" + ColorUtility.ToHtmlStringRGB(nameColor) + ">" + characterName.ToUpper() + "</color>: ";
+                }
+                dialogText.text += dialogueLines[lineCounter];
+                
+                advanceArrow.SetActive(true);
+                advanceEnabled = true;
             }
-            dialogText.text += dialogueLines[lineCounter];
-            
-            advanceArrow.SetActive(true);
-            advanceEnabled = true;
         }
     }
 
@@ -111,10 +117,10 @@ public class DialogBox : MonoBehaviour
 
         int i = 0;
         while (i < line.Length) {
-            char c = dialogueLines[lineCounter].ToCharArray()[i];
+            char c = line[i];
        
-            // handling of tags
-            if (c == '<') {
+            // handling of HTML markup tags
+            if (c == '<' && dialogueLines[lineCounter].Substring(i).Contains('>')) {
                 while (c != '>') {
                     dialogText.text += c;
                     i++;
@@ -124,6 +130,9 @@ public class DialogBox : MonoBehaviour
             }
             else {
                 dialogText.text += c;
+                if (!source.isPlaying) {
+                    source.PlayOneShot(clip);
+                }
                 yield return new WaitForSeconds(0.03f);
             }
             i++;

@@ -1,0 +1,51 @@
+Great job! You're getting the hang of this!
+
+Hey, thanks! So, are we reaching the end of this training session? I wanna test this thing out on some <i>real</i> bad guys.
+
+Almost there, almost there, but there's one more thing you need to know.
+First of all, functions aren't limited to having just one definition.
+Again, think of the mathematical basis: how many functions have you seen that have different definitions depending on some condition?
+
+Hmm... like the 'floor' function? Where, for even numbers, it's n/2, but for odd numbers it's (n-1)/2?
+
+Yes, exactly! In Haskell, you can use guards to define a function this way.
+So, if we wanted to write a floor function for Ints, you'd do it like so:
+floor :: Int -> Int\nfloor x =\n    | (mod x 2 == 0) = n / 2\n    | otherwise = (n - 1) / 2
+As you can imagine, the 'otherwise' clause is the one that gets executed if none of the Boolean expressions come out to True.
+
+Couldn't I just do this with an 'if' statement? Does Haskell even have those?
+
+It does, yes, but this is a lot more readable if you have more than one condition. No more else-ifs for you!
+This isn't the only way functions can have more than one definition, though. 
+Remember pattern-matching from earlier? This is another use for it; a function can have different definitions for different patterns.
+
+Okay... how does that work?
+
+Alright, say I wanted to define... a silly little function that returns "Wow, you're lucky!" if I pass 7 to it, or "Unlucky, sorry" if I pass anything else.
+You could do it with guards as before, or you could do it like this:
+lucky :: Int -> String\nlucky 7 = "Wow, you're lucky!"\nlucky x = "Unlucky, sorry"
+You've got to be careful with the order of the definitions, though, because Haskell pattern-matches sequentially.
+If I'd put the "lucky x..." line first, for example, the function would have returned "Unlucky, sorry" even if I'd put 7 in, because that input matched to "x".
+
+Got it! Functions having multiple definitions... that seems quite powerful!
+
+That's not even the best part... it opens the door for <i>recursion</i>.
+Recursion is when a function definition includes an application of the function itself.
+Say, for example, getting the factorial of something... you know what that is, right?
+
+Yeah, when you multiply a number by every number below it until you get to 1.
+
+Yes, that's right. If you wrote that as f(x), could that not be defined as f(x) = x * f(x-1)?
+
+...Oh! I see what you're getting at! So, in Haskell, that'd be 'factorial x = x * factorial x-1', right?
+Wait, though, that wouldn't stop when you get to 1...
+
+Right again, and <i?that's</i> when pattern-matching comes in.
+The full definition, excluding the type signature, would be:\nfactorial 1 = 1\nfactorial x = x * factorial x-1
+The first line there is the base case, while the second line is the recursive step. 
+The base case is <i>incredibly<i> important; your function would never terminate otherwise.
+You could, in this case, change it to 'factorial 0 = 1' to take care of that case too.
+Of course, it'd still throw an exception if you tried getting the factorial of a negative number, but that's a problem with the real definition too, so leave it be.
+Once again, I can't leave you without making sure you can actually use all this information, so...
+
+...yeah, yeah, you know what? Bring it on!

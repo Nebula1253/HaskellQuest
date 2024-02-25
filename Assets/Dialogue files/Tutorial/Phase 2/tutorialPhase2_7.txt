@@ -1,0 +1,3 @@
+It does, yes, but this is a lot more readable if you have more than one condition. No more else-ifs for you!
+This isn't the only way functions can have more than one definition, though. 
+Remember pattern-matching from earlier? This is another use for it; a function can have different definitions for different patterns.

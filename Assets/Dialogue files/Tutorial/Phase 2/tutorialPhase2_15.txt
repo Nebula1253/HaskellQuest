@@ -1,0 +1,7 @@
+Right again, and <i>that's</i> when pattern-matching comes in.
+The full definition, excluding the type signature, would be:<br>factorial 1 = 1<br>factorial x = x * factorial x-1
+The first line there is the base case, while the second line is the recursive step. 
+The base case is <i>incredibly</i> important; your function would never terminate otherwise.
+You could, in this case, change it to 'factorial 0 = 1' to take care of that case too.
+Of course, it'd still never terminate if you tried getting the factorial of a negative number, but you can't really do anything about that.
+Once again, I can't leave you without making sure you can actually use all this information, so...

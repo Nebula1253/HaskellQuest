@@ -1,0 +1,3 @@
+That's not even the best part... it opens the door for <i>recursion</i>.
+Recursion is when a function definition includes an application of the function itself.
+Say, for example, getting the factorial of something... you know what that is, right?

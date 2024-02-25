@@ -64,7 +64,9 @@ public class PlayerHeart : MonoBehaviour
         // playerController.health -= damage;
         // playerHealthBar.setHealth(health, maxHealth);
         playerState.updateHealth(-damage);
-        playerState.DamagePenalty();
+        if (damage > 0) { // because the tutorial was screwing this up otherwise
+            playerState.DamagePenalty();
+        }
     }
 
 }

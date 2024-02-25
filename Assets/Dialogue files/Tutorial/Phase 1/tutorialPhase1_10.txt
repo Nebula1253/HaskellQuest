@@ -1,1 +1,1 @@
-And I guess the 'x <= 10' is a predicate? 
+And I guess the 'x 'mod' 2 = 0' is a predicate? 

@@ -79,8 +79,6 @@ public class CodeEditor : MonoBehaviour
         resetButton = GameObject.FindGameObjectWithTag("Reset").GetComponent<Button>();
         resetButton.onClick.AddListener(Reset);
 
-        // Debug.Log(codeFiles[currentScript].name);
-
         challengeCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[0];
         testCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[1];
 
@@ -122,16 +120,12 @@ public class CodeEditor : MonoBehaviour
                 StartCoroutine(MoveOffScreen(false));
             }
         }
-
-        // Debug.Log("Caret position = " + codeField.caretPosition);
     }
 
     private void CommentHighlighting() {
         bool commentChanged = false;
         var codeText = codeField.text.Split('\n');
         string newCode = "";
-
-        int oldCaretPosition = codeField.caretPosition;
 
         for (int i = 0; i < codeText.Length; i++) {
             string line = codeText[i];
@@ -152,9 +146,6 @@ public class CodeEditor : MonoBehaviour
         }
         if (commentChanged) {
             codeField.text = newCode;
-            // Debug.Log(oldCaretPosition + " " + codeField.caretPosition);
-            // codeField.caretPosition = oldCaretPosition;
-            // Debug.Log(oldCaretPosition + " " + codeField.caretPosition);
         }
     }
 
@@ -290,10 +281,11 @@ public class CodeEditor : MonoBehaviour
                 error = outputSplit[2].Replace("\"", "");
             }
             else if (outputSplit[3].Contains("error")) { // JDoodle-provided error messages
-                if (outputSplit[4].Contains("parse")) {
-                    error = "Parse error: you may have a missing function body";
+                if (output.Contains("parse")) {
+                    error = "Parse error: you may have a missing function body, or an incorrect operator, or a missing bracket";
                 }
                 else error = outputSplit[4];
+                // error = outputSplit[3].Replace("\"", "");
             }
 
             statusDisplay.color = Color.red;
@@ -321,7 +313,7 @@ public class CodeEditor : MonoBehaviour
     }
 
     void CallJDoodle() {
-        string script = CleanColorFormatting(codeField.text) + testCode;
+        string script = "{-# LANGUAGE ParallelListComp #-}\n" + CleanColorFormatting(codeField.text) + testCode;
         // Debug.Log(script);
 
         try {

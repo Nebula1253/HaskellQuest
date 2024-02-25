@@ -1,0 +1,1 @@
+Yeah, when you multiply a number by every number below it until you get to 1.

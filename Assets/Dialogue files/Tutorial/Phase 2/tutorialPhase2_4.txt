@@ -1,0 +1,1 @@
+Hmm... like the 'floor' function? Where, for even numbers, it's n/2, but for odd numbers it's (n-1)/2?

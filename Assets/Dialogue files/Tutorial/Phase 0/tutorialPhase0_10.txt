@@ -1,4 +1,4 @@
-Yes, but you're gonna have to learn how to use it.
+Yes, but you're going to have to learn how to use it. And for that, you have to learn how Haskell works.
 It all begins with <i>types</i> and <i>expressions</i>...
 Types, as you can guess, are how Haskell describes the kind of data you're working with. There are a few standard types in Haskell:
 1) Int: an integer within the range -2<sup>29</sup> to (2<sup>29</sup> - 1), and Integer: an unbounded integer

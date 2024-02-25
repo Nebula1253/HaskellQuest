@@ -19,4 +19,9 @@ public class EnemyController : MonoBehaviour
     public virtual void PhaseTransition(int phase) {
         Debug.Log("Current phase:" + phase);
     }
+
+    public void muteMusic() {
+        var source = GetComponent<AudioSource>();
+        source.mute = true;
+    }
 }

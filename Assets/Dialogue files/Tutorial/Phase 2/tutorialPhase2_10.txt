@@ -1,0 +1,1 @@
+Got it! Functions having multiple definitions... that seems quite powerful!

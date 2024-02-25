@@ -17,7 +17,7 @@ public class MainBattle : MonoBehaviour
     void Start()
     {
         hack = transform.Find("HackButton").gameObject;
-        dialog = transform.Find("DialogBox").gameObject;
+        // dialog = transform.Find("DialogBox").gameObject;
         enemyView = GameObject.Find("EnemyView");
 
         editor = GameObject.FindGameObjectWithTag("CodeEditor").GetComponent<CodeEditor>();
@@ -72,7 +72,7 @@ public class MainBattle : MonoBehaviour
 
     IEnumerator moveToTurnPos() {
         hackButton.interactable = false;
-        dialog.SetActive(false);
+        // dialog.SetActive(false);
 
         while (GetComponent<RectTransform>().anchoredPosition.x > UIturnXPos) {
             var newX = Mathf.Max(UIturnXPos, GetComponent<RectTransform>().anchoredPosition.x - uiDistanceDelta * Time.deltaTime);

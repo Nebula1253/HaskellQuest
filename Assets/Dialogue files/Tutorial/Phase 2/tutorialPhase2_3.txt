@@ -1,0 +1,3 @@
+Almost there, almost there, but there's one more thing you need to know.
+First of all, functions aren't limited to having just one definition.
+Again, think of the mathematical basis: how many functions have you seen that have different definitions depending on some condition?

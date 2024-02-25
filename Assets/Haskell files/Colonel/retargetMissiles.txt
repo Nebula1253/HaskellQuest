@@ -1,4 +1,3 @@
--- Code snippet starts here
 type Target = String
 type Angle = Float
 
@@ -13,8 +12,6 @@ launch t n = [Missile t (angleGen i) | i <- [1..n]]
 -- we'll be using this to fire them back at the enemy!
 retargetAll :: [Missile] -> Target -> [Missile]
 retargetAll missiles t = -- INPUT HERE --
-
--- Code snippet ends here
 
 -- TEST CODE
 angleGen :: Int -> Float

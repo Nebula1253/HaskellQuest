@@ -1,0 +1,5 @@
+Alright, say I wanted to define... a silly little function that returns "Wow, you're lucky!" if I pass 7 to it, or "Unlucky, sorry" if I pass anything else.
+You could do it with guards as before, or you could do it like this:
+lucky :: Int -> String<br>lucky 7 = "Wow, you're lucky!"<br>lucky x = "Unlucky, sorry"
+You've got to be careful with the order of the definitions, though, because Haskell pattern-matches sequentially.
+If I'd put the "lucky x..." line first, for example, the function would have returned "Unlucky, sorry" even if I'd put 7 in, because that input matched to "x".

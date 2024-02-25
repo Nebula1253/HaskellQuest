@@ -1,0 +1,1 @@
+Yes, that's right. If you wrote that as f(x), could that not be defined as f(x) = x * f(x-1)?

@@ -1,4 +1,4 @@
 If you want to do that, you can use the 'zip' function; it takes two lists and returns a list of tuples.
-'zip [1,2,3] [1,2]' would return [(1,1), (2,2)]: it's limited by the smaller list.
-You can also use a new feature called <b>parallel list comprehension</b>: [(i,j) | i <- [1,2,3] | j <- [1,2]] would return the same thing as zip.
+'zip [1,2,3] [1,2]' would return [(1,1), (2,2)]: the larger list is truncated to match the length of the smaller one.
+You can also use a new feature called <i>parallel</i> list comprehension: <br>[(i,j) | i <- [1,2,3] | j <- [1,2]] would return the same thing as zip.
 This is probably a lot to take in all at once, so let's test you on it. Another mock attack?

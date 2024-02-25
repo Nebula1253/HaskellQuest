@@ -26,12 +26,16 @@ public class FlashController : AttackController
         
     }
 
+    public override void Trigger(bool result)
+    {
+        attackEnded = false;
+        StartCoroutine(FlashRed(result));
+    }
+
     public override void Trigger(bool result, string additionalConditions)
     {
         attackEnded = false;
-        Debug.Log(additionalConditions);
         damage = int.Parse(additionalConditions);
-        Debug.Log("Triggered attack script");
         StartCoroutine(FlashRed(result));
     }
 
@@ -47,6 +51,7 @@ public class FlashController : AttackController
             image.color = new Color(image.color.r, image.color.g, image.color.b, alpha);
             yield return null;
         }
+        image.color = new Color(image.color.r, image.color.g, image.color.b, 0);
         attackEnded = true;
     }
 
