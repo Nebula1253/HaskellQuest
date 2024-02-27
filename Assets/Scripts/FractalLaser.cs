@@ -14,7 +14,7 @@ public class FractalLaser : MonoBehaviour
         var playerPos = player.transform.position;
         var direction = (playerPos - transform.position).normalized;
 
-        transform.rotation = Quaternion.LookRotation(transform.forward, direction);
+        transform.Rotate(Quaternion.LookRotation(transform.forward, direction).eulerAngles);
         audioSource = GetComponent<AudioSource>();
         audioSource.Play();
     }

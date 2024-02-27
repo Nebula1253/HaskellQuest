@@ -21,6 +21,8 @@ hurtPlayer (Player health) = Player (health - 10)
 -- you can use WASD or the arrow keys to try to dodge it.
 -- In this case, though, the attack itself is un-dodge-able.
 
+-- You can also use the ESC key to exit from the Editor View.
+
 -- TEST CODE
 health :: Player -> Int
 health (Player h) = h

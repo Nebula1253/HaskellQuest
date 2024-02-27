@@ -1,27 +1,25 @@
-data Fractal = Kowalewski | Fractal (Fractal)
+type Name = String
 
--- Dr. Fractal is being subjected to an infinite recursion; help him!
-createFractal :: Int -> Fractal
-createFractal n = Fractal (createFractal (n-1))
+data Person = Person Name | Fractal (Person)
 
--- Once that's done, write a function to save Kowalewski from the infinite recursion
-saveFractal :: Fractal -> Fractal
--- INPUT HERE --
+-- This is what Dr. Kowalewski did to herself to become a Fractal
+createFractal :: Person -> Int -> Person
+createFractal (Person p) 0 = Person p
+createFractal p n = Fractal (createFractal p (n-1))
+
+-- Write a function to save Kowalewski from the recursion she's
+-- trapped in!
+saveFractal :: Person -> Person
+saveFractal fractal = --INPUT HERE--
 
 -- TEST CODE
+instance Eq Person where
+    (Person a) == (Person b) = a == b
+    (Fractal a) == (Fractal b) = a == b
+    _ == _ = False
+
 main :: IO()
 main = do
-    let fractal = createFractal 4
-    let createCheck = fractal == Fractal (Fractal (Fractal (Fractal Kowalewski)))
-
-    let savedCheck = saveFractal fractal == Kowalewski
-
-    if createCheck
-        then
-            if savedCheck
-                then
-                    print("True")
-                else
-                    print("error: Kowalewski is still stuck in an infinite recursion!")
-        else
-            print("error: Something's wrong with the createFractal function!")
+    let kowalewski = Person "Kowalewski"
+    let fractal = createFractal kowalewski 5
+    print(saveFractal fractal == kowalewski)

@@ -12,6 +12,7 @@ TagManager:
   - Submit
   - MaybeProjectile
   - EffectUI
+  - Fractal
   layers:
   - Default
   - TransparentFX
