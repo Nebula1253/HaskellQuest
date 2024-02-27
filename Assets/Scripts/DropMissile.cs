@@ -22,13 +22,13 @@ public class DropMissile : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.gameObject.tag == "Player") {
+        if (other.gameObject.CompareTag("Player")) {
             Debug.Log("Player hit!");
             if (doesDamage) {
                 other.gameObject.GetComponent<PlayerHeart>().TakeDamage(5);
             }
         }
-        else if (other.gameObject.tag == "Projectile") {
+        else if (other.gameObject.CompareTag("Projectile")) {
             Destroy(other.gameObject);
         }
         Destroy(gameObject);

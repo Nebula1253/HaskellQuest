@@ -50,7 +50,7 @@ public class CodeEditor : MonoBehaviour
     private string challengeCode;
     private string testCode;
     private bool interactable = true;
-    public GameObject gameField, mainBattle;
+    public GameObject gameField, mainBattle, overheadEnemy;
     private GameObject filename;
     private MainBattle mainBattleScript;
     public Color commentColor;
@@ -107,6 +107,8 @@ public class CodeEditor : MonoBehaviour
         enemyController = GameObject.Find("EnemyView").GetComponent<EnemyController>();
 
         enemyController.PhaseTransition(currentScript);
+
+        controllers = overheadEnemy.GetComponents<AttackController>();
     }
 
     // Update is called once per frame
@@ -225,7 +227,7 @@ public class CodeEditor : MonoBehaviour
     private void EnemyMoveTrigger(bool result, string additionalConditions) {
         gameField.SetActive(true);
 
-        controllers = GameObject.FindGameObjectWithTag("Enemy").GetComponents<AttackController>();
+        // controllers = GameObject.FindGameObjectWithTag("Enemy").GetComponents<AttackController>();
         if (additionalConditions == "") {
             controllers[currentScript].Trigger(result);
         }
@@ -267,26 +269,43 @@ public class CodeEditor : MonoBehaviour
         }
         
         if (output.Contains("Timeout") || output == null) {
-            // ask player to "try again - see if they've got an infinite loop": do nothing other than that, because 
-            // this could just be JDoodle screwing around
-            statusDisplay.color = Color.yellow;
-            statusDisplay.text = "Your code timed out! Try again - see if you've got an infinite loop.";
+            if (controllers[currentScript].IsRecursionHandled()) {
+                statusDisplay.color = Color.red;
+                statusDisplay.text = "error: Your code recurses infinitely!";
+
+                playerState.CodePenalty();
+                EnemyMoveTrigger(false, additional);
+            }
+            else {
+                // // ask player to "try again - see if they've got an infinite loop": do nothing other than that, because 
+                // // this could just be JDoodle screwing around
+                statusDisplay.color = Color.yellow;
+                statusDisplay.text = "Your code timed out! Try again - see if you've got an infinite loop.";
+            }
         }
         else if (output.Contains("error")) {
             // put error details on screen, trigger enemy fire
             
             var outputSplit = output.Split('\n');
             var error = "DUMMY: SHOULD NEVER BE DISPLAYED";
-            if (outputSplit[2].Contains("error")) { // custom error messages
+
+            if (outputSplit[2].Contains("jdoodle.hs") && outputSplit[2].Contains("error")) { // JDoodle errors
+                // if (output.Contains("parse")) {
+                //     error = "Parse error: you may have a missing function body, or an incorrect operator, or a missing bracket";
+                // }
+                // else 
+                error = outputSplit[3];
+            }
+            else if (outputSplit[2].Contains("error")) { // custom error messages
                 error = outputSplit[2].Replace("\"", "");
             }
-            else if (outputSplit[3].Contains("error")) { // JDoodle-provided error messages
-                if (output.Contains("parse")) {
-                    error = "Parse error: you may have a missing function body, or an incorrect operator, or a missing bracket";
-                }
-                else error = outputSplit[4];
-                // error = outputSplit[3].Replace("\"", "");
-            }
+            // else if (outputSplit[3].Contains("error")) { // JDoodle-provided error messages
+            //     if (output.Contains("parse")) {
+            //         error = "Parse error: you may have a missing function body, or an incorrect operator, or a missing bracket";
+            //     }
+            //     else error = outputSplit[4];
+            //     // error = outputSplit[3].Replace("\"", "");
+            // }
 
             statusDisplay.color = Color.red;
             statusDisplay.text = error;
@@ -296,7 +315,8 @@ public class CodeEditor : MonoBehaviour
         }
         else {
             // trigger enemy fire depending on whether the code passed the test
-            string result = output.Split('\n')[2];
+            string result = output.Split('\n')[2].Replace("\"", "");
+            Debug.Log(result);
             bool resultBool = result == "True";
             if (resultBool) {
                 statusDisplay.color = Color.green;
@@ -354,7 +374,8 @@ public class CodeEditor : MonoBehaviour
         }
         catch (WebException e)
         {
-            Debug.Log(e.ToString());
+            statusDisplay.color = Color.yellow;
+            statusDisplay.text = "There was an error with the request. Please try again.\n" + e.Message;
         }
     } 
 }

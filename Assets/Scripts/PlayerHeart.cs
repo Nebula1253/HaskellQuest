@@ -12,6 +12,7 @@ public class PlayerHeart : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 movementDir;
     private Animator animator;
+    private AudioSource hurtSound;
     public float playerSpeed;
     public float movementMagnitude;
 
@@ -38,6 +39,7 @@ public class PlayerHeart : MonoBehaviour
         playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
 
         animator = GetComponent<Animator>();
+        hurtSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -64,6 +66,12 @@ public class PlayerHeart : MonoBehaviour
         // playerController.health -= damage;
         // playerHealthBar.setHealth(health, maxHealth);
         playerState.updateHealth(-damage);
+
+        if (hurtSound.isPlaying) {
+            hurtSound.Stop();
+        }
+        hurtSound.Play();
+        
         if (damage > 0) { // because the tutorial was screwing this up otherwise
             playerState.DamagePenalty();
         }

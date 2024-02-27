@@ -11,4 +11,8 @@ public abstract class AttackController : MonoBehaviour
     }
 
     public abstract bool AttackEnd();
+
+    public virtual bool IsRecursionHandled() {
+        return false;
+    }
 }

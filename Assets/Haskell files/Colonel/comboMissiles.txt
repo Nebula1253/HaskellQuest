@@ -1,25 +1,28 @@
 type Position = Int
 type ID = String
 
-data Missile = Missile ID Position 
+data Missile = Missile ID Position
+-- this denotes a regular missile
 
-launchMissiles :: Int -> [Missile]
-launchMissiles nrMissiles = [Missile (idGen i) i | i <- [1..nrMissiles]]
+launch :: Int -> [Missile]
+launch n = [Missile (idGen i) i | i <- [1..n]]
 
 type Target = String
 type Angle = Float
 
-data HomingMissile = HomingMissile Target Angle
+data HMissile = HMissile Target Angle
+-- this denotes a homing missile
 
-launchHMissiles :: Target -> Int -> [HomingMissile]
-launchHMissiles t nrMissiles = [HomingMissile t (angleGen i)| i <- [1..nrMissiles]]
+launchHoming :: Target -> Int -> [HMissile]
+launchHoming t n = [HMissile t (angleGen i)| i <- [1..n]]
 
-retarget :: HomingMissile -> Target -> HomingMissile
-retarget (HomingMissile _ a) t = HomingMissile t a
+retarget :: HMissile -> Target -> HMissile
+retarget (HMissile _ a) t = HMissile t a
 
 -- write a function to make the homing missiles target the regular missiles
-backfire :: [Missile] -> [HomingMissile] -> [HomingMissile]
-backfire missiles homingMissiles = -- INPUT HERE --
+-- you'll have to set the regular missiles' ID as the target
+backfire :: [Missile] -> [HMissile] -> [HMissile]
+backfire missiles hMissiles = -- INPUT HERE --
 
 -- TEST CODE
 angleGen :: Int -> Float
@@ -30,8 +33,8 @@ idGen i = "missile" ++ show i
 
 main :: IO()
 main = do
-    let missiles = launchMissiles 5
-    let homingMissiles = launchHMissiles "player" 5
+    let missiles = launch 5
+    let homingMissiles = launchHoming "player" 5
     let newHomingMissiles = backfire missiles homingMissiles
-    let backfireCheck = and [t == "missile" ++ show i | (HomingMissile t _) <- newHomingMissiles | i <- [1..5]]
+    let backfireCheck = and [t == "missile" ++ show i | (HMissile t _) <- newHomingMissiles | i <- [1..5]]
     print(backfireCheck)

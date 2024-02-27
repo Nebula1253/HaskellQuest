@@ -10,6 +10,7 @@ public class HomingMissile : MonoBehaviour
     private float lockDelay;
 
     private bool missileLocked = false;
+    private AudioSource source;
 
     public void SetTarget(Transform target) {
         this.target = target;
@@ -31,6 +32,8 @@ public class HomingMissile : MonoBehaviour
     void Start()
     {
         StartCoroutine(missileLockDelay());
+        source = GetComponent<AudioSource>();
+        source.Play();
     }
 
     // Update is called once per frame
@@ -59,10 +62,8 @@ public class HomingMissile : MonoBehaviour
         StartCoroutine(missileLockDelay());
     }
 
-    
-
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.gameObject.tag == "Player") {
+        if (other.gameObject.CompareTag("Player")) {
             Debug.Log("Player hit!");
             other.gameObject.GetComponent<PlayerHeart>().TakeDamage(5);
         }

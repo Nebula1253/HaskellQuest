@@ -1,1 +1,1 @@
-Hmm... like the 'floor' function? Where, for even numbers, it's n/2, but for odd numbers it's (n-1)/2?
+Hmm... like if I wanted to divide a number and then round it down? Where, for even numbers, it's n/2, but for odd numbers it's (n-1)/2?

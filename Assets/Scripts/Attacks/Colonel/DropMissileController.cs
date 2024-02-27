@@ -9,6 +9,7 @@ public class DropMissileController : AttackController
     public int nrMissiles, nrMissileBarrages;
     public float missileSpeed, missileBorderGap, missileBarrageTimeDelay, missileYOffset;
     private float minX, maxX;
+    private AudioSource audioSource;
     
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,8 @@ public class DropMissileController : AttackController
         maxX = boxSizeXOffset + boxCentre.x - missileBorderGap;
         Debug.Log("min X " + minX);
         Debug.Log("max X " + maxX);
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -63,12 +66,16 @@ public class DropMissileController : AttackController
                     GameObject currMissile = Instantiate(missile, new Vector3(minX + missileX, missileY, transform.position.z), Quaternion.identity, transform.parent);
                     currMissile.GetComponent<DropMissile>().setSpeed(missileSpeed);
                     currMissile.GetComponent<DropMissile>().setDoesDamage(false);
+                    audioSource.Play();
                 }
                 else {
                     if (!filter) {
                         GameObject currMissile = Instantiate(missile, new Vector3(minX + missileX, missileY, transform.position.z), Quaternion.identity, transform.parent);
                         currMissile.GetComponent<DropMissile>().setSpeed(missileSpeed);
                         currMissile.GetComponent<DropMissile>().setDoesDamage(true);
+                        if (!audioSource.isPlaying) {
+                            audioSource.Play();
+                        }
                     }
                 }
                 missileX += missileXInc;

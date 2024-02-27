@@ -12,7 +12,7 @@ public class DialogBox : MonoBehaviour
 
     private string[] dialogueLines;
     private Color nameColor;
-    private Button hackButton;
+    
     private string characterName; 
     private int lineCounter = 0;
     private bool advanceEnabled = false;
@@ -34,8 +34,6 @@ public class DialogBox : MonoBehaviour
             dialogText = GetComponentInChildren<TMP_Text>();
 
             advanceArrow = transform.Find("AdvanceArrow").gameObject;
-
-            hackButton = GameObject.Find("HackButton").GetComponent<Button>();
             source = GetComponent<AudioSource>();
 
             startCalled = true;
@@ -59,7 +57,6 @@ public class DialogBox : MonoBehaviour
         Start();
 
         gameObject.SetActive(true);
-        hackButton.interactable = false;
         dialogueLines = dialogue.text.Split('\n');
         lineCounter = 0;
         dialogueComplete = false;
@@ -86,7 +83,6 @@ public class DialogBox : MonoBehaviour
                 if (lineCounter > dialogueLines.Length - 1) {
                     gameObject.SetActive(false);
                     dialogueComplete = true;
-                    hackButton.interactable = true;
                 }
                 else {
                     StartCoroutine(runThruDialogue());

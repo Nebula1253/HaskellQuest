@@ -12,6 +12,7 @@ public class ComboMissileController : AttackController
     public float homingMissileSpeed, homingMissileRotateSpeed, homingMissileLockDelay, homingMissileAngleRange;
     private Transform playerTransform;
     private float minX, maxX;
+    private AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -84,6 +85,7 @@ public class ComboMissileController : AttackController
             dropMissiles[i] = currMissile;
 
             missileX += missileXInc;
+            audioSource.Play();
         }
 
         yield return new WaitForSeconds(1.5f);

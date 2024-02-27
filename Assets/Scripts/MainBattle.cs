@@ -17,7 +17,6 @@ public class MainBattle : MonoBehaviour
     void Start()
     {
         hack = transform.Find("HackButton").gameObject;
-        // dialog = transform.Find("DialogBox").gameObject;
         enemyView = GameObject.Find("EnemyView");
 
         editor = GameObject.FindGameObjectWithTag("CodeEditor").GetComponent<CodeEditor>();
@@ -39,7 +38,6 @@ public class MainBattle : MonoBehaviour
     IEnumerator moveToCentre(bool wonBattle, bool gameOver) {
         if (gameOver) {
             hackButton.gameObject.SetActive(false);
-            // dialog.SetActive(false);
         }
 
         while (GetComponent<RectTransform>().anchoredPosition.x < UIinitXPos) {
@@ -50,7 +48,6 @@ public class MainBattle : MonoBehaviour
         
         if (!gameOver & !wonBattle) {
             hackButton.interactable = true;
-            // dialog.SetActive(true);
         }
 
     }
@@ -65,8 +62,7 @@ public class MainBattle : MonoBehaviour
         Debug.Log("wonBattle: " + wonBattle);
 
         if (wonBattle) {
-            Debug.Log("Esplode");
-            enemyView.GetComponent<EnemyController>().Esplode();
+            enemyView.GetComponent<EnemyController>().BattleEnd();
         }
     }
 

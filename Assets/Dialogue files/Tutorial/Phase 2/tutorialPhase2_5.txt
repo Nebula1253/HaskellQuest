@@ -1,4 +1,4 @@
 Yes, exactly! In Haskell, you can use guards to define a function this way.
-So, if we wanted to write a floor function for Ints, you'd do it like so:
-floor :: Int -> Int<br>floor x =<br>    | (mod x 2 == 0) = n / 2<br>    | otherwise = (n - 1) / 2
+So, if we wanted to write that function for Ints, you'd do it like so:
+floorHalf :: Int -> Int<br>floor x =<br>    | (mod x 2 == 0) = n / 2<br>    | otherwise = (n - 1) / 2
 As you can imagine, the 'otherwise' clause is the one that gets executed if none of the Boolean expressions come out to True.

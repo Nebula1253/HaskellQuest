@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,8 +15,9 @@ public class PlayerState : MonoBehaviour
     private HealthBar playerHealthBar;
     private Button screenClick;
     private bool battleDone = false;
-    public GameObject scoreDisplay, gameOverOverlay;
-    private 
+    public GameObject scoreDisplay, gameOverOverlay, dialogBox;
+    private EnemyController enemyController;
+
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +31,8 @@ public class PlayerState : MonoBehaviour
 
         screenClick = GameObject.Find("ScreenClick").GetComponent<Button>();
         screenClick.onClick.AddListener(AdvanceScene);
+
+        enemyController = GameObject.Find("EnemyView").GetComponent<EnemyController>();
     }
 
     public void updateHealth(int healthDelta) {
@@ -49,7 +53,7 @@ public class PlayerState : MonoBehaviour
 
         gameOverOverlay.SetActive(true);
 
-        GameObject.Find("EnemyView").GetComponent<EnemyController>().muteMusic();
+        GameObject.Find("EnemyView").GetComponent<EnemyController>().stopMusic();
 
         try {
             var effects = GameObject.FindGameObjectsWithTag("EffectUI");
@@ -77,6 +81,11 @@ public class PlayerState : MonoBehaviour
     }
 
     IEnumerator DisplayScoreCoroutine() {
+        // if there's an ending dialogue, wait for it to finish
+        while (!enemyController.IsBattleEnded()) {
+            yield return null;
+        }
+
         scoreDisplay.SetActive(true);
         var codeScoreText = scoreDisplay.transform.Find("CodeScore").GetComponent<TMP_Text>();
         var damageScoreText = scoreDisplay.transform.Find("DamageScore").GetComponent<TMP_Text>();

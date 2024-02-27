@@ -1,12 +1,16 @@
 type Position = Int
 
-data Missile = Missile Position Bool -- represents a missile, the bool is whether the missile is active or not
+data Missile = Missile Position Bool 
+-- represents a missile, the bool is whether the missile 
+-- is active or not
 
-launchMissiles :: Int -> [Missile]
-launchMissiles nrMissiles = [Missile i (randomGen i) | i <- [1..nrMissiles]]
--- randomGen: a function that randomly decides if the missile is active or not
+launch :: Int -> [Missile]
+launch n = [Missile i (randomGen i) | i <- [1..n]]
+-- randomGen: a function that randomly decides if the missile 
+-- is active or not
 
--- write a function to include only the INACTIVE missiles: we'll be using this to interfere with the attack!
+-- write a function to include only the INACTIVE missiles: 
+-- we'll be using this to interfere with the attack!
 filterMissiles :: [Missile] -> [Missile]
 filterMissiles missiles = -- INPUT HERE --
 

@@ -10,8 +10,8 @@ launch t n = [Missile t (angleGen i) | i <- [1..n]]
 
 -- write a function to retarget all Missiles
 -- we'll be using this to fire them back at the enemy!
-retargetAll :: [Missile] -> Target -> [Missile]
-retargetAll missiles t = -- INPUT HERE --
+retarget :: [Missile] -> Target -> [Missile]
+retarget missiles t = -- INPUT HERE --
 
 -- TEST CODE
 angleGen :: Int -> Float
@@ -19,10 +19,10 @@ angleGen i = 0.0 -- who cares lol the player's not gonna see this, the definitio
 
 main :: IO()
 main = do
-  let missiles = launchMissiles "player" 5
-  let newMissiles = retargetAll missiles "enemy"
+  let missiles = launch "player" 5
+  let newMissiles = retarget missiles "enemy"
   let retargetCheck = and [t == "enemy" | (Missile t _) <- newMissiles]
-  let wrongTargets = [t | Missile t _ <- newMissiles, t != "enemy"]
+  let wrongTargets = [t | Missile t _ <- newMissiles, t /= "enemy"]
   if null wrongTargets
     then
       print("True")
