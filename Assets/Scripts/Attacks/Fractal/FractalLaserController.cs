@@ -9,7 +9,7 @@ public class FractalLaserController : AttackController
     public GameObject drFractal, laser;
     public Image screenFlash;
     public float laserSpeed, fractalBorderGap, timeForOneFlash;
-    public int nrLasers, nrFractals;
+    public int nrLasersWhenLost, nrLasersWhenWon, nrFractals;
     private GameObject[] fractals;
     private float minX, maxX;
     private bool lasersFired = false;
@@ -55,15 +55,18 @@ public class FractalLaserController : AttackController
     IEnumerator spawnAndFire(bool result) {
         // if the player successfully writes split, spawn 8 smaller enemies
         // if the player fails, spawn 1 big enemy
+        int nrLasers = nrLasersWhenLost;
 
         if (fractals == null) {
             fractals = new GameObject[1];
             fractals[0] = Instantiate(drFractal, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, transform.parent);
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(1f);
 
         if (result) {
+            nrLasers = nrLasersWhenWon;
+
             // transparent -> purple
             float alpha;
             for (float t = 0; t <= timeForOneFlash / 2; t += Time.deltaTime) {
@@ -95,7 +98,7 @@ public class FractalLaserController : AttackController
             screenFlash.color = new Color(screenFlash.color.r, screenFlash.color.g, screenFlash.color.b, 0);
         }
 
-        var yOffset = 1.3f;
+        var yOffset = 1.1f;
         if (result) yOffset *= 0.5f;
 
         // fire lasers from each Fractal
@@ -106,8 +109,34 @@ public class FractalLaserController : AttackController
                                                     Quaternion.identity, transform.parent);
                 if (result) currLaser.transform.localScale *= 0.5f;
                 currLaser.GetComponent<FractalLaser>().SetVariables(laserSpeed, result);
-                yield return new WaitForSeconds(0.7f);
+                yield return new WaitForSecondsRealtime(0.7f);
             }
+        }
+
+        if (result) {
+            // transparent -> purple
+            float alpha;
+            for (float t = 0; t <= timeForOneFlash / 2; t += Time.deltaTime) {
+                alpha = Mathf.Lerp(0, 1, t * 2 / timeForOneFlash);
+                screenFlash.color = new Color(screenFlash.color.r, screenFlash.color.g, screenFlash.color.b, alpha);
+                yield return null;
+            }
+            screenFlash.color = new Color(screenFlash.color.r, screenFlash.color.g, screenFlash.color.b, 1);
+
+            // remove smaller fractals, replace with the bigger one
+            foreach (GameObject fractal in fractals) {
+                Destroy(fractal.gameObject);
+            }
+            fractals = new GameObject[1];
+            fractals[0] = Instantiate(drFractal, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, transform.parent);
+
+            // purple -> transparent
+            for (float t = 0; t <= timeForOneFlash / 2; t += Time.deltaTime) {
+                alpha = Mathf.Lerp(1, 0, t * 2 / timeForOneFlash);
+                screenFlash.color = new Color(screenFlash.color.r, screenFlash.color.g, screenFlash.color.b, alpha);
+                yield return null;
+            }
+            screenFlash.color = new Color(screenFlash.color.r, screenFlash.color.g, screenFlash.color.b, 0);
         }
 
         lasersFired = true;

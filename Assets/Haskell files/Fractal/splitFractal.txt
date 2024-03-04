@@ -7,9 +7,11 @@ data Laser = Laser Power
 fire :: Fractal -> Laser
 fire (Fractal n) = Laser (power n)
 -- the power of the laser is based on the size of this Fractal
+-- so lasers from smaller Fractals would cause less damage
 
--- write a function to recursively halve Dr. Fractal into 
--- smaller Fractals who can do less damage!
+-- write a function that splits Dr. Fractal into two halves,
+-- then recursively splits those halves until you reach a
+-- Fractal with an odd size!
 split :: Fractal -> [Fractal]
 split fractal = --INPUT HERE--
 
@@ -21,8 +23,9 @@ power :: Size -> Power
 power n = n -- doesn't really matter
 
 splitRef :: Fractal -> [Fractal]
-splitRef (Fractal 1) = [Fractal 1]
-splitRef (Fractal n) = splitRef (Fractal (n `div` 2)) ++ splitRef (Fractal (n `div` 2))
+splitRef (Fractal n) = 
+    | n `mod` 2 == 0 = splitRef (Fractal (div n 2)) ++ splitRef (Fractal (div n 2))
+    | otherwise      = [Fractal n]
 
 fireRef :: Fractal -> Laser
 fireRef (Fractal n) = Laser n

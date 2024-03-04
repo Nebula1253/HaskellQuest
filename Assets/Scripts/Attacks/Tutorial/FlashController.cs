@@ -40,7 +40,7 @@ public class FlashController : AttackController
     }
 
     IEnumerator FlashRed(bool result) {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSecondsRealtime(1.5f);
         float alpha;
 
         playerHeart.TakeDamage(damage);

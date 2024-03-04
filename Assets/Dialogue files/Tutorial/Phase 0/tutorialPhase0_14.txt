@@ -2,4 +2,4 @@ Right in one! In Haskell, that's called the <i>function declaration</i>.
 A function can also have multiple inputs in Haskell. An example would be "addInts :: Int -> Int -> Int". 
 There, since the last type has to be the output, you can tell that the function has two Int inputs.
 The function declaration is then, logically, "addInts x y = x + y".
-Of course, this information is all well and good, but I still need to know you can defend yourself.
+Of course, telling you this is all well and good, but I still need to know you can defend yourself for sure.

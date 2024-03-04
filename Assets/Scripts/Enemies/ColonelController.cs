@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +9,7 @@ public class ColonelController : EnemyController
     private DialogBox dbox;
     public TextAsset[] phaseZeroText, phaseOneText, phaseTwoText, endText;
     public AudioClip lambdaManDialog, colonelDialog, explosion;
-    public AnimatorController dmgBot, explBot;
+    public RuntimeAnimatorController dmgBot, explBot;
     public Color lambdaManColor, colonelColor;
     public Image screenFlash;
     private Button hackButton;

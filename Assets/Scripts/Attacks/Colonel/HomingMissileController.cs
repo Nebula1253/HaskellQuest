@@ -40,11 +40,11 @@ public class HomingMissileController : AttackController
     }
 
     IEnumerator fireMissiles(bool redirect = false) {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(1f);
         for (int i=0; i < nrMissiles; i++) {
             target = playerTransform;
             var missile = InstantiateMissile(transform.position, target);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSecondsRealtime(0.5f);
             if (redirect) {
                 target = enemyTransform;
                 missile.GetComponent<HomingMissile>().SetTarget(target);

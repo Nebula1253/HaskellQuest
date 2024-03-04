@@ -1,5 +1,5 @@
 Right again, and <i>that's</i> when the multiple definitions come in!
-The full definition, excluding the type signature, could be written as:<br>factorial 1 = 1<br>factorial x = x * factorial x-1
+The full definition, excluding the type signature, could be written as:<br>factorial 1 = 1<br>factorial x = x * factorial (x - 1)
 The first line there is the base case, while the second line is the recursive step. 
 The base case is <i>incredibly</i> important; your function would never terminate otherwise.
 You could, in this case, change it to 'factorial 0 = 1' to take care of that case too.

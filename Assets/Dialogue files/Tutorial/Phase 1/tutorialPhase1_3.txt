@@ -1,6 +1,6 @@
 Now, let's move on and talk about <i>lists</i> and <i>tuples</i>.
 Lists and tuples are Haskell's fundamental structures for managing multiple values.
-Lists, bounded by '[' and ']' store multiple values of the same type, and they have no limit to the number of elements.
-You can add elements to lists by using the ':' operator - the value on the right has to be a list, though, like '1 : [2,3]', not '[1,2] : 3'.
+Lists, bounded by '[' and ']', store multiple values of the same type, and they have no limit to the number of elements.
+You can add elements to lists by using the ':' operator. The value on the right has to be a list, though, like '1 : [2,3]', not '[1,2] : 3'.
 You can also concatenate two lists to form a single list by using the '++' operator.
 Haskell also has in-built 'length' and 'reverse' functions for lists, which...

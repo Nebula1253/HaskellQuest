@@ -1,4 +1,4 @@
 ...yeah, pretty much.
 I didn't mention earlier: Haskell has a 'String' type, but that's basically an alias for '[Char]', so these operators apply there too.
 Tuples, meanwhile, are bounded by '(' and ')', and can store values of different types, but you can't add more elements to them once declared.
-Since lists and tuples are distinct types, lists can contain lists, tuples can contain tuples, lists can contain tuples and vice versa.
+Since lists and tuples are distinct types, you can nest them; lists inside lists, tuples inside tuples, lists inside tuples and vice versa.

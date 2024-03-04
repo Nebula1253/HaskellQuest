@@ -1,2 +1,2 @@
-Those monsters and adversaries in your path... they're going to try and attack you, and you're going to need some way to defend yourself.
+The adversaries in your path... they're going to try and kill you, and you're going to need some way to defend yourself.
 The Lambda Gauntlet does exactly that. You can examine the code within your opponents and, most importantly, you can <i>change</i> that code.

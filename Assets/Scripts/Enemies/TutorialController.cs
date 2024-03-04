@@ -47,7 +47,7 @@ public class TutorialController : EnemyController
     }
 
     IEnumerator endDialogue() {
-        dbox.StartDialogue(endingText, Color.cyan, "HOLOGRAM", hologramDialog);
+        dbox.StartDialogue(endingText, hologramColor, "HOLOGRAM", hologramDialog);
         while (!dbox.GetDialogueComplete()) {
             yield return null;
         }

@@ -1,2 +1,2 @@
-Oh, don't worry! It's quite a simple attack, you should be able to avoid taking damage quite easily.
-Plus, if you do get hit, I'll heal you right back up once you've got through this phase.
+Oh, don't worry! It's quite a simple attack, you should be able to modify it quite easily.
+Plus, if you do get hurt, I'll heal you right back up once you've got through this phase.

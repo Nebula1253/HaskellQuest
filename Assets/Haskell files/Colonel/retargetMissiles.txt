@@ -1,8 +1,9 @@
 type Target = String
 type Angle = Float
 
-data Missile = Missile Target Angle -- represents homing 
--- missiles; the angle is the starting angle of the missile
+data Missile = Missile Target Angle
+-- represents homing missiles; the angle is the starting 
+-- angle of the missile
 
 launch :: Target -> Int -> [Missile]
 launch t n = [Missile t (angleGen i) | i <- [1..n]]
@@ -21,7 +22,7 @@ main :: IO()
 main = do
   let missiles = launch "player" 5
   let newMissiles = retarget missiles "enemy"
-  let retargetCheck = and [t == "enemy" | (Missile t _) <- newMissiles]
+  let retargetCheck = (and [t == "enemy" | (Missile t _) <- newMissiles]) && not (null newMissiles)
   let wrongTargets = [t | Missile t _ <- newMissiles, t /= "enemy"]
   if null wrongTargets
     then

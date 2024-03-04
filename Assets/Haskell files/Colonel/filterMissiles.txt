@@ -23,4 +23,4 @@ main = do
     let missiles = [Missile 1 True, Missile 2 False, Missile 3 True, Missile 4 True]
     let newMissiles = filterMissiles missiles
     let highlightCheck = and [b == False | (Missile _ b) <- newMissiles]
-    print(highlightCheck)
+    print(not (null newMissiles) && highlightCheck)

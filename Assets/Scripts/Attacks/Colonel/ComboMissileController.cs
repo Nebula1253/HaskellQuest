@@ -28,6 +28,8 @@ public class ComboMissileController : AttackController
 
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         Debug.Log(playerTransform);
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -70,7 +72,7 @@ public class ComboMissileController : AttackController
     }
 
     IEnumerator fireMissiles(bool retarget) {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(1f);
 
         // GameObject[] homingMissiles = new GameObject[nrMissiles];
         float missileX = 0, missileY = transform.position.y + dropMissileYOffset;
@@ -88,7 +90,7 @@ public class ComboMissileController : AttackController
             audioSource.Play();
         }
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSecondsRealtime(1.5f);
 
         // fire homing missiles, retarget homing missiles if the player has passed the test
         for (int i=0; i < nrMissiles; i++) {
@@ -99,7 +101,7 @@ public class ComboMissileController : AttackController
             }
 
             InstantiateMissile(transform.position, target);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSecondsRealtime(0.1f);
         }
 
         missilesFired = true;

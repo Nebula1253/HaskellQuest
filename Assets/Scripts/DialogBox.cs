@@ -11,9 +11,9 @@ public class DialogBox : MonoBehaviour
     private Button advanceButton;
 
     private string[] dialogueLines;
-    private Color nameColor;
+    private Color nameColor = Color.clear;
     
-    private string characterName; 
+    private string characterName = ""; 
     private int lineCounter = 0;
     private bool advanceEnabled = false;
     private bool dialogueComplete = false;
@@ -67,6 +67,11 @@ public class DialogBox : MonoBehaviour
         StartCoroutine(runThruDialogue());
     }
 
+    public void StartDialogue(TextAsset dialogue, AudioClip clip) {
+        this.clip = clip;
+        StartDialogue(dialogue);
+    }
+
     public void StartDialogue(TextAsset dialogue, Color nameColor, string characterName, AudioClip clip) {
         this.nameColor = nameColor;
         this.characterName = characterName;
@@ -93,8 +98,11 @@ public class DialogBox : MonoBehaviour
                 // complete the line flat out and allow the player to move forward
                 StopAllCoroutines();
 
-                if (nameColor != null && characterName != "") {
+                if (!nameColor.Equals(Color.clear) && characterName != "") {
                     dialogText.text = "<color=#" + ColorUtility.ToHtmlStringRGB(nameColor) + ">" + characterName.ToUpper() + "</color>: ";
+                }
+                else {
+                    dialogText.text = "";
                 }
                 dialogText.text += dialogueLines[lineCounter];
                 
@@ -105,8 +113,11 @@ public class DialogBox : MonoBehaviour
     }
 
     IEnumerator runThruDialogue() {
-        if (nameColor != null && characterName != "") {
+        if (!nameColor.Equals(Color.clear) && characterName != "") {
             dialogText.text = "<color=#" + ColorUtility.ToHtmlStringRGB(nameColor) + ">" + characterName.ToUpper() + "</color>: ";
+        }
+        else {
+            dialogText.text = "";
         }
 
         char[] line = dialogueLines[lineCounter].ToCharArray();
@@ -126,10 +137,10 @@ public class DialogBox : MonoBehaviour
             }
             else {
                 dialogText.text += c;
-                if (!source.isPlaying) {
+                if (!source.isPlaying && clip != null) {
                     source.PlayOneShot(clip);
                 }
-                yield return new WaitForSeconds(0.03f);
+                yield return new WaitForSecondsRealtime(0.03f);
             }
             i++;
         }

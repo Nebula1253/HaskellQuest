@@ -1,2 +1,2 @@
-...Oh! I see what you're getting at! So, in Haskell, that'd be 'factorial x = x * factorial x-1', right?
+...Oh! I see what you're getting at! So, in Haskell, that'd be 'factorial x = x * factorial (x - 1)', right?
 Wait, though, that wouldn't stop when you get to 1...

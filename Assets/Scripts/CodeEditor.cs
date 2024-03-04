@@ -208,7 +208,7 @@ public class CodeEditor : MonoBehaviour
         while (!controllers[currentScript].AttackEnd()) {
             yield return null;
         }
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSecondsRealtime(1);
 
         if (!gameOver) {
             StartCoroutine(MoveOffScreen(phaseOver));
@@ -283,30 +283,28 @@ public class CodeEditor : MonoBehaviour
                 statusDisplay.text = "Your code timed out! Try again - see if you've got an infinite loop.";
             }
         }
-        else if (output.Contains("error")) {
+        else if (output.Split('\n')[2].Contains("error")) {
             // put error details on screen, trigger enemy fire
             
             var outputSplit = output.Split('\n');
             var error = "DUMMY: SHOULD NEVER BE DISPLAYED";
 
-            if (outputSplit[2].Contains("jdoodle.hs") && outputSplit[2].Contains("error")) { // JDoodle errors
-                // if (output.Contains("parse")) {
-                //     error = "Parse error: you may have a missing function body, or an incorrect operator, or a missing bracket";
-                // }
-                // else 
+            if (outputSplit[2].Contains("jdoodle.hs")) { // JDoodle errors
                 error = outputSplit[3];
             }
-            else if (outputSplit[2].Contains("error")) { // custom error messages
+            else { // custom error messages
                 error = outputSplit[2].Replace("\"", "");
             }
-            // else if (outputSplit[3].Contains("error")) { // JDoodle-provided error messages
-            //     if (output.Contains("parse")) {
-            //         error = "Parse error: you may have a missing function body, or an incorrect operator, or a missing bracket";
-            //     }
-            //     else error = outputSplit[4];
-            //     // error = outputSplit[3].Replace("\"", "");
-            // }
+            
+            statusDisplay.color = Color.red;
+            statusDisplay.text = error;
+            playerState.CodePenalty();
 
+            EnemyMoveTrigger(false, additional);
+        }
+        else if (output.Split('\n')[2].Contains("Non-exhaustive")) {
+            var errorStart = output.Split('\n')[2].IndexOf("Non-exhaustive");
+            var error = output.Split('\n')[2].Substring(errorStart);
             statusDisplay.color = Color.red;
             statusDisplay.text = error;
             playerState.CodePenalty();

@@ -57,7 +57,7 @@ public class DropMissileController : AttackController
         missileY = transform.position.y + missileYOffset;
 
         for (int j = 0; j < nrMissileBarrages; j++) {
-            yield return new WaitForSeconds(missileBarrageTimeDelay);
+            yield return new WaitForSecondsRealtime(missileBarrageTimeDelay);
             missileX = 0;
             
             int safeMissile = Random.Range(0, nrMissiles);

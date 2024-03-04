@@ -69,11 +69,11 @@ public class PlayerState : MonoBehaviour
     }
 
     public void CodePenalty() {
-        codeScore -= incorrectCodePenalty;
+        codeScore = Mathf.Max(0, codeScore - incorrectCodePenalty);
     }
 
     public void DamagePenalty() {
-        damageScore -= damagePenalty;
+        damageScore = Mathf.Max(0, damageScore - damagePenalty);
     }
 
     public void DisplayScore() {
@@ -90,21 +90,25 @@ public class PlayerState : MonoBehaviour
         var codeScoreText = scoreDisplay.transform.Find("CodeScore").GetComponent<TMP_Text>();
         var damageScoreText = scoreDisplay.transform.Find("DamageScore").GetComponent<TMP_Text>();
         var finalScoreText = scoreDisplay.transform.Find("FinalScore").GetComponent<TMP_Text>();
+        var clickToContinue = scoreDisplay.transform.Find("ClickToContinue").GetComponent<TMP_Text>();
 
         codeScoreText.text = "CODE SCORE: " + codeScore;
         if (codeScore == initCodeScore)
             codeScoreText.text += "<color=#FFFF00> PERFECT!</color>";
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSecondsRealtime(0.6f);
 
         damageScoreText.text = "DAMAGE SCORE: " + damageScore;
         if (damageScore == initDamageScore)
             damageScoreText.text += "<color=#FFFF00> PERFECT!</color>";
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSecondsRealtime(0.6f);
         
         finalScoreText.text = "FINAL SCORE: " + (codeScore + damageScore);
         if (codeScore + damageScore == initCodeScore + initDamageScore)
             finalScoreText.text += "<color=#FFFF00> PERFECT!</color>";
+        yield return new WaitForSecondsRealtime(0.6f);
 
+        clickToContinue.text = "CLICK TO CONTINUE";
+        
         battleDone = true;
     }
 

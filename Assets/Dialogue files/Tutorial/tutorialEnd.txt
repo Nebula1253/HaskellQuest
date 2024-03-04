@@ -1,2 +1,2 @@
-You did it! Yes, you've picked up Haskell extremely quickly; you truly are a worthy successor.
+You did it! You've picked up Haskell extremely quickly; you truly are a worthy successor.
 Go forth, LAMBDA-MAN! You have the power to change the world!

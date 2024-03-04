@@ -3,7 +3,10 @@ data Player = Player Health
 
 hurtPlayer :: Player -> [Int] -> Player
 hurtPlayer player [] = player
-hurtPlayer (Player h) (d:ds) = hurtPlayer (Player (h - d)) ds
+hurtPlayer (Player h) (d:ds)
+    | d >= 0    = hurtPlayer (Player (h - d)) ds
+    | otherwise = hurtPlayer (Player h) ds
+
 -- you might have realised that this is basically doing the 
 -- same thing as the previous script; in fact, this is how 
 -- the 'sum' function from there is implemented.

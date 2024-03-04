@@ -48,14 +48,14 @@ public class SaveFractalController : AttackController
     }
 
     IEnumerator fireLasers(bool result) {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSecondsRealtime(1);
 
         if (!result) {
             for (int i = 0; i < nrLasers; i++) {
-                var laserInstance = Instantiate(laser, new Vector3(spawnedFractal.position.x, spawnedFractal.position.y - 1.3f, spawnedFractal.position.z), 
+                var laserInstance = Instantiate(laser, new Vector3(spawnedFractal.position.x, spawnedFractal.position.y - 1.1f, spawnedFractal.position.z), 
                                                 Quaternion.identity, transform.parent);
                 laserInstance.GetComponent<FractalLaser>().SetVariables(laserSpeed, result);
-                yield return new WaitForSeconds(0.25f);
+                yield return new WaitForSecondsRealtime(0.25f);
             }
         }
 

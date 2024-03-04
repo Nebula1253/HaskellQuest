@@ -37,4 +37,4 @@ main = do
     let homingMissiles = launchHoming "player" 5
     let newHomingMissiles = backfire missiles homingMissiles
     let backfireCheck = and [t == "missile" ++ show i | (HMissile t _) <- newHomingMissiles | i <- [1..5]]
-    print(backfireCheck)
+    print(not (null newHomingMissiles) && backfireCheck)
