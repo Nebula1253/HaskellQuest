@@ -1,2 +1,2 @@
-Yes, exactly! It's the same idea here: in Haskell, that list would be [x | x <- [1..50], x `mod` 2 = 0].
+Yes, exactly! It's the same idea here: in Haskell, that list would be [x | x <- [1..50], x `mod` 2 == 0].
 Here, 'x <- [1..50]' is a <i>generator</i>: it feeds each element of the list to the left-hand expression.

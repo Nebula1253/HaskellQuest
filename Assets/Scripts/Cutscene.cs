@@ -11,7 +11,8 @@ public class Cutscene : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        dbox = GameObject.Find("DialogBox").GetComponent<DialogBox>();
+        // dbox = GameObject.Find("DialogBox").GetComponent<DialogBox>();
+        dbox = DialogBox.Instance;
         StartCoroutine(startCutscene());
     }
 

@@ -936,7 +936,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 534718558abb29048a99ff5ef9d99efc, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.35
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1488,7 +1488,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.3921569, g: 0.1764706, b: 0, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -4281,7 +4281,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c6ff30dc8bda327499b4a8594c61386b, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.8
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -5234,7 +5234,7 @@ Transform:
   m_GameObject: {fileID: 1648886429}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00144, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.5003996, y: 2.4999998, z: 2.4999998}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -5729,8 +5729,8 @@ MonoBehaviour:
   mainBattle: {fileID: 1552646435}
   overheadEnemy: {fileID: 885496205}
   commentColor: {r: 0.49803925, g: 0.65882355, b: 0.89019614, a: 0}
-  commentHighlighting: 0
-  currentScript: 0
+  commentHighlighting: 1
+  currentScript: 2
   statusDisplayText: {fileID: 40045119}
   time: 0.5
 --- !u!1 &1855335688

@@ -9,9 +9,26 @@ public class MainBattle : MonoBehaviour
     private float spriteInitXPos, spriteTurnXPos;
     public float time;
     private float uiDistanceDelta, spriteDistanceDelta;
-    private GameObject hack, dialog, enemyView;
+    private GameObject hack, enemyView;
     private Button hackButton;
     private CodeEditor editor;
+
+    public static MainBattle Instance { get; private set; }
+
+    private void Awake() 
+    { 
+        // If there is an instance, and it's not me, delete myself.
+        
+        if (Instance != null && Instance != this) 
+        { 
+            Destroy(this); 
+        } 
+        else 
+        { 
+            Instance = this; 
+        } 
+    }
+    
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +36,8 @@ public class MainBattle : MonoBehaviour
         hack = transform.Find("HackButton").gameObject;
         enemyView = GameObject.Find("EnemyView");
 
-        editor = GameObject.FindGameObjectWithTag("CodeEditor").GetComponent<CodeEditor>();
+        // editor = GameObject.FindGameObjectWithTag("CodeEditor").GetComponent<CodeEditor>();
+        editor = CodeEditor.Instance;
 
         hackButton = hack.GetComponent<Button>();
 

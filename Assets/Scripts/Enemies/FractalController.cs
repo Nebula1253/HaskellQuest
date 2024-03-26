@@ -15,7 +15,8 @@ public class FractalController : EnemyController
     new void Start()
     {
         base.Start();
-        dbox = dialog.GetComponent<DialogBox>();
+        // dbox = dialog.GetComponent<DialogBox>();
+        dbox = DialogBox.Instance;
     }
 
     public override void BattleEnd()

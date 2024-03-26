@@ -26,7 +26,7 @@ main = do
   let wrongTargets = [t | Missile t _ <- newMissiles, t /= "enemy"]
   if null wrongTargets
     then
-      print("True")
+      print(retargetCheck)
     else if head wrongTargets == "player"
       then
         print("error: Missiles still target player")

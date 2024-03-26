@@ -13,6 +13,9 @@ PIXELORAMA by ORAMA INTERACTIVE
 <color=#aac1f5>Sound Effects</color>
 CHIPTONE by SFBGAMES
 
+<color=#aac1f5>Sound Editing</color>
+AUDACITY by THE AUDACITY TEAM
+
 <size=52px><color=#aac1f5>Assets Used</size></color>
 <color=#aac1f5>Music</color>
 TIM FOLLIN - 'Time Trax' OST: Title Theme
@@ -31,6 +34,16 @@ SOGOMN - Explosions - OpenGameArt.org
 EMR - Random Low Quality SFX - OpenGameArt.org
 FARFADET46 - Laser Fire - OpenGameArt.org
 
+<color=#aac1f5>Fonts</color>
+ABACADABA - Determination Sans - FontSpace.com
+INGOFONTS - DePixel Schmal - DaFont.com
+OREN WATSON - NeoLetters - DaFont.com
+
+<size=52px><color=#aac1f5>Tutorials Used</color></size>
+BRACKEYS - "How to make a HEALTH BAR in Unity!"
+BRACKEYS - "How to make a Homing Missile in Unity"
+COUCHFERRET MAKES GAMES - "Unity Top Down Character Controller with Animation and Movement"
+
 <size=52px><color=#aac1f5>'Dr. Fractal' Battle Concept</size></color>
 KRZYSZTOF GRYKIEL
 
@@ -38,7 +51,27 @@ KRZYSZTOF GRYKIEL
 DON SANNELLA
 
 <size=52px><color=#aac1f5>Playtesters - THANK YOU!</size></color>
-
+ALESSANDRA TERRANOVA
+ANDREAS HIROPEDI
+ANDREW TWIGG
+ANISH THAPA
+ARINDAM BAG
+BEN NORMAN
+DYLAN DRUCKER
+HENG SHIU
+JAPJOT SINGH
+JOSEPH ADAMS
+KRYSTOF BEZDEK
+KRZYSZTOF GRYKIEL
+LEA ANDRUSZ
+MAIA BRIGGS
+MAX WALDEN
+MOHAMMED ABUBAKER
+NICHOLAS ARESTA NGADIMAN
+PAULA SPARROW MUÑOZ
+RYAN HENERY
+SOUPARNA MANDAL
+YAN CHIN
 
 
 

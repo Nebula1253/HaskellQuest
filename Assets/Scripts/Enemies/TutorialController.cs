@@ -16,12 +16,15 @@ public class TutorialController : EnemyController
     public Color lambdaManColor, hologramColor;
     private PlayerState pState;
     private Button hackButton;
+    
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
-        dbox = dialog.GetComponent<DialogBox>();
-        pState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
+        // dbox = dialog.GetComponent<DialogBox>();
+        dbox = DialogBox.Instance;
+        // pState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
+        pState = PlayerState.Instance;
         
         hackButton = GameObject.Find("HackButton").GetComponent<Button>();
     }

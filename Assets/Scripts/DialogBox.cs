@@ -20,9 +20,22 @@ public class DialogBox : MonoBehaviour
     private bool startCalled = false; // rot in hell
     private AudioSource source;
     private AudioClip clip;
+    public static DialogBox Instance { get; private set; }
+
+    private void Awake() 
+    { 
+        // If there is an instance, and it's not me, delete myself.
+        
+        if (Instance != null && Instance != this) 
+        { 
+            Destroy(this); 
+        } 
+        else 
+        { 
+            Instance = this; 
+        } 
+    }
     
-
-
     // Start is called before the first frame update
     void Start()
     {

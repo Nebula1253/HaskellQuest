@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Credits : MonoBehaviour
 {
     public AudioClip creditsMusic, secretMusic;
     public TextAsset creditsText, secretText;
-    public float scrollSpeed, secretScrollSpeed;
-    private float actualScrollSpeed;
+    public float scrollSpeed, secretScrollSpeed, creditsEndY, secretEndY;
+    private float actualScrollSpeed, actualCreditsEndY;
     private AudioSource audioSource;
     private TMP_Text creditsTMP;
     private bool creditsStarted = false;
@@ -31,8 +32,8 @@ public class Credits : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Credits started: " + creditsStarted);
-        Debug.Log("Secret done: " + secretDone);
+        // Debug.Log("Credits started: " + creditsStarted);
+        // Debug.Log("Secret done: " + secretDone);
         if (creditsStarted) {
             transform.Translate(Vector3.up * actualScrollSpeed * Time.deltaTime);
         }
@@ -43,13 +44,19 @@ public class Credits : MonoBehaviour
                     audioSource.clip = secretMusic;
                     creditsTMP.text = secretText.text;
                     actualScrollSpeed = secretScrollSpeed;
+                    actualCreditsEndY = secretEndY;
                     secretDone = true;
                 } 
             } else {
                 audioSource.clip = creditsMusic;
                 creditsTMP.text = creditsText.text;
                 actualScrollSpeed = scrollSpeed;
+                actualCreditsEndY = creditsEndY;
             } 
+        }
+        Debug.Log(transform.position.y);
+        if (transform.position.y >= actualCreditsEndY) {
+            SceneManager.LoadScene("StartScreen");
         }
     }
 

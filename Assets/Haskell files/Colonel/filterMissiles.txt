@@ -7,7 +7,7 @@ data Missile = Missile Position Bool
 launch :: Int -> [Missile]
 launch n = [Missile i (randomGen i) | i <- [1..n]]
 -- randomGen: a function that randomly decides if the missile 
--- is active or not
+-- is active or not; one missile per barrage won't hurt you
 
 -- write a function to include only the INACTIVE missiles: 
 -- we'll be using this to interfere with the attack!

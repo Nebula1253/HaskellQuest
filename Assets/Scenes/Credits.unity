@@ -227,7 +227,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.3921569, g: 0.1764706, b: 0, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -422,8 +422,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -1762}
-  m_SizeDelta: {x: 1509.32, y: 2292.87}
+  m_AnchoredPosition: {x: 0, y: -2624.1616}
+  m_SizeDelta: {x: 1509.32, y: 4017.17}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1270265049
 MonoBehaviour:
@@ -479,8 +479,10 @@ MonoBehaviour:
   secretMusic: {fileID: 8300000, guid: 0ced95ce831fb45418339a1df1197fc9, type: 3}
   creditsText: {fileID: 4900000, guid: 1c9f2268f56c2e74ca02674b4542100d, type: 3}
   secretText: {fileID: 4900000, guid: 8df935e49bb88c14facbe12509e4d6a2, type: 3}
-  scrollSpeed: 0.5
-  secretScrollSpeed: 0.65
+  scrollSpeed: 0.7
+  secretScrollSpeed: 0.78
+  creditsEndY: 23.4
+  secretEndY: 24.5
 --- !u!82 &1270265052
 AudioSource:
   m_ObjectHideFlags: 0
@@ -493,7 +495,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.4
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -611,8 +613,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0099792, y: -0.0024414}
-  m_SizeDelta: {x: 1509.3, y: 298.79}
+  m_AnchoredPosition: {x: -0.0099792, y: -0.0023880005}
+  m_SizeDelta: {x: 1509.3, y: 4017.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1706790393
 MonoBehaviour:
@@ -634,20 +636,31 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<size=60px><color=#aac1f5>CREDITS</color></size>\n\r\n<size=52px><color=#aac1f5>Concept,
-    Design, Story, Programming, Art\r</color></size>\nNEEL AMONKAR\r\n\r\n<size=52px><color=#aac1f5>Tools
-    Used</color>\r</size>\n<color=#aac1f5>Game Engine\r</color>\nUNITY\r\n\r\n<color=#aac1f5>Pixel
-    Art\r</color>\nPIXELORAMA by ORAMA INTERACTIVE\r\n\r\n<color=#aac1f5>Sound Effects\r</color>\nCHIPTONE
-    by SFBGAMES\r\n\r\n<size=52px><color=#aac1f5>Assets Used\r</size></color>\n<color=#aac1f5>Music\r</color>\nTIM
+  m_text: "<size=60px><color=#aac1f5>CREDITS</color></size>\r\n\r\n<size=52px><color=#aac1f5>Concept,
+    Design, Story, Programming, Art</color></size>\r\nNEEL AMONKAR\r\n\r\n<size=52px><color=#aac1f5>Tools
+    Used</color></size>\r\n<color=#aac1f5>Game Engine</color>\r\nUNITY\r\n\r\n<color=#aac1f5>Pixel
+    Art</color>\r\nPIXELORAMA by ORAMA INTERACTIVE\r\n\r\n<color=#aac1f5>Sound Effects</color>\r\nCHIPTONE
+    by SFBGAMES\r\n\r\n<color=#aac1f5>Sound Editing</color>\r\nAUDACITY by THE AUDACITY
+    TEAM\r\n\r\n<size=52px><color=#aac1f5>Assets Used</size></color>\r\n<color=#aac1f5>Music</color>\r\nTIM
     FOLLIN - 'Time Trax' OST: Title Theme\r\nTIM FOLLIN - 'Time Trax' OST: Mission
     Briefing Theme\r\nTIM FOLLIN - 'Time Trax' OST: Stage 2, 5, 7 Theme\r\nTIM FOLLIN
     - 'Time Trax' OST: Stage 4, 6 Theme\r\nSAVAGED REGIME - 'Life on Earth: Reimagined'
-    OST: Stage 4 Theme\r\n\r\n<color=#aac1f5>Sprites\r</color>\nSAMOLIVER - Missile
+    OST: Stage 4 Theme\r\n\r\n<color=#aac1f5>Sprites</color>\r\nSAMOLIVER - Missile
     - OpenGameArt.org\r\nCRAFTPIX - Sky Backgrounds - Itch.io\r\nBRACKEYS - Health
-    Bar\r\nSOGOMN - Explosions - OpenGameArt.org\r\n\r\n<color=#aac1f5>Sound Effects\r</color>\nEMR
-    - Random Low Quality SFX - OpenGameArt.org\r\nFARFADET46 - Laser Fire - OpenGameArt.org\r\n\r\n<size=52px><color=#aac1f5>Special
-    Thanks\r</size></color>\nDON SANNELLA\r\nKRZYSZTOF GRYKIEL\r\nDAVID <insert surname>\r\n\r\n<size=52px><color=#aac1f5>Playtesters
-    - THANK YOU!\r\r</size></color>\n\r\n\n\n\n\n<size=60px><color=#aac1f5>THANK
+    Bar\r\nSOGOMN - Explosions - OpenGameArt.org\r\n\r\n<color=#aac1f5>Sound Effects</color>\r\nEMR
+    - Random Low Quality SFX - OpenGameArt.org\r\nFARFADET46 - Laser Fire - OpenGameArt.org\r\n\r\n<color=#aac1f5>Fonts</color>\r\nABACADABA
+    - Determination Sans - FontSpace.com\r\nINGOFONTS - DePixel Schmal - DaFont.com\r\nOREN
+    WATSON - NeoLetters - DaFont.com\r\n\r\n<size=52px><color=#aac1f5>Tutorials Used</color></size>\r\nBRACKEYS
+    - \"How to make a HEALTH BAR in Unity!\"\r\nBRACKEYS - \"How to make a Homing
+    Missile in Unity\"\r\nCOUCHFERRET MAKES GAMES - \"Unity Top Down Character Controller
+    with Animation and Movement\"\r\n\r\n<size=52px><color=#aac1f5>'Dr. Fractal'
+    Battle Concept</size></color>\r\nKRZYSZTOF GRYKIEL\r\n\r\n<size=52px><color=#aac1f5>Special
+    Thanks</size></color>\r\nDON SANNELLA\r\n\r\n<size=52px><color=#aac1f5>Playtesters
+    - THANK YOU!</size></color>\r\nALESSANDRA TERRANOVA\r\nANDREAS HIROPEDI\r\nANDREW
+    TWIGG\r\nANISH THAPA\r\nARINDAM BAG\r\nBEN NORMAN\r\nDYLAN DRUCKER\r\nHENG SHIU\r\nJAPJOT
+    SINGH\r\nJOSEPH ADAMS\r\nKRYSTOF BEZDEK\r\nKRZYSZTOF GRYKIEL\r\nLEA ANDRUSZ\r\nMAIA
+    BRIGGS\r\nMAX WALDEN\r\nMOHAMMED ABUBAKER\r\nNICHOLAS ARESTA NGADIMAN\r\nPAULA
+    SPARROW MU\xD1OZ\r\nRYAN HENERY\r\nSOUPARNA MANDAL\r\nYAN CHIN\r\n\r\n\r\n\r\n\r\n<size=60px><color=#aac1f5>THANK
     YOU FOR PLAYING!</color></size>"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 98f6828b2c77b1f489266346cfe4872f, type: 2}

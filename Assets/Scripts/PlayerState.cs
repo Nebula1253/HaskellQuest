@@ -17,12 +17,28 @@ public class PlayerState : MonoBehaviour
     private bool battleDone = false;
     public GameObject scoreDisplay, gameOverOverlay, dialogBox;
     private EnemyController enemyController;
+    public static PlayerState Instance { get; private set; }
+
+    private void Awake() 
+    { 
+        // If there is an instance, and it's not me, delete myself.
+        
+        if (Instance != null && Instance != this) 
+        { 
+            Destroy(this); 
+        } 
+        else 
+        { 
+            Instance = this; 
+        } 
+    }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        playerHealthBar = GameObject.Find("HealthBar").GetComponent<HealthBar>();
+        // playerHealthBar = GameObject.Find("HealthBar").GetComponent<HealthBar>();
+        playerHealthBar = HealthBar.Instance;
         // Debug.Log(gameOverOverlay);
         health = maxHealth;
         playerHealthBar.setHealth(health, maxHealth);
@@ -45,10 +61,10 @@ public class PlayerState : MonoBehaviour
     }
 
     private void GameOver() {
-        var mainBattle = GameObject.Find("MainBattle").GetComponent<MainBattle>();
+        var mainBattle = MainBattle.Instance;
         mainBattle.moveToCentreCall(false, true);
-
-        var codeEditor = GameObject.Find("CodeEditor").GetComponent<CodeEditor>();
+;
+        var codeEditor = CodeEditor.Instance;
         codeEditor.MoveOffScreenGameOver();
 
         gameOverOverlay.SetActive(true);

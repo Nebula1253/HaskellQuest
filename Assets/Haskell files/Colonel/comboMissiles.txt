@@ -16,13 +16,15 @@ data HMissile = HMissile Target Angle
 launchHoming :: Target -> Int -> [HMissile]
 launchHoming t n = [HMissile t (angleGen i)| i <- [1..n]]
 
+-- write a function to make the homing missiles 
+-- target the regular missiles: you'll have to set the 
+-- regular missiles' ID as the target
+
 retarget :: HMissile -> Target -> HMissile
 retarget (HMissile _ a) t = HMissile t a
 
--- write a function to make the homing missiles target the regular missiles
--- you'll have to set the regular missiles' ID as the target
 backfire :: [Missile] -> [HMissile] -> [HMissile]
-backfire missiles hMissiles = -- INPUT HERE --
+backfire m_list hm_list = -- INPUT HERE --
 
 -- TEST CODE
 angleGen :: Int -> Float

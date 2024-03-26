@@ -36,7 +36,8 @@ public class PlayerHeart : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
 
-        playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
+        // playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
+        playerState = PlayerState.Instance;
 
         animator = GetComponent<Animator>();
         hurtSound = GetComponent<AudioSource>();
