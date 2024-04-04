@@ -5730,7 +5730,7 @@ MonoBehaviour:
   overheadEnemy: {fileID: 885496205}
   commentColor: {r: 0.49803925, g: 0.65882355, b: 0.89019614, a: 0}
   commentHighlighting: 1
-  currentScript: 2
+  currentScript: 0
   statusDisplayText: {fileID: 40045119}
   time: 0.5
 --- !u!1 &1855335688

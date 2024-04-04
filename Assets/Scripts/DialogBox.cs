@@ -39,7 +39,7 @@ public class DialogBox : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // dumbest fucking bug ever
+        // dumbest bug ever
         if (!startCalled) {
             advanceButton = GameObject.Find("ScreenClick").GetComponent<Button>();
             advanceButton.onClick.AddListener(AdvanceDialogue);

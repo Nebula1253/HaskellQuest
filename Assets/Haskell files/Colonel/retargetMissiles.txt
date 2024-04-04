@@ -16,7 +16,7 @@ retarget missiles t = -- INPUT HERE --
 
 -- TEST CODE
 angleGen :: Int -> Float
-angleGen i = 0.0 -- who cares lol the player's not gonna see this, the definition is just here to stop a compiler error
+angleGen i = fromIntegral i -- the player's not going to see this, the definition is just here to stop a compiler error
 
 main :: IO()
 main = do
