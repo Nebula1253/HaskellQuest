@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class TutorialController : EnemyController
 {
-    public GameObject dialog;
-    private DialogBox dbox;
     public TextAsset[] phaseZeroText;
     public TextAsset[] phaseOneText;
     public TextAsset[] phaseTwoText;
@@ -15,30 +13,26 @@ public class TutorialController : EnemyController
     public AudioClip hologramDialog;
     public Color lambdaManColor, hologramColor;
     private PlayerState pState;
-    private Button hackButton;
     
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
-        // dbox = dialog.GetComponent<DialogBox>();
-        dbox = DialogBox.Instance;
-        // pState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
         pState = PlayerState.Instance;
-        
-        hackButton = GameObject.Find("HackButton").GetComponent<Button>();
     }
 
     public override void PhaseTransition(int phase)
     {
-        switch(phase) {
-            case 0:
-                StartCoroutine(phaseZero());
-                break;
-            case 1: case 2:
-                pState.updateHealth(100);
-                StartCoroutine(phaseOneTwo(phase));
-                break;
+        if (!skipDialogue) {
+            switch(phase) {
+                case 0:
+                    StartCoroutine(phaseZero());
+                    break;
+                case 1: case 2:
+                    pState.updateHealth(100);
+                    StartCoroutine(phaseOneTwo(phase));
+                    break;
+            }
         }
     }
 

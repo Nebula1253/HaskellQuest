@@ -323,17 +323,17 @@ public class CodeEditor : MonoBehaviour
                 statusDisplay.text = "Your code timed out! Try again - see if you've got an infinite loop.";
             }
         }
-        else if (output.Split('\n')[2].Contains("error")) {
+        else if (output.Split('\n').Length >= 4 && output.Split('\n')[3].Contains("error")) {
             // put error details on screen, trigger enemy fire
             
             var outputSplit = output.Split('\n');
             var error = "DUMMY: SHOULD NEVER BE DISPLAYED";
 
-            if (outputSplit[2].Contains("jdoodle.hs")) { // JDoodle errors
-                error = outputSplit[3];
+            if (outputSplit[3].Contains("jdoodle.hs")) { // JDoodle errors
+                error = outputSplit[4];
             }
             else { // custom error messages
-                error = outputSplit[2].Replace("\"", "");
+                error = outputSplit[3].Replace("\"", "");
             }
             
             statusDisplay.color = Color.red;

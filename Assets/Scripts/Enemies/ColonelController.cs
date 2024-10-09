@@ -6,21 +6,16 @@ using UnityEngine.UI;
 public class ColonelController : EnemyController
 {
     public GameObject dialog;
-    private DialogBox dbox;
     public TextAsset[] phaseZeroText, phaseOneText, phaseTwoText, endText;
     public AudioClip lambdaManDialog, colonelDialog, explosion;
     public RuntimeAnimatorController dmgBot, explBot;
     public Color lambdaManColor, colonelColor;
     public Image screenFlash;
-    private Button hackButton;
     public float timeForOneFlash;
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
-        // dbox = dialog.GetComponent<DialogBox>();
-        dbox = DialogBox.Instance;
-        hackButton = GameObject.Find("HackButton").GetComponent<Button>();
     }
 
     public override void BattleEnd()
@@ -32,7 +27,9 @@ public class ColonelController : EnemyController
 
     public override void PhaseTransition(int phase)
     {
-        StartCoroutine(dialogue(phase));
+        if (!skipDialogue) {
+            StartCoroutine(dialogue(phase));
+        }
     }
 
     IEnumerator dialogue(int phase) {

@@ -29,4 +29,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Credits.unity
     guid: c963a3fe83eab414690b199fd94a4ceb
+  - enabled: 1
+    path: Assets/Scenes/ColonelBattleNetwork.unity
+    guid: 17418517cbe4a3c43bc50ee4dcdb88ce
   m_configObjects: {}

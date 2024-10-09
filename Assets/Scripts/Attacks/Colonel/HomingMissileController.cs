@@ -41,6 +41,7 @@ public class HomingMissileController : AttackController
 
     IEnumerator fireMissiles(bool redirect = false) {
         yield return new WaitForSecondsRealtime(1f);
+
         for (int i=0; i < nrMissiles; i++) {
             target = playerTransform;
             var missile = InstantiateMissile(transform.position, target);
@@ -50,6 +51,7 @@ public class HomingMissileController : AttackController
                 missile.GetComponent<HomingMissile>().SetTarget(target);
             }
         }
+        
         missilesFired = true;
     }
 

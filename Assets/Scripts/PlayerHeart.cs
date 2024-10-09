@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerHeart : MonoBehaviour
+public class PlayerHeart : NetworkBehaviour
 {
     
     float minX, minY, maxX, maxY;
@@ -18,11 +19,13 @@ public class PlayerHeart : MonoBehaviour
 
     void Start()
     {
-        // var boxSize = transform.parent.GetComponent<Renderer>().bounds.size
+        GameObject battlefield = GameObject.Find("BattleField");
 
-        var boxSize = transform.parent.GetChild(0).GetComponent<Renderer>().bounds.size;
+        var boxSize = battlefield.transform.GetChild(0).GetComponent<Renderer>().bounds.size;
         var spriteSize = GetComponent<SpriteRenderer>().bounds.size;
-        var boxCentre = transform.parent.position;
+        var boxCentre = battlefield.transform.position;
+
+        transform.position = boxCentre;
 
         var boxSizeXOffset = boxSize.x / 2;
         var boxSizeYOffset = boxSize.y / 2;
@@ -35,8 +38,6 @@ public class PlayerHeart : MonoBehaviour
         maxY = boxSizeYOffset + boxCentre.y - spriteSizeYOffset;
 
         rb = GetComponent<Rigidbody2D>();
-
-        // playerState = GameObject.Find("PlayerState").GetComponent<PlayerState>();
         playerState = PlayerState.Instance;
 
         animator = GetComponent<Animator>();
@@ -46,6 +47,8 @@ public class PlayerHeart : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) return;
+
         movementDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         movementDir.Normalize();
         movementMagnitude = movementDir.magnitude;
@@ -63,9 +66,6 @@ public class PlayerHeart : MonoBehaviour
     }
 
     public void TakeDamage(int damage) {
-        // health -= damage;
-        // playerController.health -= damage;
-        // playerHealthBar.setHealth(health, maxHealth);
         playerState.updateHealth(-damage);
 
         if (hurtSound.isPlaying) {

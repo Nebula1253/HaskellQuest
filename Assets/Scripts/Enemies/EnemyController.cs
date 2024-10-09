@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
     protected GameObject enemySprite, background;
+    protected Button hackButton;
     protected bool battleEnded = false;
+    protected DialogBox dbox;
     public static EnemyController Instance { get; private set; }
+    public bool skipDialogue;
 
     private void Awake() 
     { 
@@ -27,6 +31,8 @@ public class EnemyController : MonoBehaviour
     {
         enemySprite = transform.Find("EnemySprite").gameObject;
         background = transform.Find("Background").gameObject;
+        dbox = DialogBox.Instance;
+        hackButton = GameObject.Find("HackButton").GetComponent<Button>();
     }
 
     public virtual void BattleEnd() {

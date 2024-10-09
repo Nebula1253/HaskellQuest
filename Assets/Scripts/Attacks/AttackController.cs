@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public abstract class AttackController : MonoBehaviour
+public abstract class AttackController : NetworkBehaviour
 {
     // template for all attack scripts
     public virtual void Trigger(bool result) {}

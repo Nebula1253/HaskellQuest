@@ -5,7 +5,6 @@ using UnityEngine;
 public class FractalController : EnemyController
 {
     public GameObject dialog;
-    private DialogBox dbox;
     public TextAsset[] phaseZeroText, phaseOneText, endText;
     public AudioClip lambdaManDialog, fractalDialog, kowalewskiDialog;
     public Color lambdaManColor, fractalColor, kowalewskiColor;
@@ -15,8 +14,6 @@ public class FractalController : EnemyController
     new void Start()
     {
         base.Start();
-        // dbox = dialog.GetComponent<DialogBox>();
-        dbox = DialogBox.Instance;
     }
 
     public override void BattleEnd()
@@ -27,7 +24,9 @@ public class FractalController : EnemyController
 
     public override void PhaseTransition(int phase)
     {
-        StartCoroutine(phaseDialogue(phase));
+        if (!skipDialogue) {
+            StartCoroutine(phaseDialogue(phase));
+        }
     }
 
     IEnumerator phaseDialogue(int phase) {
