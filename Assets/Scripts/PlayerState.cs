@@ -37,9 +37,8 @@ public class PlayerState : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // playerHealthBar = GameObject.Find("HealthBar").GetComponent<HealthBar>();
         playerHealthBar = HealthBar.Instance;
-        // Debug.Log(gameOverOverlay);
+        
         health = maxHealth;
         playerHealthBar.setHealth(health, maxHealth);
         codeScore = initCodeScore;
@@ -61,7 +60,7 @@ public class PlayerState : MonoBehaviour
     }
 
     private void GameOver() {
-        var mainBattle = MainBattle.Instance;
+        var mainBattle = PlayerHUD.Instance;
         mainBattle.moveToCentreCall(false, true);
 ;
         var codeEditor = CodeEditor.Instance;

@@ -20,10 +20,6 @@ public class HealthBar : MonoBehaviour
             Instance = this; 
         } 
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
 
     public Slider slider;
     public TMPro.TextMeshProUGUI healthTextMesh;

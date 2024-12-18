@@ -6,6 +6,7 @@ using Unity.Netcode;
 public class Test : NetworkBehaviour
 {
     public GameObject battlefield;
+    public GameObject enemy;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,19 +17,17 @@ public class Test : NetworkBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.T)) {
-            EnableBattleFieldRpc();
-            // battlefield.GetComponent<BattleField>().SpawnPlayer();
+            EnableBattleFieldRpc(); // everyone enables the battlefield and the players
         }
     }
 
     [Rpc(SendTo.Everyone)]
     void EnableBattleFieldRpc() {
         if (battlefield.GetComponent<BattleField>().IsActive) {
-            // battlefield.SetActive(false);
+            battlefield.GetComponent<BattleField>().DeactivateBattlefield();
         }
         else {
-            battlefield.GetComponent<BattleField>().SpawnPlayer();
+            battlefield.GetComponent<BattleField>().ActivateBattlefield();
         }
-        
     }
 }

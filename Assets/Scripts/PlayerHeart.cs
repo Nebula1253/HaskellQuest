@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerHeart : NetworkBehaviour
+public class PlayerAvatar : NetworkBehaviour
 {
     
     float minX, minY, maxX, maxY;

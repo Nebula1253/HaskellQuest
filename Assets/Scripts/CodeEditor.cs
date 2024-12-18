@@ -64,9 +64,9 @@ public class CodeEditor : MonoBehaviour
     private string challengeCode;
     private string testCode;
     private bool interactable = true;
-    public GameObject gameField, mainBattle, overheadEnemy;
+    public GameObject gameField, playerHUD, overheadEnemy;
     private GameObject filename;
-    private MainBattle mainBattleScript;
+    private PlayerHUD playerHUDScript;
     public Color commentColor;
     public bool commentHighlighting;
     private string colorCode;
@@ -119,7 +119,7 @@ public class CodeEditor : MonoBehaviour
 
         DisableEditor();
 
-        mainBattleScript = MainBattle.Instance;
+        playerHUDScript = PlayerHUD.Instance;
 
         filename = GameObject.Find("Filename");
 
@@ -217,9 +217,10 @@ public class CodeEditor : MonoBehaviour
            wonBattle = (currentScript + 1) >= codeFiles.Length; 
         }
         if (!gameOver) {
-            mainBattleScript.moveToCentreCall(wonBattle);
+            playerHUDScript.moveToCentreCall(wonBattle);
         }
         
+        // TODO replace this with Unity's own UI animation option
         while (GetComponent<RectTransform>().anchoredPosition.x < 0) {
             var newX = Mathf.Min(0, GetComponent<RectTransform>().anchoredPosition.x + distanceDelta * Time.deltaTime);
             GetComponent<RectTransform>().anchoredPosition = new Vector2(newX, GetComponent<RectTransform>().anchoredPosition.y);

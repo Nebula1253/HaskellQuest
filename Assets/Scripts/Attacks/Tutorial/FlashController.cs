@@ -10,14 +10,14 @@ public class FlashController : AttackController
     public float maxAlpha, timeForOneFlash;
     public GameObject heart;
     public Image image;
-    private PlayerHeart playerHeart;
+    private PlayerAvatar playerHeart;
     private bool attackEnded = false;
 
     // Start is called before the first frame update
     void Start()
     {
         maxAlpha = Mathf.Clamp(maxAlpha, 0, 1);
-        playerHeart = heart.GetComponent<PlayerHeart>();
+        playerHeart = heart.GetComponent<PlayerAvatar>();
     }
 
     // Update is called once per frame

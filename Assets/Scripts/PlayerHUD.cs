@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainBattle : MonoBehaviour
+public class PlayerHUD : MonoBehaviour
 {
     public int UIinitXPos, UIturnXPos;
     private float spriteInitXPos, spriteTurnXPos;
@@ -13,7 +13,7 @@ public class MainBattle : MonoBehaviour
     private Button hackButton;
     private CodeEditor editor;
 
-    public static MainBattle Instance { get; private set; }
+    public static PlayerHUD Instance { get; private set; }
 
     private void Awake() 
     { 

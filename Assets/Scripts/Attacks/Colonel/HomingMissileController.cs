@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class HomingMissileController : AttackController
@@ -8,7 +9,8 @@ public class HomingMissileController : AttackController
     public int nrMissiles;
     public float missileSpeed, missileRotateSpeed, missileLockDelay;
     public float missileAngleRange;
-    private Transform target, playerTransform, enemyTransform;
+    private Transform target, enemyTransform;
+    private List<Transform> playerTransforms = new List<Transform>();
     private GameObject gameField;
     private bool missilesFired = false;
     
@@ -16,12 +18,14 @@ public class HomingMissileController : AttackController
     void Start()
     {
         gameField = GameObject.FindGameObjectWithTag("GameField");
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        // playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         enemyTransform = GameObject.FindGameObjectWithTag("Enemy").transform;
     }
 
     public override void Trigger(bool result) {
-        StartCoroutine(fireMissiles(result));
+        if (IsServer) {
+            StartCoroutine(fireMissiles(result));
+        }
     }
 
     private GameObject InstantiateMissile(Vector3 position, Transform target) {
@@ -36,14 +40,30 @@ public class HomingMissileController : AttackController
         newMissile.GetComponent<HomingMissile>().SetRotateSpeed(missileRotateSpeed);
         newMissile.GetComponent<HomingMissile>().SetLockDelay(missileLockDelay);
 
+        newMissile.GetComponent<NetworkObject>().Spawn();
+
         return newMissile;
     }
 
     IEnumerator fireMissiles(bool redirect = false) {
         yield return new WaitForSecondsRealtime(1f);
 
-        for (int i=0; i < nrMissiles; i++) {
-            target = playerTransform;
+        if (playerTransforms.Count == 0) {
+            var players = GameObject.FindGameObjectsWithTag("Player");
+            foreach (var player in players)
+            {
+                playerTransforms.Add(player.transform);
+            }
+        }
+
+        int nrPlayers = playerTransforms.Count;
+        int whichPlayer = 0;
+
+        for (int i=0; i < (nrMissiles * nrPlayers); i++) {
+            target = playerTransforms[whichPlayer];
+            whichPlayer = whichPlayer == 0 ? nrPlayers - 1 : 0;
+            Debug.Log(target);
+
             var missile = InstantiateMissile(transform.position, target);
             yield return new WaitForSecondsRealtime(0.5f);
             if (redirect) {

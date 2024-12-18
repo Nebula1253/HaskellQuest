@@ -32,7 +32,7 @@ public class FractalLaser : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.CompareTag("Player")) {
-            var player = other.gameObject.GetComponent<PlayerHeart>();
+            var player = other.gameObject.GetComponent<PlayerAvatar>();
             if (fractalSplit) {
                 player.TakeDamage(1);
             }
