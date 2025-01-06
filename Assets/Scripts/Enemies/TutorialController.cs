@@ -29,7 +29,7 @@ public class TutorialController : EnemyController
                     StartCoroutine(phaseZero());
                     break;
                 case 1: case 2:
-                    pState.updateHealth(100);
+                    pState.updateHealth(100, 0); // TODO FIX!!!!!
                     StartCoroutine(phaseOneTwo(phase));
                     break;
             }

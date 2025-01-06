@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Mathematics;
 
 public class BattleField : NetworkBehaviour
 {
@@ -26,7 +27,15 @@ public class BattleField : NetworkBehaviour
         if (!spawnedPlayer) {
             if (IsServer) {
                 // host spawns new player for itself
-                var player = Instantiate(player1Prefab, transform);
+                GameObject player;
+                if (NetworkManager.ConnectedClientsList.Count > 1) {
+                    Vector3 playerSpawn = new Vector3(spawnPoint.x - multiplayerXOffset, spawnPoint.y, spawnPoint.z);
+                    player = Instantiate(player1Prefab, playerSpawn, Quaternion.identity, transform);
+                }
+                else {
+                    player = Instantiate(player1Prefab, spawnPoint, Quaternion.identity, transform);
+                }
+                
                 player.GetComponent<NetworkObject>().SpawnAsPlayerObject(OwnerClientId);
 
                 Debug.Log("HOST SPAWNED");
@@ -67,7 +76,13 @@ public class BattleField : NetworkBehaviour
 
     [ServerRpc(RequireOwnership = false)]
     void SpawnPlayerServerRpc(ServerRpcParams serverRpcParams = default) {
-        var player = Instantiate(player2Prefab, transform);
+        // assumption - in a singe-player game, the player starts as the host and there are no clients
+        // therefore, if the server / host received this RPC, there has to have been a client, and we are in 2P mode - thus the offset needs to be added
+        Vector3 playerSpawn = new Vector3(spawnPoint.x + multiplayerXOffset, spawnPoint.y, spawnPoint.z);
+
+        var player = Instantiate(player2Prefab, playerSpawn, Quaternion.identity, transform);
         player.GetComponent<NetworkObject>().SpawnAsPlayerObject(serverRpcParams.Receive.SenderClientId);
+
+        Debug.Log("CLIENT SPAWNED");
     }
 }

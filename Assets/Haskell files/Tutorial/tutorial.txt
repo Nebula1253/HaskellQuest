@@ -1,20 +1,10 @@
--- the "type" keyword allows you to define custom types 
--- as aliases for other types
 type Health = Int
-
--- the "data" keyword defines a custom data structure 
--- with a specific pattern
 data Player = Player Health 
 
 hurtPlayer :: Player -> Player
 hurtPlayer (Player health) = Player (health - 10) 
 
--- The "(Player health)" there is an example 
--- of pattern-matching.
--- You can specify patterns that data should match to, and then 
--- deconstructing that data if it does, in one fell swoop.
-
--- Your job: change that function there so you 
+-- Your job: change the above function so that you 
 -- take no damage at all!
 
 -- Once you hit the submit button, the enemy's attack 

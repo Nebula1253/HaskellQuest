@@ -5,17 +5,21 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Unity.Netcode;
 
-public class PlayerState : MonoBehaviour
+public class PlayerState : NetworkBehaviour
 {
-    public int health, maxHealth;
+    public int maxHealth;
+    private NetworkList<int> health = new NetworkList<int>();
+    private List<HealthBar> bars = new List<HealthBar>();
     public int initCodeScore = 5000, initDamageScore = 5000;
     private int codeScore, damageScore;
     public int incorrectCodePenalty, damagePenalty;
-    private HealthBar playerHealthBar;
     private Button screenClick;
     private bool battleDone = false;
     public GameObject scoreDisplay, gameOverOverlay, dialogBox;
+    public GameObject singlePlayerHealthBar;
+    public GameObject multiplayerHealthBars;
     private EnemyController enemyController;
     public static PlayerState Instance { get; private set; }
 
@@ -37,10 +41,29 @@ public class PlayerState : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerHealthBar = HealthBar.Instance;
-        
-        health = maxHealth;
-        playerHealthBar.setHealth(health, maxHealth);
+        if (NetworkManager.ConnectedClientsList.Count > 1) {
+        // if (true) { // debugging purposes
+            // multi-player
+            multiplayerHealthBars.SetActive(true);
+            singlePlayerHealthBar.SetActive(false);
+
+            foreach (var bar in multiplayerHealthBars.GetComponentsInChildren<HealthBar>())
+            {
+                bar.setHealth(maxHealth, maxHealth);
+                bars.Add(bar);
+            }
+        }
+        else {
+            // single-player
+            singlePlayerHealthBar.SetActive(true);
+            multiplayerHealthBars.SetActive(false);
+
+            health.Add(maxHealth); // P1 health
+
+            var bar = singlePlayerHealthBar.GetComponentInChildren<HealthBar>();
+            bar.setHealth(maxHealth, maxHealth);
+            bars.Add(bar);
+        }
         codeScore = initCodeScore;
         damageScore = initDamageScore;
 
@@ -50,11 +73,36 @@ public class PlayerState : MonoBehaviour
         enemyController = GameObject.Find("EnemyView").GetComponent<EnemyController>();
     }
 
-    public void updateHealth(int healthDelta) {
-        health = Mathf.Clamp(health + healthDelta, 0, maxHealth);
-        playerHealthBar.setHealth(health, maxHealth);
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        Debug.Log("ON NETWORK SPAWN");
+
+        if (IsServer) {
+            health.Add(maxHealth); // P1 health
+            health.Add(maxHealth); // P2 health
+        }
+        else if (IsClient) {
+            health.OnListChanged += OnListChanged;
+        }
+    }
+
+    private void OnListChanged(NetworkListEvent<int> changeEvent) {
+        bars[changeEvent.Index].setHealth(changeEvent.Value, maxHealth);
+
+        if (changeEvent.Value <= 0) {
+            GameOver();
+        }
+    }
+
+    public void updateHealth(int healthDelta, int player) {
+        if (IsServer) {
+            health[player] = Mathf.Clamp(health[player] + healthDelta, 0, maxHealth);
+            bars[player].setHealth(health[player], maxHealth);
+        }
         
-        if (health <= 0) {
+        if (health[player] <= 0) { // TODO probably needs to be changed
             GameOver();
         }
     }

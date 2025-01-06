@@ -1,0 +1,14 @@
+Recursion is a way of defining functions where the function is applied within its own definition.
+
+Let's take a look at the factorial function. If written as f(x), the factorial function could be defined as f(x) = x * f(x - 1). However, on its own, this would never terminate, which is why we need a special case for f(1), which is just 1. Having this special case is <i>incredibly</i> important, to ensure the program doesn't run forever.
+
+These cases are known as the recursive case and the base case respectively, and are why having case expressions and pattern-matching are immensely useful. The full definition in Haskell would look something like this:
+
+    factorial :: Int -> Int
+    factorial 1 = 1
+    factorial x = x * factorial (x - 1)
+
+You could change the base case to "factorial 0 = 1" to take care of that case as well. Of course, this function still fails to terminate when supplied with a negative number, but that's true of the actual factorial function as well.
+
+Recursion is an incredibly powerful tool, and it comes in handy for splitting a larger problem into multiple smaller sub-problems.
+    

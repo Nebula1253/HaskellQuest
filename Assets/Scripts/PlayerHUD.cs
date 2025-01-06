@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Netcode;
 
 public class PlayerHUD : MonoBehaviour
 {
@@ -49,6 +50,8 @@ public class PlayerHUD : MonoBehaviour
 
         // Debug.Log("UIinitXPos: " + UIinitXPos + " UIturnXPos: " + UIturnXPos);
         // Debug.Log("spriteInitXPos: " + spriteInitXPos + " spriteTurnXPos: " + spriteTurnXPos);
+
+
 
         spriteDistanceDelta = Mathf.Abs(spriteInitXPos - spriteTurnXPos) / time;
     }

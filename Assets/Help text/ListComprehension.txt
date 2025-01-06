@@ -1,0 +1,24 @@
+List comprehensions allow you to create a list based on the elements of another list, similar to set comprehensions. For instance, if a set was mathematically defined as:
+    {x | x ∈ {1..50}, x % 2 = 0}
+...this being all even numbers from 1 to 50, then the equivalent list comprehension in Haskell would be:
+    [x | x <- [1..50], x `mod` 2 == 0]
+
+In this example, 'x <- [1..50]' is a <i>generator</i>: it feeds each element of the list to the expression before the '|'. The 'x `mod` 2 == 0' is known as a <i>guard</i>: an expression evaluating to a Bool, which is used to filter the elements of the list fed through.
+
+You can use multiple generators in a list comprehension, though later generators refine the results of prior generators. Let's look at an example:
+    [(i,j) | i <- ['a','b'], j <- [1,2]]
+
+This expression evaluates out to the list:
+    [(a,1),(a,2),(b,1),(b,2)]
+
+The second list is iterated through entirely, before the first generator moves on to the next element of the first list.
+
+To iterate through both lists <i>simultaneously</i>, you can use the 'zip' function: it takes two lists and returns a list of tuples. For instance, the expression:
+    zip [1,2,3] [1,2]
+...returns the list [(1, 1), (2, 2)]. The longer list is essentially truncated to match the length of the shorter one. 
+
+This list can then be used in a list comprehension if any further operations need to be done. For instance, if you want the sum of two lists of ints, it would be:
+    [ i + j | (i, j) <- zip [1,2,3] [1,2] ]
+
+Haskell also offers a feature called <i>parallel</i> list comprehension, which essentially does the same thing with more intuitive syntax. The above example becomes:
+    [ i + j | i <- [1,2,3] | j <- [1,2] ]

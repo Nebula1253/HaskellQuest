@@ -16,6 +16,7 @@ public class PlayerAvatar : NetworkBehaviour
     private AudioSource hurtSound;
     public float playerSpeed;
     public float movementMagnitude;
+    public int whichPlayer;
 
     void Start()
     {
@@ -24,8 +25,6 @@ public class PlayerAvatar : NetworkBehaviour
         var boxSize = battlefield.transform.GetChild(0).GetComponent<Renderer>().bounds.size;
         var spriteSize = GetComponent<SpriteRenderer>().bounds.size;
         var boxCentre = battlefield.transform.position;
-
-        transform.position = boxCentre;
 
         var boxSizeXOffset = boxSize.x / 2;
         var boxSizeYOffset = boxSize.y / 2;
@@ -66,7 +65,7 @@ public class PlayerAvatar : NetworkBehaviour
     }
 
     public void TakeDamage(int damage) {
-        playerState.updateHealth(-damage);
+        playerState.updateHealth(-damage, whichPlayer);
 
         if (hurtSound.isPlaying) {
             hurtSound.Stop();
