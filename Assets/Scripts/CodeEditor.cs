@@ -73,7 +73,7 @@ public class CodeEditor : MonoBehaviour
     private float codeEditorXPos;
     public int currentScript = 0;
 
-    public GameObject statusDisplayText, helpScreen;
+    public GameObject statusDisplayObj, helpScreen;
     public float time;
     private float distanceDelta, helpScreenDistanceDelta;
 
@@ -86,29 +86,32 @@ public class CodeEditor : MonoBehaviour
     public float codeBoxHeightWithErrors, codeBoxHeightWithoutErrors, errorDisplayOffPosY, errorDisplayOnPosY;
     public GameObject codeFieldObj, codeFieldScrollBar;
     private bool errorDisplayOn = false;
+    public string errorPlaceholderText;
 
-    public static CodeEditor Instance { get; private set; }
-    private void Awake() 
-    { 
-        // If there is an instance, and it's not me, delete myself.
+    // public static CodeEditor Instance { get; private set; }
+    // private void Awake() 
+    // { 
+    //     // If there is an instance, and it's not me, delete myself.
         
-        if (Instance != null && Instance != this) 
-        { 
-            Destroy(this); 
-        } 
-        else 
-        { 
-            Instance = this; 
-        } 
-    }
+    //     if (Instance != null && Instance != this) 
+    //     { 
+    //         Destroy(this); 
+    //     } 
+    //     else 
+    //     { 
+    //         Instance = this; 
+    //     } 
+    // }
 
     // Start is called before the first frame update
     void Start()
     {
         helpScreen.GetComponent<RectTransform>().anchoredPosition = new Vector2(960, helpScreen.GetComponent<RectTransform>().anchoredPosition.y);
+        statusDisplayObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(statusDisplayObj.GetComponent<RectTransform>().anchoredPosition.x, errorDisplayOffPosY);
 
         codeField = GetComponentInChildren<TMP_InputField>();
-        statusDisplay = statusDisplayText.GetComponentInChildren<TMP_Text>();
+        statusDisplay = statusDisplayObj.GetComponentInChildren<TMP_Text>();
+        statusDisplay.text = errorPlaceholderText;
         
         submitButton = GameObject.FindGameObjectWithTag("Submit").GetComponent<Button>();
         submitButton.onClick.AddListener(Submit);
@@ -246,12 +249,41 @@ public class CodeEditor : MonoBehaviour
         helpScreenActive = true;
     }
 
+    IEnumerator ErrorScreenActivate() {
+        var statusDisplayRect = statusDisplayObj.GetComponent<RectTransform>();
+
+        while (statusDisplayRect.anchoredPosition.y < errorDisplayOnPosY) {
+            var newY = statusDisplayRect.anchoredPosition.y + (distanceDelta * Time.deltaTime);
+            if (newY > errorDisplayOnPosY) {
+                newY = errorDisplayOnPosY;
+            }
+            statusDisplayRect.anchoredPosition = new Vector2(statusDisplayRect.anchoredPosition.x, newY);
+            yield return null;
+        }
+
+        errorDisplayOn = true;
+    }
+
+    IEnumerator ErrorScreenDeactivate() {
+        var statusDisplayRect = statusDisplayObj.GetComponent<RectTransform>();
+
+        while (statusDisplayRect.anchoredPosition.y > errorDisplayOffPosY) {
+            var newY = statusDisplayRect.anchoredPosition.y - (distanceDelta * Time.deltaTime);
+            if (newY < errorDisplayOffPosY) {
+                newY = errorDisplayOffPosY;
+            }
+            statusDisplayRect.anchoredPosition = new Vector2(statusDisplayRect.anchoredPosition.x, newY);
+            yield return null;
+        }
+
+        errorDisplayOn = false;
+    }
+
     void Errors() {
         var sizeDelta = Math.Abs(codeBoxHeightWithErrors - codeBoxHeightWithoutErrors) / 2;
 
         var codeFieldRect = codeFieldObj.GetComponent<RectTransform>();
         var codeFieldScrollBarRect = codeFieldScrollBar.GetComponent<RectTransform>();
-        var statusDisplayRect = statusDisplayText.GetComponent<RectTransform>();
 
         if (errorDisplayOn) {
             codeFieldRect.sizeDelta = new Vector2(codeFieldRect.sizeDelta.x, codeBoxHeightWithoutErrors);
@@ -260,9 +292,7 @@ public class CodeEditor : MonoBehaviour
             codeFieldScrollBarRect.sizeDelta = new Vector2(codeFieldScrollBarRect.sizeDelta.x, codeBoxHeightWithoutErrors);
             codeFieldScrollBarRect.anchoredPosition -= new Vector2(0, sizeDelta);
 
-            statusDisplayRect.anchoredPosition = new Vector2(statusDisplayRect.anchoredPosition.x, errorDisplayOffPosY);
-
-            errorDisplayOn = false;
+            StartCoroutine(ErrorScreenDeactivate());
         }
         else {
             codeFieldRect.sizeDelta = new Vector2(codeFieldRect.sizeDelta.x, codeBoxHeightWithErrors);
@@ -271,9 +301,7 @@ public class CodeEditor : MonoBehaviour
             codeFieldScrollBarRect.sizeDelta = new Vector2(codeFieldScrollBarRect.sizeDelta.x, codeBoxHeightWithErrors);
             codeFieldScrollBarRect.anchoredPosition += new Vector2(0, sizeDelta);
 
-            statusDisplayRect.anchoredPosition = new Vector2(statusDisplayRect.anchoredPosition.x, errorDisplayOnPosY);
-
-            errorDisplayOn = true;
+            StartCoroutine(ErrorScreenActivate());
         }
     }
 
@@ -383,7 +411,7 @@ public class CodeEditor : MonoBehaviour
         errorsButton.interactable = true;
     }
     
-    private string CleanColorFormatting(string code) {
+    public string CleanColorFormatting(string code) {
         return code.Replace("<color=" + colorCode + ">", "").Replace("</color>", "");
     }
 
@@ -392,6 +420,10 @@ public class CodeEditor : MonoBehaviour
         if (output.Contains("Additional: ")) {
             additional = output.Split('\n')[3].Remove(0,13);
             additional = additional.Remove(additional.Length - 1, 1);
+        }
+
+        if (statusDisplay.text == errorPlaceholderText) {
+            statusDisplay.text = "";
         }
         
         if (output.Contains("Timeout") || output == null) {

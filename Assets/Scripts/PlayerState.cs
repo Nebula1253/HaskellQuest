@@ -111,7 +111,7 @@ public class PlayerState : NetworkBehaviour
         var mainBattle = PlayerHUD.Instance;
         mainBattle.moveToCentreCall(false, true);
 ;
-        var codeEditor = CodeEditor.Instance;
+        var codeEditor = GameObject.FindGameObjectWithTag("CodeEditor").GetComponent<CodeEditor>();
         codeEditor.MoveOffScreenGameOver();
 
         gameOverOverlay.SetActive(true);

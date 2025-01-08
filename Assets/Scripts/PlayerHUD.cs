@@ -37,8 +37,8 @@ public class PlayerHUD : MonoBehaviour
         hack = transform.Find("HackButton").gameObject;
         enemyView = GameObject.Find("EnemyView");
 
-        // editor = GameObject.FindGameObjectWithTag("CodeEditor").GetComponent<CodeEditor>();
-        editor = CodeEditor.Instance;
+        editor = GameObject.FindGameObjectWithTag("CodeEditor").GetComponent<CodeEditor>();
+        // editor = CodeEditor.Instance;
 
         hackButton = hack.GetComponent<Button>();
 
