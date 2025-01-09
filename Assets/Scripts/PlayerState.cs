@@ -6,11 +6,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Unity.Netcode;
+using System.Reflection;
+using UnityEditor;
 
 public class PlayerState : NetworkBehaviour
 {
     public int maxHealth;
-    private NetworkList<int> health = new NetworkList<int>();
+    private NetworkList<int> health;
     private List<HealthBar> bars = new List<HealthBar>();
     public int initCodeScore = 5000, initDamageScore = 5000;
     private int codeScore, damageScore;
@@ -26,7 +28,10 @@ public class PlayerState : NetworkBehaviour
     private void Awake() 
     { 
         // If there is an instance, and it's not me, delete myself.
-        
+        if (health == null) {
+            health = new NetworkList<int>();
+        }
+
         if (Instance != null && Instance != this) 
         { 
             Destroy(this); 
@@ -35,14 +40,18 @@ public class PlayerState : NetworkBehaviour
         { 
             Instance = this; 
         } 
+
+// # if UNITY_EDITOR
+//         // AssemblyReloadEvents.beforeAssemblyReload += CleanupHealthList;
+// # endif
     }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        if (NetworkManager.ConnectedClientsList.Count > 1) {
-        // if (true) { // debugging purposes
+        // if (NetworkManager.ConnectedClientsList.Count > 1) {
+        if (true) { // debugging purposes
             // multi-player
             multiplayerHealthBars.SetActive(true);
             singlePlayerHealthBar.SetActive(false);
@@ -180,4 +189,24 @@ public class PlayerState : NetworkBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
+
+//     public override void OnDestroy()
+//     {
+//         base.OnDestroy();
+
+//         // CleanupHealthList();
+
+// # if UNITY_EDITOR
+//         // AssemblyReloadEvents.beforeAssemblyReload -= CleanupHealthList;
+// # endif
+//     }
+
+//     private void CleanupHealthList() {
+//         Debug.Log("Cleanup Health List is called");
+
+//         if (health != null) {
+//             health.Dispose();
+//             health = null;
+//         }
+//     }
 }

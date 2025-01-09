@@ -967,6 +967,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battlefield: {fileID: 1234470213}
   enemy: {fileID: 885496205}
+  debug: 0
 --- !u!1 &510746278
 GameObject:
   m_ObjectHideFlags: 0
@@ -6071,7 +6072,7 @@ PrefabInstance:
       objectReference: {fileID: 885496205}
     - target: {fileID: 7335874115675977564, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
       propertyPath: commentHighlighting
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7677417676897108661, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
       propertyPath: m_AnchorMax.y

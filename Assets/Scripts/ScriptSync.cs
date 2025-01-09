@@ -5,9 +5,9 @@ using UnityEngine;
 using DiffMatchPatch;
 using TMPro;
 
-public enum Operation {
-    DELETE, INSERT, EQUAL
-}
+// public enum Operation {
+//     DELETE, INSERT, EQUAL
+// }
 
 public struct DiffWrapper : INetworkSerializable {
     public Operation operation;
@@ -41,7 +41,7 @@ public class ScriptSync : NetworkBehaviour
     void Start()
     {
         codeField = GetComponentInChildren<TMP_InputField>();
-        RefreshText();
+        ChangeText();
 
         dmp = new diff_match_patch();
     }
@@ -60,7 +60,8 @@ public class ScriptSync : NetworkBehaviour
         }
     }
 
-    void RefreshText() {
+    
+    void ChangeText() {
         codeText = GetComponent<CodeEditor>().CleanColorFormatting(codeField.text);
         codeShadow = codeText;
     }
@@ -96,11 +97,11 @@ public class ScriptSync : NetworkBehaviour
             temp.Add(new DiffWrapper(diff));
         }
 
-        ServerApplyClientEditsRpc(temp.ToArray());
+        ApplyClientEditsServerRpc(temp.ToArray());
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    void ServerApplyClientEditsRpc(DiffWrapper[] clientEditsArray) {
+    void ApplyClientEditsServerRpc(DiffWrapper[] clientEditsArray) {
         // get a list of diffs again
         List<Diff> clientEdits = new List<Diff>();
         foreach (var diffWrapper in clientEditsArray)
@@ -118,11 +119,13 @@ public class ScriptSync : NetworkBehaviour
         // attempt to apply client edits to server text
         List<Patch> serverTextPatches = dmp.patch_make(codeText, clientEdits);
 
-        ShowPatches(serverTextPatches);
+        // ShowPatches(serverTextPatches);
 
-        codeText = (string) dmp.patch_apply(serverTextPatches, codeText)[0];
-
-        codeField.text = codeText; // I would hope the comment highlighting gets automatically applied here
+        var newCodeText = (string) dmp.patch_apply(serverTextPatches, codeText)[0];
+        if (!codeText.Equals(newCodeText))  {
+            codeField.text = newCodeText; // I would hope the comment highlighting gets automatically applied here
+        }
+        codeText = newCodeText;
 
         // now, get server-side edits
         List<Diff> serverEdits = dmp.diff_main(codeShadow, codeText);
@@ -135,11 +138,12 @@ public class ScriptSync : NetworkBehaviour
         {
             temp.Add(new DiffWrapper(diff));
         }
-        ClientApplyServerEditsRpc(temp.ToArray());
+        ApplyServerEditsClientRpc(temp.ToArray());
     }
 
-    [Rpc(SendTo.NotServer, RequireOwnership = false)]
-    void ClientApplyServerEditsRpc(DiffWrapper[] serverEditsArray) {
+    [Rpc(SendTo.NotServer, RequireOwnership = true)]
+    void ApplyServerEditsClientRpc(DiffWrapper[] serverEditsArray) {
+        Debug.Log("ClientApplyServerEditsRpc called");
         // get list of diffs again
         List<Diff> serverEdits = new List<Diff>();
         foreach (var diffWrapper in serverEditsArray) {
@@ -155,8 +159,10 @@ public class ScriptSync : NetworkBehaviour
 
         // attempt to apply server edits to client text
         List<Patch> clientTextPatches = dmp.patch_make(codeText, serverEdits);
-        codeText = (string) dmp.patch_apply(clientTextPatches, codeText)[0];
-
-        codeField.text = codeText;
+        var newCodeText = (string) dmp.patch_apply(clientTextPatches, codeText)[0];
+        if (!codeText.Equals(newCodeText))  {
+            codeField.text = newCodeText; // I would hope the comment highlighting gets automatically applied here
+        }
+        codeText = newCodeText;
     }
 }

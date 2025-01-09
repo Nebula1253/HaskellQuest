@@ -8,6 +8,7 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 using System.Runtime.ConstrainedExecution;
+using System.Data.Common;
 
 public class JDoodleRequest {
     public string clientId = "190c8528c5ed8a609a6322fb00818260";
@@ -80,7 +81,7 @@ public class CodeEditor : MonoBehaviour
     private PlayerState playerState;
     private bool gameOver = false;
     private EnemyController enemyController;
-    private int alteredCaretPosition = -1;
+    private int cachedCaretPosition = -1;
     private bool helpScreenActive = false;
 
     public float codeBoxHeightWithErrors, codeBoxHeightWithoutErrors, errorDisplayOffPosY, errorDisplayOnPosY;
@@ -169,19 +170,22 @@ public class CodeEditor : MonoBehaviour
             }
         }
 
-        if (alteredCaretPosition != -1) {
-            codeField.caretPosition = alteredCaretPosition;
-            alteredCaretPosition = -1;
+        if (cachedCaretPosition != -1) {
+            codeField.caretPosition = cachedCaretPosition;
+            cachedCaretPosition = -1;
         }
     }
 
     private void CommentHighlighting() {
         bool commentChanged = false;
-        var codeText = codeField.text.Split('\n');
+        var codeLines = codeField.text.Split('\n');
         string newCode = "";
 
-        for (int i = 0; i < codeText.Length; i++) {
-            string line = codeText[i];
+        Debug.Log(codeLines.Length);
+
+        for (int i = 0; i < codeLines.Length; i++) {
+            string line = codeLines[i];
+
             if (line.Contains("--") && !line.Contains("<color=" + colorCode + ">")) {
                 var regex = new Regex("--");
                 line = regex.Replace(line, "<color=" + colorCode + ">--", 1);
@@ -197,13 +201,19 @@ public class CodeEditor : MonoBehaviour
                 line = line.Replace("</color>", "");
                 commentChanged = true;
             }
-            
-            newCode += line + "\n";
+
+            newCode += line;
+            if (i != codeLines.Length - 1) {
+                newCode += "\n";
+            }
         }
         
         if (commentChanged) {
-            alteredCaretPosition = codeField.caretPosition;
+            cachedCaretPosition = codeField.caretPosition;
             codeField.text = newCode;
+
+            // don't know why this would work, but let's hope it somehow does??
+            codeField.caretPosition = cachedCaretPosition;
         }
     }
 

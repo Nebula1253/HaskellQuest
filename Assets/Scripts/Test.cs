@@ -7,6 +7,7 @@ public class Test : NetworkBehaviour
 {
     public GameObject battlefield;
     public GameObject enemy;
+    public bool debug;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +17,7 @@ public class Test : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T)) {
+        if (Input.GetKeyDown(KeyCode.T) && debug) {
             EnableBattleFieldRpc(); // everyone enables the battlefield and the players
         }
     }
