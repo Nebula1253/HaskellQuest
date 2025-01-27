@@ -16,6 +16,7 @@ data HMissile = HMissile Target Angle
 launchHoming :: Target -> Int -> [HMissile]
 launchHoming t n = [HMissile t (angleGen i)| i <- [1..n]]
 
+-- PLAYER CODE
 -- write a function to make the homing missiles 
 -- target the regular missiles: you'll have to set the 
 -- regular missiles' ID as the target

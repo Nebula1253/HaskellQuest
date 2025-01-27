@@ -6,7 +6,7 @@ using Unity.Mathematics;
 
 public class BattleField : NetworkBehaviour
 {
-    public GameObject player1Prefab, player2Prefab;
+    public GameObject playerPrefab, player1Prefab, player2Prefab;
     public GameObject battlefieldBG, enemyOverhead;
     public Vector3 spawnPoint;
     public float multiplayerXOffset;
@@ -29,11 +29,13 @@ public class BattleField : NetworkBehaviour
                 // host spawns new player for itself
                 GameObject player;
                 if (NetworkManager.ConnectedClientsList.Count > 1) {
+                    // multiplayer
                     Vector3 playerSpawn = new Vector3(spawnPoint.x - multiplayerXOffset, spawnPoint.y, spawnPoint.z);
                     player = Instantiate(player1Prefab, playerSpawn, Quaternion.identity, transform);
                 }
                 else {
-                    player = Instantiate(player1Prefab, spawnPoint, Quaternion.identity, transform);
+                    // single-player
+                    player = Instantiate(playerPrefab, spawnPoint, Quaternion.identity, transform);
                 }
                 
                 player.GetComponent<NetworkObject>().SpawnAsPlayerObject(OwnerClientId);
@@ -55,10 +57,10 @@ public class BattleField : NetworkBehaviour
         }
         IsActive = true;
 
-        if (IsServer) {
-            // start attack
-            GameObject.FindGameObjectWithTag("Enemy").GetComponent<AttackController>().Trigger(false);
-        }
+        // if (IsServer) {
+        //     // start attack
+        //     GameObject.FindGameObjectWithTag("Enemy").GetComponent<AttackController>().Trigger(false);
+        // }
     }
 
     public void DeactivateBattlefield() {

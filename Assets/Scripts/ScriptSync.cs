@@ -14,7 +14,7 @@ public struct DiffWrapper : INetworkSerializable {
     public string text;
 
     public DiffWrapper(Diff diff) {
-        operation = (Operation) diff.operation;
+        operation = diff.operation;
         text = diff.text;
     }
 
@@ -25,7 +25,7 @@ public struct DiffWrapper : INetworkSerializable {
     }
 
     public Diff ToDiff() {
-        return new Diff((DiffMatchPatch.Operation) operation, text);
+        return new Diff(operation, text);
     }
 }
 
@@ -61,7 +61,7 @@ public class ScriptSync : NetworkBehaviour
     }
 
     
-    void ChangeText() {
+    public void ChangeText() {
         codeText = GetComponent<CodeEditor>().CleanColorFormatting(codeField.text);
         codeShadow = codeText;
     }
@@ -96,12 +96,16 @@ public class ScriptSync : NetworkBehaviour
         {
             temp.Add(new DiffWrapper(diff));
         }
+        var currentScript = GetComponent<CodeEditor>().currentScript;
 
-        ApplyClientEditsServerRpc(temp.ToArray());
+        ApplyClientEditsServerRpc(temp.ToArray(), currentScript);
     }
 
     [Rpc(SendTo.Server, RequireOwnership = false)]
-    void ApplyClientEditsServerRpc(DiffWrapper[] clientEditsArray) {
+    void ApplyClientEditsServerRpc(DiffWrapper[] clientEditsArray, int clientCurrentScript) {
+        var currentScript = GetComponent<CodeEditor>().currentScript;
+        if (clientCurrentScript != currentScript) return;
+
         // get a list of diffs again
         List<Diff> clientEdits = new List<Diff>();
         foreach (var diffWrapper in clientEditsArray)
@@ -138,12 +142,14 @@ public class ScriptSync : NetworkBehaviour
         {
             temp.Add(new DiffWrapper(diff));
         }
-        ApplyServerEditsClientRpc(temp.ToArray());
+        ApplyServerEditsClientRpc(temp.ToArray(), currentScript);
     }
 
     [Rpc(SendTo.NotServer, RequireOwnership = true)]
-    void ApplyServerEditsClientRpc(DiffWrapper[] serverEditsArray) {
-        Debug.Log("ClientApplyServerEditsRpc called");
+    void ApplyServerEditsClientRpc(DiffWrapper[] serverEditsArray, int serverCurrentScript) {
+        var currentScript = GetComponent<CodeEditor>().currentScript;
+        if (serverCurrentScript != currentScript) return;
+
         // get list of diffs again
         List<Diff> serverEdits = new List<Diff>();
         foreach (var diffWrapper in serverEditsArray) {

@@ -9,6 +9,7 @@ launch n = [Missile i (randomGen i) | i <- [1..n]]
 -- randomGen: a function that randomly decides if the missile 
 -- is active or not; one missile per barrage won't hurt you
 
+-- PLAYER CODE
 -- write a function to include only the INACTIVE missiles: 
 -- we'll be using this to interfere with the attack!
 filterMissiles :: [Missile] -> [Missile]

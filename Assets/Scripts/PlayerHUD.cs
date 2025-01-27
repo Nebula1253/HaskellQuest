@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
 
-public class PlayerHUD : MonoBehaviour
+public class PlayerHUD : NetworkBehaviour
 {
     public int UIinitXPos, UIturnXPos;
     private float spriteInitXPos, spriteTurnXPos;
@@ -42,7 +42,7 @@ public class PlayerHUD : MonoBehaviour
 
         hackButton = hack.GetComponent<Button>();
 
-        hackButton.onClick.AddListener(PlayerActionHack);
+        hackButton.onClick.AddListener(PlayerActionHackRpc);
 
         uiDistanceDelta = Mathf.Abs(UIinitXPos - UIturnXPos) / time;
         spriteInitXPos = 0f;
@@ -112,7 +112,8 @@ public class PlayerHUD : MonoBehaviour
         StartCoroutine(moveSpriteToCentre(wonBattle));
     }
 
-    private void PlayerActionHack() {
+    [Rpc(SendTo.Everyone)]
+    private void PlayerActionHackRpc() {
         StartCoroutine(moveToTurnPos());
         StartCoroutine(moveSpriteToTurnPos());
         editor.ActivateEditor();

@@ -9,63 +9,26 @@ using UnityEngine.UI;
 using TMPro;
 using System.Runtime.ConstrainedExecution;
 using System.Data.Common;
+using Unity.Netcode;
+using JDoodle;
 
-public class JDoodleRequest {
-    public string clientId = "190c8528c5ed8a609a6322fb00818260";
-    public string clientSecret = "f61f2873be5015e976b49dc18c4f33ce45133494fc1dafeb60480fc20b9f40ac";
-    public string script;
-    public string language = "haskell";
-    public string versionIndex = "3";
-
-    public JDoodleRequest(string script) {
-        this.script = script;
-    }
-}
-
-public class JDoodleCreditsRequest {
-    public string clientId = "190c8528c5ed8a609a6322fb00818260";
-    public string clientSecret = "f61f2873be5015e976b49dc18c4f33ce45133494fc1dafeb60480fc20b9f40ac";
-}
-
-public class JDoodleResponse {
-    public string output;
-    public string statusCode;
-    public string memory;
-    public string cpuTime;
-
-    public JDoodleResponse(string output, string statusCode, string memory, string cpuTime) {
-        this.output = output;
-        this.statusCode = statusCode;
-        this.memory = memory;
-        this.cpuTime = cpuTime;
-    }
-}
-
-public class JDoodleCreditsResponse {
-    public int used;
-    public string error;
-    public string statusCode;
-    
-    public JDoodleCreditsResponse(int used, string error, string statusCode) {
-        this.used = used;
-        this.error = error;
-        this.statusCode = statusCode;
-    }
-}
-
-public class CodeEditor : MonoBehaviour
+public class CodeEditor : NetworkBehaviour
 {
     const int CREDIT_LIMIT = 200;
+    const string TEST_CODE_MARKER = "-- TEST CODE";
+    const string PLAYER_CODE_MARKER = "-- PLAYER CODE";
     private TMP_InputField codeField;
-    private TMP_Text statusDisplay;
-    private Button submitButton, resetButton, helpButton, errorsButton;
+    private TMP_Text errorDisplay;
+    public TMP_Text nonEditableCode;
+
+    private Button submitButton, resetButton;
     public TextAsset[] codeFiles;
     private AttackController[] controllers;
 
     private string challengeCode;
     private string testCode;
     private bool interactable = true;
-    public GameObject gameField, playerHUD, overheadEnemy;
+    public GameObject battlefield, overheadEnemy;
     private GameObject filename;
     private PlayerHUD playerHUDScript;
     public Color commentColor;
@@ -74,19 +37,14 @@ public class CodeEditor : MonoBehaviour
     private float codeEditorXPos;
     public int currentScript = 0;
 
-    public GameObject statusDisplayObj, helpScreen;
+    public GameObject statusDisplayObj;
     public float time;
-    private float distanceDelta, helpScreenDistanceDelta;
+    private float distanceDelta;
 
     private PlayerState playerState;
     private bool gameOver = false;
     private EnemyController enemyController;
     private int cachedCaretPosition = -1;
-    private bool helpScreenActive = false;
-
-    public float codeBoxHeightWithErrors, codeBoxHeightWithoutErrors, errorDisplayOffPosY, errorDisplayOnPosY;
-    public GameObject codeFieldObj, codeFieldScrollBar;
-    private bool errorDisplayOn = false;
     public string errorPlaceholderText;
 
     // public static CodeEditor Instance { get; private set; }
@@ -107,12 +65,9 @@ public class CodeEditor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        helpScreen.GetComponent<RectTransform>().anchoredPosition = new Vector2(960, helpScreen.GetComponent<RectTransform>().anchoredPosition.y);
-        statusDisplayObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(statusDisplayObj.GetComponent<RectTransform>().anchoredPosition.x, errorDisplayOffPosY);
-
         codeField = GetComponentInChildren<TMP_InputField>();
-        statusDisplay = statusDisplayObj.GetComponentInChildren<TMP_Text>();
-        statusDisplay.text = errorPlaceholderText;
+        errorDisplay = statusDisplayObj.GetComponentInChildren<TMP_Text>();
+        errorDisplay.text = errorPlaceholderText;
         
         submitButton = GameObject.FindGameObjectWithTag("Submit").GetComponent<Button>();
         submitButton.onClick.AddListener(Submit);
@@ -120,17 +75,8 @@ public class CodeEditor : MonoBehaviour
         resetButton = GameObject.FindGameObjectWithTag("Reset").GetComponent<Button>();
         resetButton.onClick.AddListener(Reset);
 
-        helpButton = GameObject.FindGameObjectWithTag("Help").GetComponent<Button>();
-        helpButton.onClick.AddListener(Help);
-
-        errorsButton = GameObject.FindGameObjectWithTag("Error").GetComponent<Button>();
-        errorsButton.onClick.AddListener(Errors);
-
-        challengeCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[0];
-        testCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[1];
-
-        codeField.text = challengeCode;
         colorCode = "#" + ColorUtility.ToHtmlStringRGB(commentColor);
+        ChangeScript();
 
         codeEditorXPos = -960;
 
@@ -143,8 +89,8 @@ public class CodeEditor : MonoBehaviour
         distanceDelta = Mathf.Abs(codeEditorXPos) / time;
 
         if (commentHighlighting) {
-            CommentHighlighting();
-            codeField.onValueChanged.AddListener(delegate {CommentHighlighting(); });
+            EditableCodeHighlighting();
+            codeField.onValueChanged.AddListener(delegate {EditableCodeHighlighting(); });
         }
 
         filename.GetComponent<TMP_Text>().text = codeFiles[currentScript].name + ".hs";
@@ -162,11 +108,8 @@ public class CodeEditor : MonoBehaviour
     void Update()
     {
         if (interactable) {
-            // CommentHighlighting();
-
             if (Input.GetKeyDown(KeyCode.Escape)) {
-                DisableEditor();
-                StartCoroutine(MoveOffScreen(false));
+                BackRpc();
             }
         }
 
@@ -176,9 +119,46 @@ public class CodeEditor : MonoBehaviour
         }
     }
 
-    private void CommentHighlighting() {
+    void ChangeScript() {
+        var testCodeDivvy = codeFiles[currentScript].text.Split(TEST_CODE_MARKER, StringSplitOptions.None);
+        Debug.Log(testCodeDivvy[0]);
+
+        challengeCode = testCodeDivvy[0];
+        testCode = testCodeDivvy[1];
+
+        var playerCodeDivvy = challengeCode.Split(PLAYER_CODE_MARKER, StringSplitOptions.None);
+
+        string neCodeCommented = CommentHighlighting(playerCodeDivvy[0]);
+        if (neCodeCommented != null) {
+            nonEditableCode.text = neCodeCommented;
+        }
+        else {
+            nonEditableCode.text = playerCodeDivvy[0];
+        }
+        codeField.text = playerCodeDivvy[1];
+    }
+
+    void EditableCodeHighlighting() {
+        string newCode = CommentHighlighting(codeField.text);
+
+        if (newCode != null) {
+            cachedCaretPosition = codeField.caretPosition;
+            codeField.text = newCode;
+
+            // don't know why this would work, but let's hope it somehow does??
+            codeField.caretPosition = cachedCaretPosition;
+        }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    void BackRpc() {
+        DisableEditor();
+        StartCoroutine(MoveOffScreen(false));
+    }
+
+    private string CommentHighlighting(string code) {
         bool commentChanged = false;
-        var codeLines = codeField.text.Split('\n');
+        var codeLines = code.Split('\n');
         string newCode = "";
 
         Debug.Log(codeLines.Length);
@@ -209,11 +189,10 @@ public class CodeEditor : MonoBehaviour
         }
         
         if (commentChanged) {
-            cachedCaretPosition = codeField.caretPosition;
-            codeField.text = newCode;
-
-            // don't know why this would work, but let's hope it somehow does??
-            codeField.caretPosition = cachedCaretPosition;
+            return newCode;
+        }
+        else {
+            return null;
         }
     }
 
@@ -225,96 +204,6 @@ public class CodeEditor : MonoBehaviour
         codeField.text = challengeCode;
     }
 
-    void Help() {
-        if (helpScreenActive) {
-            StartCoroutine(HelpScreenDeactivate());
-        }
-        else {
-            StartCoroutine(HelpScreenActivate());
-        }
-        
-    }
-
-    IEnumerator HelpScreenDeactivate() {
-        while (helpScreen.GetComponent<RectTransform>().anchoredPosition.x < 960f) {
-            var newX = helpScreen.GetComponent<RectTransform>().anchoredPosition.x + (distanceDelta * Time.deltaTime);
-            if (newX > 960f) {
-                newX = 960f;
-            }
-            helpScreen.GetComponent<RectTransform>().anchoredPosition = new Vector2(newX, helpScreen.GetComponent<RectTransform>().anchoredPosition.y);
-            yield return null;
-        }
-        helpScreenActive = false;
-    }
-
-    IEnumerator HelpScreenActivate() {
-        while (helpScreen.GetComponent<RectTransform>().anchoredPosition.x > 0f) {
-            var newX = helpScreen.GetComponent<RectTransform>().anchoredPosition.x - (distanceDelta * Time.deltaTime);
-            if (newX < 0f) {
-                newX = 0f;
-            }
-            helpScreen.GetComponent<RectTransform>().anchoredPosition = new Vector2(newX, helpScreen.GetComponent<RectTransform>().anchoredPosition.y);
-            yield return null;
-        }
-        helpScreenActive = true;
-    }
-
-    IEnumerator ErrorScreenActivate() {
-        var statusDisplayRect = statusDisplayObj.GetComponent<RectTransform>();
-
-        while (statusDisplayRect.anchoredPosition.y < errorDisplayOnPosY) {
-            var newY = statusDisplayRect.anchoredPosition.y + (distanceDelta * Time.deltaTime);
-            if (newY > errorDisplayOnPosY) {
-                newY = errorDisplayOnPosY;
-            }
-            statusDisplayRect.anchoredPosition = new Vector2(statusDisplayRect.anchoredPosition.x, newY);
-            yield return null;
-        }
-
-        errorDisplayOn = true;
-    }
-
-    IEnumerator ErrorScreenDeactivate() {
-        var statusDisplayRect = statusDisplayObj.GetComponent<RectTransform>();
-
-        while (statusDisplayRect.anchoredPosition.y > errorDisplayOffPosY) {
-            var newY = statusDisplayRect.anchoredPosition.y - (distanceDelta * Time.deltaTime);
-            if (newY < errorDisplayOffPosY) {
-                newY = errorDisplayOffPosY;
-            }
-            statusDisplayRect.anchoredPosition = new Vector2(statusDisplayRect.anchoredPosition.x, newY);
-            yield return null;
-        }
-
-        errorDisplayOn = false;
-    }
-
-    void Errors() {
-        var sizeDelta = Math.Abs(codeBoxHeightWithErrors - codeBoxHeightWithoutErrors) / 2;
-
-        var codeFieldRect = codeFieldObj.GetComponent<RectTransform>();
-        var codeFieldScrollBarRect = codeFieldScrollBar.GetComponent<RectTransform>();
-
-        if (errorDisplayOn) {
-            codeFieldRect.sizeDelta = new Vector2(codeFieldRect.sizeDelta.x, codeBoxHeightWithoutErrors);
-            codeFieldRect.anchoredPosition -= new Vector2(0, sizeDelta);
-
-            codeFieldScrollBarRect.sizeDelta = new Vector2(codeFieldScrollBarRect.sizeDelta.x, codeBoxHeightWithoutErrors);
-            codeFieldScrollBarRect.anchoredPosition -= new Vector2(0, sizeDelta);
-
-            StartCoroutine(ErrorScreenDeactivate());
-        }
-        else {
-            codeFieldRect.sizeDelta = new Vector2(codeFieldRect.sizeDelta.x, codeBoxHeightWithErrors);
-            codeFieldRect.anchoredPosition += new Vector2(0, sizeDelta);
-
-            codeFieldScrollBarRect.sizeDelta = new Vector2(codeFieldScrollBarRect.sizeDelta.x, codeBoxHeightWithErrors);
-            codeFieldScrollBarRect.anchoredPosition += new Vector2(0, sizeDelta);
-
-            StartCoroutine(ErrorScreenActivate());
-        }
-    }
-
     private void DisableEditor() {
         interactable = false;
         codeField.interactable = false;
@@ -322,15 +211,19 @@ public class CodeEditor : MonoBehaviour
 
         submitButton.interactable = false;
         resetButton.interactable = false;
-        helpButton.interactable = false;
-        errorsButton.interactable = false;
+
+        GetComponent<HelpScreen>().ButtonInteractable(false);
+        GetComponent<ErrorScreen>().ButtonInteractable(false);
     }
 
     IEnumerator MoveOffScreen(bool changeScript) {
-        if (helpScreenActive) {
-            StartCoroutine(HelpScreenDeactivate());
+        if (GetComponent<HelpScreen>().helpScreenActive) {
+            GetComponent<HelpScreen>().Deactivate();
         }
-        gameField.SetActive(false);
+        if (GetComponent<ErrorScreen>().errorDisplayActive) {
+            GetComponent<ErrorScreen>().Deactivate();
+        }
+        battlefield.SetActive(false);
         // statusDisplay.text = "";
 
         bool wonBattle = false;
@@ -354,10 +247,9 @@ public class CodeEditor : MonoBehaviour
         else if (changeScript) {
             currentScript++;
             
-            challengeCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[0];
-            testCode = codeFiles[currentScript].text.Split("-- TEST CODE", StringSplitOptions.None)[1];
+            ChangeScript();
 
-            codeField.text = challengeCode;
+            GetComponent<ScriptSync>().ChangeText();
             
             filename.GetComponent<TMP_Text>().text = codeFiles[currentScript].name + ".hs";
             enemyController.PhaseTransition(currentScript);
@@ -387,15 +279,25 @@ public class CodeEditor : MonoBehaviour
     }
 
     private void EnemyMoveTrigger(bool result, string additionalConditions) {
-        gameField.SetActive(true);
+        // battlefield.SetActive(true);
+        battlefield.GetComponent<BattleField>().ActivateBattlefield();
 
-        // controllers = GameObject.FindGameObjectWithTag("Enemy").GetComponents<AttackController>();
-        if (additionalConditions == "") {
-            controllers[currentScript].Trigger(result);
+        if (GetComponent<HelpScreen>().helpScreenActive) {
+            GetComponent<HelpScreen>().ImmediateDeactivate();
         }
-        else {
-            controllers[currentScript].Trigger(result, additionalConditions);
+        if (GetComponent<ErrorScreen>().errorDisplayActive) {
+            GetComponent<ErrorScreen>().ImmediateDeactivate();
         }
+
+        if (IsServer) {
+            if (additionalConditions == "") {
+                controllers[currentScript].Trigger(result);
+            }
+            else {
+                controllers[currentScript].Trigger(result, additionalConditions);
+            }
+        }
+        
 
         StartCoroutine(EnemyMove(result));
     }
@@ -417,8 +319,9 @@ public class CodeEditor : MonoBehaviour
 
         submitButton.interactable = true;
         resetButton.interactable = true;
-        helpButton.interactable = true;
-        errorsButton.interactable = true;
+        
+        GetComponent<HelpScreen>().ButtonInteractable(true);
+        GetComponent<ErrorScreen>().ButtonInteractable(true);
     }
     
     public string CleanColorFormatting(string code) {
@@ -432,14 +335,14 @@ public class CodeEditor : MonoBehaviour
             additional = additional.Remove(additional.Length - 1, 1);
         }
 
-        if (statusDisplay.text == errorPlaceholderText) {
-            statusDisplay.text = "";
+        if (errorDisplay.text == errorPlaceholderText) {
+            errorDisplay.text = "";
         }
         
         if (output.Contains("Timeout") || output == null) {
             if (controllers[currentScript].IsRecursionHandled()) {
                 // statusDisplay.color = Color.red;
-                statusDisplay.text += "<color=#ff0000>Your code recurses infinitely!</color>\n";
+                errorDisplay.text += "<color=#ff0000>Your code recurses infinitely!</color>\n";
 
                 playerState.CodePenalty();
                 EnemyMoveTrigger(false, additional);
@@ -448,7 +351,7 @@ public class CodeEditor : MonoBehaviour
                 // // ask player to "try again - see if they've got an infinite loop": do nothing other than that, because 
                 // // this could just be JDoodle screwing around
                 // statusDisplay.color = Color.yellow;
-                statusDisplay.text += "<color=#ffff00>Your code timed out! Try again - see if you've got an infinite loop.</color>\n";
+                errorDisplay.text += "<color=#ffff00>Your code timed out! Try again - see if you've got an infinite loop.</color>\n";
             }
         }
         else if (output.Split('\n').Length >= 4 && output.Split('\n')[3].Contains("error")) {
@@ -465,7 +368,7 @@ public class CodeEditor : MonoBehaviour
             }
             
             // statusDisplay.color = Color.red;
-            statusDisplay.text += "<color=#ff0000>" + error + "</color>\n";
+            errorDisplay.text += "<color=#ff0000>" + error + "</color>\n";
             playerState.CodePenalty();
 
             EnemyMoveTrigger(false, additional);
@@ -474,7 +377,7 @@ public class CodeEditor : MonoBehaviour
             var errorStart = output.Split('\n')[2].IndexOf("Non-exhaustive");
             var error = output.Split('\n')[2].Substring(errorStart);
             // statusDisplay.color = Color.red;
-            statusDisplay.text += "<color=#ff0000>" + error + "</color>\n";
+            errorDisplay.text += "<color=#ff0000>" + error + "</color>\n";
             playerState.CodePenalty();
 
             EnemyMoveTrigger(false, additional);
@@ -486,11 +389,11 @@ public class CodeEditor : MonoBehaviour
             bool resultBool = result == "True";
             if (resultBool) {
                 // statusDisplay.color = Color.green;
-                statusDisplay.text += "<color=#00ff00>Test passed!</color>\n";
+                errorDisplay.text += "<color=#00ff00>Test passed!</color>\n";
             }
             else {
                 // statusDisplay.color = Color.red;
-                statusDisplay.text += "<color=#ff0000>Test failed!</color>\n";
+                errorDisplay.text += "<color=#ff0000>Test failed!</color>\n";
                 playerState.CodePenalty();
             }
 
@@ -536,8 +439,8 @@ public class CodeEditor : MonoBehaviour
             }
 
             if (creditsResponse.error != null) {
-                statusDisplay.color = Color.red;
-                statusDisplay.text = creditsResponse.error;
+                errorDisplay.color = Color.red;
+                errorDisplay.text = creditsResponse.error;
             }
             else if (creditsResponse.used <= CREDIT_LIMIT) {
                 HttpWebRequest executeRequest = (HttpWebRequest)WebRequest.Create(executeURL);
@@ -576,15 +479,15 @@ public class CodeEditor : MonoBehaviour
 
             }
             else {
-                statusDisplay.color = Color.yellow;
-                statusDisplay.text = "There are no more compiler credits remaining today - please try again tomorrow.";
+                errorDisplay.color = Color.yellow;
+                errorDisplay.text = "There are no more compiler credits remaining today - please try again tomorrow.";
             }
             creditsHTTPResponse.Close();
         }
         catch (WebException e)
         {
-            statusDisplay.color = Color.yellow;
-            statusDisplay.text = "There was an error with the request. Please try again.\n" + e.Message;
+            errorDisplay.color = Color.yellow;
+            errorDisplay.text = "There was an error with the request. Please try again.\n" + e.Message;
         }
     } 
 }
