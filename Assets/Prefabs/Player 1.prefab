@@ -82,8 +82,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b9cb64cf935a29141af63cf81338daef, type: 3}
-  m_Color: {r: 1, g: 0.5424528, b: 0.5424528, a: 1}
+  m_Sprite: {fileID: 21300000, guid: c7f3484af6d5e98418f975e03e0909a4, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -128,6 +128,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSpeed: 5
   movementMagnitude: 0
+  whichPlayer: 0
+  isFrozen: 0
+  freezeColor: {r: 0.45882353, g: 0.87058824, b: 1, a: 1}
 --- !u!50 &2814686463394895186
 Rigidbody2D:
   serializedVersion: 4
@@ -210,7 +213,7 @@ Animator:
   m_GameObject: {fileID: 5797171458900306993}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 28cdc571032f6ed43b508b51fbb7ba57, type: 2}
+  m_Controller: {fileID: 9100000, guid: 88ceaef549c7568428bfa7484f732788, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

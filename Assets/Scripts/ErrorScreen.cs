@@ -17,11 +17,12 @@ public class ErrorScreen : MonoBehaviour
     void Start()
     {
         errorDisplay.GetComponent<RectTransform>().anchoredPosition = new Vector2(960f, errorDisplay.GetComponent<RectTransform>().anchoredPosition.y);
-
-        errorsButton = GameObject.FindGameObjectWithTag("Error").GetComponent<Button>();
-        errorsButton.onClick.AddListener(Errors);
-
         distanceDelta = 960f / time;
+    }
+
+    public void AssignButton(Button button) {
+        errorsButton = button;
+        errorsButton.onClick.AddListener(Errors);
     }
 
     void Errors() {

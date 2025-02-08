@@ -15,6 +15,7 @@ TagManager:
   - Fractal
   - Help
   - Error
+  - Multiplayer
   layers:
   - Default
   - TransparentFX

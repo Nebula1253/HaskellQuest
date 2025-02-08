@@ -7,28 +7,31 @@ using System.Text.RegularExpressions;
 using System;
 using UnityEngine.UI;
 using TMPro;
-using System.Runtime.ConstrainedExecution;
-using System.Data.Common;
 using Unity.Netcode;
 using JDoodle;
+using ParrelSync;
 
 public class CodeEditor : NetworkBehaviour
 {
     const int CREDIT_LIMIT = 200;
     const string TEST_CODE_MARKER = "-- TEST CODE";
-    const string PLAYER_CODE_MARKER = "-- PLAYER CODE";
+    const string SINGLEPLAYER_CODE_MARKER = "-- PLAYER CODE";
+    const string MULTIPLAYER_P1_CODE_MARKER = "-- PLAYER 1 CODE";
+    const string MULTIPLAYER_P2_CODE_MARKER = "-- PLAYER 2 CODE";
     private TMP_InputField codeField;
     private TMP_Text errorDisplay;
     public TMP_Text nonEditableCode;
 
     private Button submitButton, resetButton;
-    public TextAsset[] codeFiles;
+    public TextAsset[] singleplayerCodeFiles;
+    public TextAsset[] multiplayerCodeFiles;
+    private TextAsset[] codeFiles;
     private AttackController[] controllers;
 
-    private string challengeCode;
+    private string challengeCode, playerEditableCode;
     private string testCode;
     private bool interactable = true;
-    public GameObject battlefield, overheadEnemy;
+    public GameObject battlefield, overheadEnemy1P, overheadEnemy2P;
     private GameObject filename;
     private PlayerHUD playerHUDScript;
     public Color commentColor;
@@ -46,21 +49,8 @@ public class CodeEditor : NetworkBehaviour
     private EnemyController enemyController;
     private int cachedCaretPosition = -1;
     public string errorPlaceholderText;
-
-    // public static CodeEditor Instance { get; private set; }
-    // private void Awake() 
-    // { 
-    //     // If there is an instance, and it's not me, delete myself.
-        
-    //     if (Instance != null && Instance != this) 
-    //     { 
-    //         Destroy(this); 
-    //     } 
-    //     else 
-    //     { 
-    //         Instance = this; 
-    //     } 
-    // }
+    private int disableInteractAcksReceived = 0;
+    public GameObject singleplayerButtons, multiplayerButtons;
 
     // Start is called before the first frame update
     void Start()
@@ -68,19 +58,35 @@ public class CodeEditor : NetworkBehaviour
         codeField = GetComponentInChildren<TMP_InputField>();
         errorDisplay = statusDisplayObj.GetComponentInChildren<TMP_Text>();
         errorDisplay.text = errorPlaceholderText;
-        
-        submitButton = GameObject.FindGameObjectWithTag("Submit").GetComponent<Button>();
-        submitButton.onClick.AddListener(Submit);
 
-        resetButton = GameObject.FindGameObjectWithTag("Reset").GetComponent<Button>();
-        resetButton.onClick.AddListener(Reset);
+        if (NetworkHelper.Instance.IsMultiplayer) {
+            singleplayerButtons.SetActive(false);
+            multiplayerButtons.SetActive(true);
+
+            AssignButtons(multiplayerButtons);
+
+            codeFiles = multiplayerCodeFiles;
+
+            controllers = overheadEnemy2P.GetComponents<AttackController>();
+        }
+        else {
+            singleplayerButtons.SetActive(true);
+            multiplayerButtons.SetActive(false);
+
+            AssignButtons(singleplayerButtons);
+
+            codeFiles = singleplayerCodeFiles;
+
+            controllers = overheadEnemy1P.GetComponents<AttackController>();
+        }
 
         colorCode = "#" + ColorUtility.ToHtmlStringRGB(commentColor);
+        
         ChangeScript();
 
         codeEditorXPos = -960;
 
-        DisableEditor();
+        DisableInteractRpc(NetworkManager.Singleton.LocalClientId);
 
         playerHUDScript = PlayerHUD.Instance;
 
@@ -100,8 +106,9 @@ public class CodeEditor : NetworkBehaviour
         enemyController = EnemyController.Instance;
 
         enemyController.PhaseTransition(currentScript);
-
-        controllers = overheadEnemy.GetComponents<AttackController>();
+        
+        // how the hell do i make this multiplayer???
+        // easy just have 2 objects, dummy
     }
 
     // Update is called once per frame
@@ -119,23 +126,76 @@ public class CodeEditor : NetworkBehaviour
         }
     }
 
+    void AssignButtons(GameObject buttons) {
+        for (int i = 0; i < buttons.transform.childCount; i++)
+        {
+            GameObject button = buttons.transform.GetChild(i).gameObject;
+            if (button.CompareTag("Submit")) {
+                submitButton = button.GetComponent<Button>();
+                submitButton.onClick.AddListener(Submit);
+            }
+            else if (button.CompareTag("Reset")) {
+                resetButton = button.GetComponent<Button>();
+                resetButton.onClick.AddListener(Reset);
+            }
+            else if (button.CompareTag("Help")) {
+                GetComponent<HelpScreen>().AssignButton(button.GetComponent<Button>());
+            }
+            else if (button.CompareTag("Error")) {
+                GetComponent<ErrorScreen>().AssignButton(button.GetComponent<Button>());
+            }
+            else if (button.CompareTag("Multiplayer")) {
+                GetComponent<OtherPlayerCode>().AssignButton(button.GetComponent<Button>());
+            }
+        }
+    }
+
     void ChangeScript() {
-        var testCodeDivvy = codeFiles[currentScript].text.Split(TEST_CODE_MARKER, StringSplitOptions.None);
+        Debug.Log(codeFiles);
+        var testCodeDivvy = codeFiles[currentScript].text.Split(TEST_CODE_MARKER);
         Debug.Log(testCodeDivvy[0]);
 
         challengeCode = testCodeDivvy[0];
         testCode = testCodeDivvy[1];
 
-        var playerCodeDivvy = challengeCode.Split(PLAYER_CODE_MARKER, StringSplitOptions.None);
+        if (NetworkHelper.Instance.IsMultiplayer) {
+            var playerCodeDivvy = challengeCode.Split(MULTIPLAYER_P1_CODE_MARKER);
 
-        string neCodeCommented = CommentHighlighting(playerCodeDivvy[0]);
-        if (neCodeCommented != null) {
-            nonEditableCode.text = neCodeCommented;
+            string neCodeCommented = CommentHighlighting(playerCodeDivvy[0].Trim());
+            if (neCodeCommented != null) {
+                nonEditableCode.text = neCodeCommented;
+            }
+            else {
+                nonEditableCode.text = playerCodeDivvy[0].Trim();
+            }
+
+            var p1p2Code = playerCodeDivvy[1].Split(MULTIPLAYER_P2_CODE_MARKER);
+
+            var p1Code = p1p2Code[0].Trim();
+            var p2Code = p1p2Code[1].Trim();
+
+            if (NetworkHelper.Instance.IsPlayerOne) {
+                codeField.text = p1Code;
+                playerEditableCode = p1Code;
+            }
+            else {
+                codeField.text = p2Code;
+                playerEditableCode = p2Code;
+            }
         }
         else {
-            nonEditableCode.text = playerCodeDivvy[0];
+            var playerCodeDivvy = challengeCode.Split(SINGLEPLAYER_CODE_MARKER);
+
+            string neCodeCommented = CommentHighlighting(playerCodeDivvy[0]);
+            if (neCodeCommented != null) {
+                nonEditableCode.text = neCodeCommented;
+            }
+            else {
+                nonEditableCode.text = playerCodeDivvy[0].Trim();
+            }
+            codeField.text = playerCodeDivvy[1].Trim();
+            playerEditableCode = playerCodeDivvy[1].Trim();
         }
-        codeField.text = playerCodeDivvy[1];
     }
 
     void EditableCodeHighlighting() {
@@ -152,7 +212,7 @@ public class CodeEditor : NetworkBehaviour
 
     [Rpc(SendTo.Everyone)]
     void BackRpc() {
-        DisableEditor();
+        DisableInteractRpc(NetworkManager.Singleton.LocalClientId);
         StartCoroutine(MoveOffScreen(false));
     }
 
@@ -161,24 +221,34 @@ public class CodeEditor : NetworkBehaviour
         var codeLines = code.Split('\n');
         string newCode = "";
 
+        string openTag = "<color=" + colorCode + ">";
+        string closeTag = "</color>";
+
         Debug.Log(codeLines.Length);
 
         for (int i = 0; i < codeLines.Length; i++) {
             string line = codeLines[i];
 
-            if (line.Contains("--") && !line.Contains("<color=" + colorCode + ">")) {
+            if (line.Contains("--") && !line.Contains(openTag)) {
                 var regex = new Regex("--");
-                line = regex.Replace(line, "<color=" + colorCode + ">--", 1);
+                line = regex.Replace(line, openTag + "--", 1);
 
                 // line = line.Replace("--", "<color=" + colorCode + ">--");
-                line += "</color>";
+                line += closeTag;
                 commentChanged = true;
             }
-            else if ((!line.Contains("--") && line.Contains("<color=" + colorCode + ">")) ||
-                    (line.Contains("<color=" + colorCode + ">") && !line.Contains("</color>")) ||
-                    (!line.Contains("<color=" + colorCode + ">") && line.Contains("</color>"))) {
-                line = line.Replace("<color=" + colorCode + ">", "");
-                line = line.Replace("</color>", "");
+            else if ((!line.Contains("--") && line.Contains(openTag)) || // highlighted, but not a comment
+                    (line.Contains(openTag) && !line.Contains(closeTag)) || // has opening tag but not the closing tag
+                    (!line.Contains(openTag) && line.Contains(closeTag))) { // has closing tag but not the opening tag
+                    
+                line = line.Replace(openTag, "").Replace(closeTag, "");
+                commentChanged = true;
+            }
+            else if (line.Contains(openTag + "--") && line.Contains(closeTag)
+                    && line.Substring(Math.Max(0, line.Length - closeTag.Length)) != closeTag) // line is a comment and has tags, but the closing tag isn't at the end of the line
+            {
+                line = line.Replace(closeTag, "");
+                line += closeTag;
                 commentChanged = true;
             }
 
@@ -196,15 +266,31 @@ public class CodeEditor : NetworkBehaviour
         }
     }
 
-    void Submit() {
-        CallJDoodle();
-    }
-
     void Reset() {
-        codeField.text = challengeCode;
+        codeField.text = playerEditableCode;
     }
 
-    private void DisableEditor() {
+    void Submit() {
+        StartCoroutine(SubmitCoroutine());
+    }
+
+    IEnumerator SubmitCoroutine() {
+        DisableInteractRpc(NetworkManager.Singleton.LocalClientId, true);
+        // NEED to make sure UI is disabled on all game instances before call to JDoodle is made
+        // therefore, we have this fucking bullshit, because Unity Netcode does not make RPCs awaitable
+
+        var desiredNrAcks = NetworkHelper.Instance.IsMultiplayer ? 2 : 1;
+        Debug.Log(desiredNrAcks);
+        while (disableInteractAcksReceived != desiredNrAcks) {
+            yield return null;
+        }
+        disableInteractAcksReceived = 0;
+        
+        SubmitToJDoodle();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void DisableInteractRpc(ulong callingClientID, bool isSubmittingCode = false) {
         interactable = false;
         codeField.interactable = false;
         codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
@@ -214,6 +300,34 @@ public class CodeEditor : NetworkBehaviour
 
         GetComponent<HelpScreen>().ButtonInteractable(false);
         GetComponent<ErrorScreen>().ButtonInteractable(false);
+        GetComponent<OtherPlayerCode>().ButtonInteractable(false);
+
+
+        if (isSubmittingCode) {
+            AcknowledgeDisableInteractRpc(callingClientID);
+        }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void AcknowledgeDisableInteractRpc(ulong originalClientID) {
+        if (NetworkManager.Singleton.LocalClientId == originalClientID) {
+            Debug.Log("ACK RECEIVED");
+            disableInteractAcksReceived += 1;
+        } 
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void EnableInteractRpc() {
+        codeField.interactable = true;
+        interactable = true;
+        codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.white;
+
+        submitButton.interactable = true;
+        resetButton.interactable = true;
+        
+        GetComponent<HelpScreen>().ButtonInteractable(true);
+        GetComponent<ErrorScreen>().ButtonInteractable(true);
+        GetComponent<OtherPlayerCode>().ButtonInteractable(true);
     }
 
     IEnumerator MoveOffScreen(bool changeScript) {
@@ -223,8 +337,7 @@ public class CodeEditor : NetworkBehaviour
         if (GetComponent<ErrorScreen>().errorDisplayActive) {
             GetComponent<ErrorScreen>().Deactivate();
         }
-        battlefield.SetActive(false);
-        // statusDisplay.text = "";
+        battlefield.GetComponent<BattleField>().DeactivateBattlefield();
 
         bool wonBattle = false;
         if (changeScript) {
@@ -234,7 +347,6 @@ public class CodeEditor : NetworkBehaviour
             playerHUDScript.moveToCentreCall(wonBattle);
         }
         
-        // TODO replace this with Unity's own UI animation option
         while (GetComponent<RectTransform>().anchoredPosition.x < 0) {
             var newX = Mathf.Min(0, GetComponent<RectTransform>().anchoredPosition.x + distanceDelta * Time.deltaTime);
             GetComponent<RectTransform>().anchoredPosition = new Vector2(newX, GetComponent<RectTransform>().anchoredPosition.y);
@@ -248,25 +360,28 @@ public class CodeEditor : NetworkBehaviour
             currentScript++;
             
             ChangeScript();
-
-            GetComponent<ScriptSync>().ChangeText();
             
             filename.GetComponent<TMP_Text>().text = codeFiles[currentScript].name + ".hs";
             enemyController.PhaseTransition(currentScript);
         }
     }
 
+    [Rpc(SendTo.Everyone)]
+    private void EndOfEnemyMoveRpc(bool phaseOver) {
+        if (!gameOver) {
+            StartCoroutine(MoveOffScreen(phaseOver));
+        }
+    }
+
     IEnumerator EnemyMove(bool phaseOver) {
-        DisableEditor();
+        // DisableEditorRpc();
 
         while (!controllers[currentScript].AttackEnd()) {
             yield return null;
         }
         yield return new WaitForSecondsRealtime(1);
 
-        if (!gameOver) {
-            StartCoroutine(MoveOffScreen(phaseOver));
-        }
+        EndOfEnemyMoveRpc(phaseOver);
     }
 
     public void MoveOffScreenGameOver() {
@@ -278,8 +393,9 @@ public class CodeEditor : NetworkBehaviour
         StartCoroutine(MoveOnScreen());
     }
 
-    private void EnemyMoveTrigger(bool result, string additionalConditions) {
-        // battlefield.SetActive(true);
+    [Rpc(SendTo.Everyone)]
+    private void EnemyMoveTriggerRpc(bool result, string additionalConditions) {
+        Debug.Log(additionalConditions);
         battlefield.GetComponent<BattleField>().ActivateBattlefield();
 
         if (GetComponent<HelpScreen>().helpScreenActive) {
@@ -296,10 +412,10 @@ public class CodeEditor : NetworkBehaviour
             else {
                 controllers[currentScript].Trigger(result, additionalConditions);
             }
+
+            StartCoroutine(EnemyMove(result));
         }
         
-
-        StartCoroutine(EnemyMove(result));
     }
 
     IEnumerator MoveOnScreen() {
@@ -313,19 +429,19 @@ public class CodeEditor : NetworkBehaviour
             yield return null;
         }
 
-        codeField.interactable = true;
-        interactable = true;
-        codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.white;
-
-        submitButton.interactable = true;
-        resetButton.interactable = true;
-        
-        GetComponent<HelpScreen>().ButtonInteractable(true);
-        GetComponent<ErrorScreen>().ButtonInteractable(true);
+        EnableInteractRpc();
     }
     
     public string CleanColorFormatting(string code) {
         return code.Replace("<color=" + colorCode + ">", "").Replace("</color>", "");
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void AddErrorToDisplayRpc(string error) {
+        if (errorDisplay.text == errorPlaceholderText) {
+            errorDisplay.text = "";
+        }
+        errorDisplay.text += error;
     }
 
     private void EvaluateResult(string output) {
@@ -334,24 +450,21 @@ public class CodeEditor : NetworkBehaviour
             additional = output.Split('\n')[3].Remove(0,13);
             additional = additional.Remove(additional.Length - 1, 1);
         }
-
-        if (errorDisplay.text == errorPlaceholderText) {
-            errorDisplay.text = "";
-        }
         
         if (output.Contains("Timeout") || output == null) {
             if (controllers[currentScript].IsRecursionHandled()) {
-                // statusDisplay.color = Color.red;
-                errorDisplay.text += "<color=#ff0000>Your code recurses infinitely!</color>\n";
 
-                playerState.CodePenalty();
-                EnemyMoveTrigger(false, additional);
+                AddErrorToDisplayRpc("<color=#ff0000>Your code recurses infinitely!</color>\n");
+
+                EnemyMoveTriggerRpc(false, additional);
             }
             else {
-                // // ask player to "try again - see if they've got an infinite loop": do nothing other than that, because 
-                // // this could just be JDoodle screwing around
-                // statusDisplay.color = Color.yellow;
-                errorDisplay.text += "<color=#ffff00>Your code timed out! Try again - see if you've got an infinite loop.</color>\n";
+                // ask player to "try again - see if they've got an infinite loop": do nothing other than that, because 
+                // this could just be JDoodle screwing around
+                
+                AddErrorToDisplayRpc("<color=#ffff00>Your code timed out! Try again - see if you've got an infinite loop.</color>\n");
+
+                //EnableEditor here
             }
         }
         else if (output.Split('\n').Length >= 4 && output.Split('\n')[3].Contains("error")) {
@@ -367,20 +480,17 @@ public class CodeEditor : NetworkBehaviour
                 error = outputSplit[3].Replace("\"", "");
             }
             
-            // statusDisplay.color = Color.red;
-            errorDisplay.text += "<color=#ff0000>" + error + "</color>\n";
-            playerState.CodePenalty();
+            AddErrorToDisplayRpc("<color=#ff0000>" + error + "</color>\n");
 
-            EnemyMoveTrigger(false, additional);
+            EnemyMoveTriggerRpc(false, additional);
         }
         else if (output.Split('\n')[2].Contains("Non-exhaustive")) {
             var errorStart = output.Split('\n')[2].IndexOf("Non-exhaustive");
             var error = output.Split('\n')[2].Substring(errorStart);
-            // statusDisplay.color = Color.red;
-            errorDisplay.text += "<color=#ff0000>" + error + "</color>\n";
-            playerState.CodePenalty();
+            
+            AddErrorToDisplayRpc("<color=#ff0000>" + error + "</color>\n");
 
-            EnemyMoveTrigger(false, additional);
+            EnemyMoveTriggerRpc(false, additional);
         }
         else {
             // trigger enemy fire depending on whether the code passed the test
@@ -388,24 +498,28 @@ public class CodeEditor : NetworkBehaviour
             Debug.Log(result);
             bool resultBool = result == "True";
             if (resultBool) {
-                // statusDisplay.color = Color.green;
-                errorDisplay.text += "<color=#00ff00>Test passed!</color>\n";
+                AddErrorToDisplayRpc("<color=#00ff00>Test passed!</color>\n");
             }
             else {
                 // statusDisplay.color = Color.red;
-                errorDisplay.text += "<color=#ff0000>Test failed!</color>\n";
-                playerState.CodePenalty();
+                AddErrorToDisplayRpc("<color=#ff0000>Test failed!</color>\n");
             }
 
-            EnemyMoveTrigger(resultBool, additional);
+            EnemyMoveTriggerRpc(resultBool, additional);
         }
     }
 
-    void CallJDoodle() {
-        string script = "{-# LANGUAGE ParallelListComp #-}\n" + CleanColorFormatting(codeField.text) + testCode;
+    void SubmitToJDoodle() {
+        string script = "{-# LANGUAGE ParallelListComp #-}\n" + CleanColorFormatting(nonEditableCode.text);
+        if (NetworkHelper.Instance.IsMultiplayer) {
+            script += CleanColorFormatting(codeField.text) + CleanColorFormatting(GetComponent<OtherPlayerCode>().GetText()) + testCode;
+        }
+        else {
+            script += CleanColorFormatting(codeField.text) + testCode;
+        }
+
         string executeURL = "https://api.jdoodle.com/v1/execute";
         string creditsURL = "https://api.jdoodle.com/v1/credit-spent";
-        // Debug.Log(script);
 
         try {
             HttpWebRequest creditsHTTPRequest = (HttpWebRequest)WebRequest.Create(creditsURL);
@@ -479,15 +593,15 @@ public class CodeEditor : NetworkBehaviour
 
             }
             else {
-                errorDisplay.color = Color.yellow;
-                errorDisplay.text = "There are no more compiler credits remaining today - please try again tomorrow.";
+                AddErrorToDisplayRpc("<color=#ffff00>There are no more compiler credits remaining today - please try again tomorrow.</color>\n");
+                EnableInteractRpc();
             }
             creditsHTTPResponse.Close();
         }
         catch (WebException e)
         {
-            errorDisplay.color = Color.yellow;
-            errorDisplay.text = "There was an error with the request. Please try again.\n" + e.Message;
+            AddErrorToDisplayRpc("<color=#ffff00>There was an error with the request. Please try again.\n" + e.Message + "</color>\n");
+            EnableInteractRpc();
         }
     } 
 }

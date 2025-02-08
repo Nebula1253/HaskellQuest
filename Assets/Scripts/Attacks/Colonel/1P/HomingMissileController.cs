@@ -19,7 +19,7 @@ public class HomingMissileController : AttackController
     {
         gameField = GameObject.FindGameObjectWithTag("GameField");
         // playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        enemyTransform = GameObject.FindGameObjectWithTag("Enemy").transform;
+        enemyTransform = gameObject.transform;
     }
 
     public override void Trigger(bool result) {

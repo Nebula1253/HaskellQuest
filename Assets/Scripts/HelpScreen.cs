@@ -15,12 +15,14 @@ public class HelpScreen : MonoBehaviour
     void Start()
     {
         helpScreen.GetComponent<RectTransform>().anchoredPosition = new Vector2(960, helpScreen.GetComponent<RectTransform>().anchoredPosition.y);
-
-        helpButton = GameObject.FindGameObjectWithTag("Help").GetComponent<Button>();
-        helpButton.onClick.AddListener(Help);
-
         distanceDelta = 960f / time;
     }
+
+    public void AssignButton(Button button) {
+        helpButton = button;
+        helpButton.onClick.AddListener(Help);
+    }
+
     void Help() {
         if (helpScreenActive) {
             StartCoroutine(HelpScreenDeactivate());

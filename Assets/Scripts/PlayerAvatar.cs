@@ -17,6 +17,9 @@ public class PlayerAvatar : NetworkBehaviour
     public float playerSpeed;
     public float movementMagnitude;
     public int whichPlayer;
+    public bool isFrozen = false;
+
+    public Color freezeColor;
 
     void Start()
     {
@@ -50,6 +53,10 @@ public class PlayerAvatar : NetworkBehaviour
 
         movementDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         movementDir.Normalize();
+        if (isFrozen) {
+            movementDir = Vector2.zero;
+        }
+
         movementMagnitude = movementDir.magnitude;
 
         rb.velocity = movementDir * playerSpeed;
@@ -71,10 +78,19 @@ public class PlayerAvatar : NetworkBehaviour
             hurtSound.Stop();
         }
         hurtSound.Play();
-        
-        if (damage > 0) { // because the tutorial was screwing this up otherwise
-            playerState.DamagePenalty();
-        }
     }
 
+    public void Freeze(float freezeDuration) {
+        StartCoroutine(FreezeCoroutine(freezeDuration));
+    }
+
+    IEnumerator FreezeCoroutine(float freezeDuration) {
+        GetComponent<SpriteRenderer>().color = freezeColor; // need to do this better
+        isFrozen = true;
+
+        yield return new WaitForSeconds(freezeDuration);
+
+        isFrozen = false;
+        GetComponent<SpriteRenderer>().color = Color.white;
+    }
 }

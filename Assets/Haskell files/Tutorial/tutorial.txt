@@ -22,5 +22,5 @@ main = do
     let damagedPlayer = hurtPlayer player
     let difference = health player - health damagedPlayer
 
-    print(difference <= 0) -- how can I retrofit this to allow for variable amounts of damage?
+    print(difference <= 0)
     print("Additional: " ++ show difference);

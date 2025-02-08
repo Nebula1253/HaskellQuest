@@ -1,7 +1,7 @@
 namespace JDoodle {
     public class JDoodleRequest {
-        public string clientId = "190c8528c5ed8a609a6322fb00818260";
-        public string clientSecret = "f61f2873be5015e976b49dc18c4f33ce45133494fc1dafeb60480fc20b9f40ac";
+        public string clientId = "7f33da00788efdd5ef493dd6bbbbd7d8";
+        public string clientSecret = "bf6cca04cafecd7bec6293f792df632929de3c57c54e5c968332de26f2d58b9c";
         public string script;
         public string language = "haskell";
         public string versionIndex = "3";
@@ -12,8 +12,8 @@ namespace JDoodle {
     }
 
     public class JDoodleCreditsRequest {
-        public string clientId = "190c8528c5ed8a609a6322fb00818260";
-        public string clientSecret = "f61f2873be5015e976b49dc18c4f33ce45133494fc1dafeb60480fc20b9f40ac";
+        public string clientId = "7f33da00788efdd5ef493dd6bbbbd7d8";
+        public string clientSecret = "bf6cca04cafecd7bec6293f792df632929de3c57c54e5c968332de26f2d58b9c";
     }
 
     public class JDoodleResponse {

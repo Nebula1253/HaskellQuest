@@ -14,12 +14,9 @@ public class PlayerState : NetworkBehaviour
     public int maxHealth;
     private NetworkList<int> health;
     private List<HealthBar> bars = new List<HealthBar>();
-    public int initCodeScore = 5000, initDamageScore = 5000;
-    private int codeScore, damageScore;
-    public int incorrectCodePenalty, damagePenalty;
     private Button screenClick;
     private bool battleDone = false;
-    public GameObject scoreDisplay, gameOverOverlay, dialogBox;
+    public GameObject gameOverOverlay, dialogBox;
     public GameObject singlePlayerHealthBar;
     public GameObject multiplayerHealthBars;
     private EnemyController enemyController;
@@ -28,9 +25,7 @@ public class PlayerState : NetworkBehaviour
     private void Awake() 
     { 
         // If there is an instance, and it's not me, delete myself.
-        if (health == null) {
-            health = new NetworkList<int>();
-        }
+        health ??= new NetworkList<int>();
 
         if (Instance != null && Instance != this) 
         { 
@@ -39,19 +34,14 @@ public class PlayerState : NetworkBehaviour
         else 
         { 
             Instance = this; 
-        } 
-
-// # if UNITY_EDITOR
-//         // AssemblyReloadEvents.beforeAssemblyReload += CleanupHealthList;
-// # endif
+        }
     }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        // if (NetworkManager.ConnectedClientsList.Count > 1) {
-        if (true) { // debugging purposes
+        if (NetworkHelper.Instance.IsMultiplayer) {
             // multi-player
             multiplayerHealthBars.SetActive(true);
             singlePlayerHealthBar.SetActive(false);
@@ -67,14 +57,10 @@ public class PlayerState : NetworkBehaviour
             singlePlayerHealthBar.SetActive(true);
             multiplayerHealthBars.SetActive(false);
 
-            health.Add(maxHealth); // P1 health
-
             var bar = singlePlayerHealthBar.GetComponentInChildren<HealthBar>();
             bar.setHealth(maxHealth, maxHealth);
             bars.Add(bar);
         }
-        codeScore = initCodeScore;
-        damageScore = initDamageScore;
 
         screenClick = GameObject.Find("ScreenClick").GetComponent<Button>();
         screenClick.onClick.AddListener(AdvanceScene);
@@ -86,14 +72,19 @@ public class PlayerState : NetworkBehaviour
     {
         base.OnNetworkSpawn();
 
-        Debug.Log("ON NETWORK SPAWN");
-
-        if (IsServer) {
-            health.Add(maxHealth); // P1 health
-            health.Add(maxHealth); // P2 health
+        if (NetworkHelper.Instance.IsMultiplayer) {
+            // multiplayer
+            if (IsServer) {
+                health.Add(maxHealth); // P1 health
+                health.Add(maxHealth); // P2 health
+            }
+            else if (IsClient) {
+                health.OnListChanged += OnListChanged;
+            }
         }
-        else if (IsClient) {
-            health.OnListChanged += OnListChanged;
+        else {
+            // singleplayer
+            health.Add(maxHealth);
         }
     }
 
@@ -140,14 +131,6 @@ public class PlayerState : NetworkBehaviour
         }
     }
 
-    public void CodePenalty() {
-        codeScore = Mathf.Max(0, codeScore - incorrectCodePenalty);
-    }
-
-    public void DamagePenalty() {
-        damageScore = Mathf.Max(0, damageScore - damagePenalty);
-    }
-
     public void DisplayScore() {
         StartCoroutine(DisplayScoreCoroutine());
     }
@@ -157,29 +140,6 @@ public class PlayerState : NetworkBehaviour
         while (!enemyController.IsBattleEnded()) {
             yield return null;
         }
-
-        scoreDisplay.SetActive(true);
-        var codeScoreText = scoreDisplay.transform.Find("CodeScore").GetComponent<TMP_Text>();
-        var damageScoreText = scoreDisplay.transform.Find("DamageScore").GetComponent<TMP_Text>();
-        var finalScoreText = scoreDisplay.transform.Find("FinalScore").GetComponent<TMP_Text>();
-        var clickToContinue = scoreDisplay.transform.Find("ClickToContinue").GetComponent<TMP_Text>();
-
-        codeScoreText.text = "CODE SCORE: " + codeScore;
-        if (codeScore == initCodeScore)
-            codeScoreText.text += "<color=#FFFF00> PERFECT!</color>";
-        yield return new WaitForSecondsRealtime(0.6f);
-
-        damageScoreText.text = "DAMAGE SCORE: " + damageScore;
-        if (damageScore == initDamageScore)
-            damageScoreText.text += "<color=#FFFF00> PERFECT!</color>";
-        yield return new WaitForSecondsRealtime(0.6f);
-        
-        finalScoreText.text = "FINAL SCORE: " + (codeScore + damageScore);
-        if (codeScore + damageScore == initCodeScore + initDamageScore)
-            finalScoreText.text += "<color=#FFFF00> PERFECT!</color>";
-        yield return new WaitForSecondsRealtime(0.6f);
-
-        clickToContinue.text = "CLICK TO CONTINUE";
         
         battleDone = true;
     }
@@ -189,24 +149,4 @@ public class PlayerState : NetworkBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
-
-//     public override void OnDestroy()
-//     {
-//         base.OnDestroy();
-
-//         // CleanupHealthList();
-
-// # if UNITY_EDITOR
-//         // AssemblyReloadEvents.beforeAssemblyReload -= CleanupHealthList;
-// # endif
-//     }
-
-//     private void CleanupHealthList() {
-//         Debug.Log("Cleanup Health List is called");
-
-//         if (health != null) {
-//             health.Dispose();
-//             health = null;
-//         }
-//     }
 }

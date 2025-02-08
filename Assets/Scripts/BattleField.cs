@@ -7,7 +7,7 @@ using Unity.Mathematics;
 public class BattleField : NetworkBehaviour
 {
     public GameObject playerPrefab, player1Prefab, player2Prefab;
-    public GameObject battlefieldBG, enemyOverhead;
+    public GameObject battlefieldBG, enemyOverhead1P, enemyOverhead2P;
     public Vector3 spawnPoint;
     public float multiplayerXOffset;
     public bool IsActive = false;
@@ -22,13 +22,19 @@ public class BattleField : NetworkBehaviour
 
     public void ActivateBattlefield() {
         battlefieldBG.SetActive(true);
-        enemyOverhead.GetComponent<SpriteRenderer>().enabled = true;
+        // enemyOverhead1P.GetComponent<SpriteRenderer>().enabled = true;
+        if (NetworkHelper.Instance.IsMultiplayer) {
+            enemyOverhead2P.GetComponent<SpriteRenderer>().enabled = true;
+        }
+        else {
+            enemyOverhead1P.GetComponent<SpriteRenderer>().enabled = true;
+        }
 
         if (!spawnedPlayer) {
-            if (IsServer) {
+            if (NetworkHelper.Instance.IsPlayerOne) {
                 // host spawns new player for itself
                 GameObject player;
-                if (NetworkManager.ConnectedClientsList.Count > 1) {
+                if (NetworkHelper.Instance.IsMultiplayer) {
                     // multiplayer
                     Vector3 playerSpawn = new Vector3(spawnPoint.x - multiplayerXOffset, spawnPoint.y, spawnPoint.z);
                     player = Instantiate(player1Prefab, playerSpawn, Quaternion.identity, transform);
@@ -65,7 +71,9 @@ public class BattleField : NetworkBehaviour
 
     public void DeactivateBattlefield() {
         battlefieldBG.SetActive(false);
-        enemyOverhead.GetComponent<SpriteRenderer>().enabled = false;
+        
+        enemyOverhead1P.GetComponent<SpriteRenderer>().enabled = false;
+        enemyOverhead2P.GetComponent<SpriteRenderer>().enabled = false;
         
         var playerPrefabs = GameObject.FindGameObjectsWithTag("Player");
         foreach (var player in playerPrefabs)

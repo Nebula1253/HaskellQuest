@@ -11,6 +11,7 @@ public class HomingMissile : MonoBehaviour
 
     private bool missileLocked = false;
     private AudioSource source;
+    private bool doesDamage = true;
 
     public void SetTarget(Transform target) {
         this.target = target;
@@ -65,12 +66,18 @@ public class HomingMissile : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.CompareTag("Player")) {
             Debug.Log("Player hit!");
-            other.gameObject.GetComponent<PlayerAvatar>().TakeDamage(5);
+            if (doesDamage) {
+                other.gameObject.GetComponent<PlayerAvatar>().TakeDamage(5);
+            }
         }
         Destroy(gameObject);
     }
 
     void OnBecameInvisible() {
         Destroy(gameObject);
+    }
+
+    public void Deactivate() {
+        doesDamage = false;
     }
 }

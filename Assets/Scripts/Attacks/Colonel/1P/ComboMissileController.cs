@@ -10,7 +10,6 @@ public class ComboMissileController : AttackController
     public int nrMissiles;
     public float dropMissileSpeed, dropMissileBorderGap, dropMissileYOffset;
     public float homingMissileSpeed, homingMissileRotateSpeed, homingMissileLockDelay, homingMissileAngleRange;
-    private Transform playerTransform;
     private float minX, maxX;
     private AudioSource audioSource;
 
@@ -25,9 +24,6 @@ public class ComboMissileController : AttackController
         maxX = boxSizeXOffset + boxCentre.x - dropMissileBorderGap;
         Debug.Log("min X " + minX);
         Debug.Log("max X " + maxX);
-
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        Debug.Log(playerTransform);
 
         audioSource = GetComponent<AudioSource>();
     }
@@ -95,7 +91,7 @@ public class ComboMissileController : AttackController
         // fire homing missiles, retarget homing missiles if the player has passed the test
         for (int i=0; i < nrMissiles; i++) {
             Debug.Log("Firing missile " + i);
-            var target = playerTransform;
+            var target = GameObject.FindGameObjectWithTag("Player").transform;
             if (retarget) {
                 target = dropMissiles[i].transform;
             }
