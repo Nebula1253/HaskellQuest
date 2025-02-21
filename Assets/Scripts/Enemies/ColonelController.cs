@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ColonelController : EnemyController
 {
     public GameObject dialog;
-    public TextAsset[] phaseZeroText, phaseOneText, phaseTwoText, endText;
-    public AudioClip lambdaManDialog, colonelDialog, explosion;
+    public TextAsset initDialogue, phase1Dialogue, phase2Dialogue, endDialogue;
+    public AudioClip lambdaManSFX, colonelSFX, explosion;
     public RuntimeAnimatorController dmgBot, explBot;
     public Color lambdaManColor, colonelColor;
     public Image screenFlash;
@@ -27,6 +28,10 @@ public class ColonelController : EnemyController
 
     public override void PhaseTransition(int phase)
     {
+        if (!startCalled) {
+            Start();
+        }
+
         if (!skipDialogue) {
             StartCoroutine(dialogue(phase));
         }
@@ -35,27 +40,28 @@ public class ColonelController : EnemyController
     IEnumerator dialogue(int phase) {
         hackButton.interactable = false;
 
-        TextAsset[] dialogue = phaseZeroText;
-        switch(phase) {
+        TextAsset dialogue = initDialogue;
+        switch (phase) {
             case 0:
-                dialogue = phaseZeroText;
+                dialogue = initDialogue;
                 break;
             case 1:
-                dialogue = phaseOneText;
+                dialogue = phase1Dialogue;
                 enemySprite.GetComponent<Animator>().runtimeAnimatorController = dmgBot;
                 break;
             case 2:
-                dialogue = phaseTwoText;
+                dialogue = phase2Dialogue;
                 enemySprite.GetComponent<Animator>().speed *= 0.6f;
                 break;
         }
+        var dialogueSegments = dialogue.text.Split(SWITCH_STR);
 
-        for (int i = 0; i < dialogue.Length; i++) {
+        for (int i = 0; i < dialogueSegments.Length; i++) {
             if (i % 2 == 0) {
-                dbox.StartDialogue(dialogue[i], lambdaManColor, "LAMBDA-MAN", lambdaManDialog);
+                dbox.StartDialogue(dialogueSegments[i].Trim(), lambdaManColor, "LAMBDA-MAN", lambdaManSFX);
             }
             else {
-                dbox.StartDialogue(dialogue[i], colonelColor, "COL. TRIGGER-FINGER", colonelDialog);
+                dbox.StartDialogue(dialogueSegments[i].Trim(), colonelColor, "COL. TRIGGER-FINGER", colonelSFX);
             }
             
             while (!dbox.GetDialogueComplete()) {
@@ -67,7 +73,11 @@ public class ColonelController : EnemyController
 
     IEnumerator explodeBot() {
         hackButton.interactable = false;
-        dbox.StartDialogue(endText[0], colonelColor, "COL. TRIGGER-FINGER", colonelDialog);
+        var endTextSplit = endDialogue.text.Split(SWITCH_STR);
+        var colDialog = endTextSplit[0];
+        var lambdaDialog = endTextSplit[1];
+
+        dbox.StartDialogue(colDialog, colonelColor, "COL. TRIGGER-FINGER", colonelSFX);
         while (!dbox.GetDialogueComplete()) {
             yield return null;
         }
@@ -92,7 +102,7 @@ public class ColonelController : EnemyController
         }
         screenFlash.color = new Color(screenFlash.color.r, screenFlash.color.g, screenFlash.color.b, 0);
 
-        dbox.StartDialogue(endText[1], lambdaManColor, "LAMBDA-MAN", lambdaManDialog);
+        dbox.StartDialogue(lambdaDialog, lambdaManColor, "LAMBDA-MAN", lambdaManSFX);
         while (!dbox.GetDialogueComplete()) {
             yield return null;
         }

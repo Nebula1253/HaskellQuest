@@ -9,12 +9,12 @@ launch :: Target -> Int -> [HomingMissile]
 launch t n = [HomingMissile t (angleGen i) | i <- [1..n]]
 -- this launches n missiles at target t with random start angles
 
-data FreezeMissile = FreezeMissile Bool
+data FreezeMissile = FreezeMissile Bool Angle
 -- represents missiles that can freeze you in place; the bool is
 -- whether the missile is active or not
 
 launchFreeze :: Int -> [FreezeMissile]
-launchFreeze n = [FreezeMissile True | i <- [1..n]]
+launchFreeze n = [FreezeMissile True (angleGen i) | i <- [1..n]]
 -- this launches n missiles that can freeze you in place
 
 -- PLAYER 1 CODE
@@ -39,11 +39,11 @@ main = do
     let fMissiles = launchFreeze 5
 
     let newHMissiles = retarget hMissiles "enemy"
-    let retargetCheck = (and [t == "enemy" | (HomingMissile t _) <- newHMissiles]) && not (null newHMissiles)
+    let retargetCheck = (and [t == "enemy" | (HomingMissile t _) <- newHMissiles]) && not (null newHMissiles) && (and [a == b | (HomingMissile _ a) <- newHMissiles | (HomingMissile _ b) <- hMissiles]) && (length hMissiles == length newHMissiles)
     let invalidTargets = [t | HomingMissile t _ <- newHMissiles, t /= "enemy"]
 
     let newFMissiles = disable fMissiles
-    let freezeCheck = not (and [b | (FreezeMissile b) <- newFMissiles]) && not (null newFMissiles)
+    let freezeCheck = not (and [b | (FreezeMissile b) <- newFMissiles]) && not (null newFMissiles) && (length fMissiles == length newFMissiles) && (and [a == b | (FreezeMissile _ a) <- fMissiles | (FreezeMissile _ b) <- newFMissiles])
 
     if retargetCheck
         then

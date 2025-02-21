@@ -35,7 +35,7 @@ public class HomingMissileController : AttackController
         Vector3 missileStartOffset = missileRotation * new Vector3(0, 1.5f, 0);
 
         GameObject newMissile = Instantiate(missile, position + missileStartOffset, missileRotation, gameField.transform);
-        newMissile.GetComponent<HomingMissile>().SetTarget(target);
+        newMissile.GetComponent<HomingMissile>().SetTargetTransform(target);
         newMissile.GetComponent<HomingMissile>().SetSpeed(missileSpeed);
         newMissile.GetComponent<HomingMissile>().SetRotateSpeed(missileRotateSpeed);
         newMissile.GetComponent<HomingMissile>().SetLockDelay(missileLockDelay);
@@ -68,7 +68,7 @@ public class HomingMissileController : AttackController
             yield return new WaitForSecondsRealtime(0.5f);
             if (redirect) {
                 target = enemyTransform;
-                missile.GetComponent<HomingMissile>().SetTarget(target);
+                missile.GetComponent<HomingMissile>().SetTargetTransform(target);
             }
         }
         

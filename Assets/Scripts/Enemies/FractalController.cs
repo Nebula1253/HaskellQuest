@@ -40,10 +40,10 @@ public class FractalController : EnemyController
 
         for (int i = 0; i < dialogue.Length; i++) {
             if (i % 2 == 0) {
-                dbox.StartDialogue(dialogue[i], lambdaManColor, "LAMBDA-MAN", lambdaManDialog);
+                // dbox.StartDialogue(dialogue[i], lambdaManColor, "LAMBDA-MAN", lambdaManDialog);
             }
             else {
-                dbox.StartDialogue(dialogue[i], fractalColor, "DR. FRACTAL", fractalDialog);
+                // dbox.StartDialogue(dialogue[i], fractalColor, "DR. FRACTAL", fractalDialog);
             }
             
             while (!dbox.GetDialogueComplete()) {
@@ -53,7 +53,7 @@ public class FractalController : EnemyController
     }
 
     IEnumerator saveKowalewski() {
-        dbox.StartDialogue(endText[0], fractalColor, "DR. FRACTAL", fractalDialog);
+        // dbox.StartDialogue(endText[0], fractalColor, "DR. FRACTAL", fractalDialog);
 
         while (!dbox.GetDialogueComplete()) {
             yield return null;
@@ -62,12 +62,12 @@ public class FractalController : EnemyController
         enemySprite.GetComponent<Animator>().runtimeAnimatorController = kowalewski;
         yield return new WaitForSeconds(2f);    
 
-        dbox.StartDialogue(endText[1], kowalewskiColor, "DR. KOWALEWSKI", kowalewskiDialog);
+        // dbox.StartDialogue(endText[1], kowalewskiColor, "DR. KOWALEWSKI", kowalewskiDialog);
         while (!dbox.GetDialogueComplete()) {
             yield return null;
         }
 
-        dbox.StartDialogue(endText[2], lambdaManColor, "LAMBDA-MAN", lambdaManDialog);
+        // dbox.StartDialogue(endText[2], lambdaManColor, "LAMBDA-MAN", lambdaManDialog);
         while (!dbox.GetDialogueComplete()) {
             yield return null;
         }

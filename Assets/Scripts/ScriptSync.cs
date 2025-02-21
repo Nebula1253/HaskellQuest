@@ -9,6 +9,8 @@ using TMPro;
 //     DELETE, INSERT, EQUAL
 // }
 
+// ended up going completely unused, but I'm sentimental so I'm keeping it
+
 public struct DiffWrapper : INetworkSerializable {
     public Operation operation;
     public string text;

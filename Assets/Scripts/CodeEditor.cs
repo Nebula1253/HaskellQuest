@@ -9,7 +9,6 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.Netcode;
 using JDoodle;
-using ParrelSync;
 
 public class CodeEditor : NetworkBehaviour
 {
@@ -106,9 +105,6 @@ public class CodeEditor : NetworkBehaviour
         enemyController = EnemyController.Instance;
 
         enemyController.PhaseTransition(currentScript);
-        
-        // how the hell do i make this multiplayer???
-        // easy just have 2 objects, dummy
     }
 
     // Update is called once per frame
@@ -285,7 +281,7 @@ public class CodeEditor : NetworkBehaviour
             yield return null;
         }
         disableInteractAcksReceived = 0;
-        
+
         SubmitToJDoodle();
     }
 
@@ -300,8 +296,10 @@ public class CodeEditor : NetworkBehaviour
 
         GetComponent<HelpScreen>().ButtonInteractable(false);
         GetComponent<ErrorScreen>().ButtonInteractable(false);
-        GetComponent<OtherPlayerCode>().ButtonInteractable(false);
 
+        if (NetworkHelper.Instance.IsMultiplayer) {
+            GetComponent<OtherPlayerCode>().ButtonInteractable(false);
+        }
 
         if (isSubmittingCode) {
             AcknowledgeDisableInteractRpc(callingClientID);
@@ -327,7 +325,10 @@ public class CodeEditor : NetworkBehaviour
         
         GetComponent<HelpScreen>().ButtonInteractable(true);
         GetComponent<ErrorScreen>().ButtonInteractable(true);
-        GetComponent<OtherPlayerCode>().ButtonInteractable(true);
+
+        if (NetworkHelper.Instance.IsMultiplayer) {
+            GetComponent<OtherPlayerCode>().ButtonInteractable(true);
+        }
     }
 
     IEnumerator MoveOffScreen(bool changeScript) {
@@ -380,6 +381,10 @@ public class CodeEditor : NetworkBehaviour
             yield return null;
         }
         yield return new WaitForSecondsRealtime(1);
+        foreach (var mine in GameObject.FindGameObjectsWithTag("Landmine"))
+        {
+            Destroy(mine);
+        }
 
         EndOfEnemyMoveRpc(phaseOver);
     }
@@ -465,6 +470,7 @@ public class CodeEditor : NetworkBehaviour
                 AddErrorToDisplayRpc("<color=#ffff00>Your code timed out! Try again - see if you've got an infinite loop.</color>\n");
 
                 //EnableEditor here
+                EnableInteractRpc();
             }
         }
         else if (output.Split('\n').Length >= 4 && output.Split('\n')[3].Contains("error")) {
@@ -496,16 +502,18 @@ public class CodeEditor : NetworkBehaviour
             // trigger enemy fire depending on whether the code passed the test
             string result = output.Split('\n')[2].Replace("\"", "");
             Debug.Log(result);
-            bool resultBool = result == "True";
-            if (resultBool) {
+
+            if (result == "True") {
                 AddErrorToDisplayRpc("<color=#00ff00>Test passed!</color>\n");
             }
-            else {
-                // statusDisplay.color = Color.red;
+            else if (result == "False") {
                 AddErrorToDisplayRpc("<color=#ff0000>Test failed!</color>\n");
             }
+            else if (result.Contains("error")) {
+                AddErrorToDisplayRpc(result);
+            }
 
-            EnemyMoveTriggerRpc(resultBool, additional);
+            EnemyMoveTriggerRpc(result == "True", additional);
         }
     }
 

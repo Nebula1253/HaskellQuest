@@ -75,7 +75,7 @@ public class HomingFreezeMissileController : AttackController
 
         GameObject newMissile = Instantiate(homingMissile, position + missileStartOffset, homingRotation, battlefield.transform);
 
-        newMissile.GetComponent<HomingMissile>().SetTarget(target);
+        newMissile.GetComponent<HomingMissile>().SetTargetTransform(target);
         newMissile.GetComponent<HomingMissile>().SetSpeed(homingSpeed);
         newMissile.GetComponent<HomingMissile>().SetRotateSpeed(homingRotateSpeed);
         newMissile.GetComponent<HomingMissile>().SetLockDelay(homingLockDelay);
@@ -93,7 +93,7 @@ public class HomingFreezeMissileController : AttackController
 
         GameObject newMissile = Instantiate(freezeMissile, position + missileStartOffset, freezeRotation, battlefield.transform);
 
-        newMissile.GetComponent<HomingMissile>().SetTarget(target);
+        newMissile.GetComponent<HomingMissile>().SetTargetTransform(target);
         newMissile.GetComponent<HomingMissile>().SetSpeed(freezeSpeed);
         newMissile.GetComponent<HomingMissile>().SetRotateSpeed(freezeRotateSpeed);
         newMissile.GetComponent<HomingMissile>().SetLockDelay(freezeLockDelay);
@@ -148,7 +148,7 @@ public class HomingFreezeMissileController : AttackController
                 yield return new WaitForSecondsRealtime(0.5f);
 
                 if (retarget) {
-                    missile.GetComponent<HomingMissile>().SetTarget(enemyTransform);
+                    missile.GetComponent<HomingMissile>().SetTargetTransform(enemyTransform);
                 }
             }
         }

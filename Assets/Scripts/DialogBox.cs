@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Netcode;
 
-public class DialogBox : MonoBehaviour
+public class DialogBox : NetworkBehaviour
 {
     private TMP_Text dialogText;
     private GameObject advanceArrow;
@@ -28,6 +29,7 @@ public class DialogBox : MonoBehaviour
         
         if (Instance != null && Instance != this) 
         { 
+            Debug.Log("ouf! i am destroy");
             Destroy(this); 
         } 
         else 
@@ -42,7 +44,7 @@ public class DialogBox : MonoBehaviour
         // dumbest bug ever
         if (!startCalled) {
             advanceButton = GameObject.Find("ScreenClick").GetComponent<Button>();
-            advanceButton.onClick.AddListener(AdvanceDialogue);
+            advanceButton.onClick.AddListener(AdvanceDialogueRpc);
 
             dialogText = GetComponentInChildren<TMP_Text>();
 
@@ -63,14 +65,14 @@ public class DialogBox : MonoBehaviour
         return dialogueComplete;
     }
 
-    public void StartDialogue(TextAsset dialogue) {
+    public void StartDialogue(string dialogue) {
         // despite changing the order directly in build settings, the script calling StartDialogue has its Start() method called BEFORE the actual DialogueBox Start()
         // so basically the StartDialogue() code executes before the Start() code does
         // I'm force-calling Start() here and have added a stupid bool to make sure it doesn't get called a second time
         Start();
 
         gameObject.SetActive(true);
-        dialogueLines = dialogue.text.Split('\n');
+        dialogueLines = dialogue.Split('\n');
         lineCounter = 0;
         dialogueComplete = false;
 
@@ -80,19 +82,20 @@ public class DialogBox : MonoBehaviour
         StartCoroutine(runThruDialogue());
     }
 
-    public void StartDialogue(TextAsset dialogue, AudioClip clip) {
+    public void StartDialogue(string dialogue, AudioClip clip) {
         this.clip = clip;
         StartDialogue(dialogue);
     }
 
-    public void StartDialogue(TextAsset dialogue, Color nameColor, string characterName, AudioClip clip) {
+    public void StartDialogue(string dialogue, Color nameColor, string characterName, AudioClip clip) {
         this.nameColor = nameColor;
         this.characterName = characterName;
         this.clip = clip;
         StartDialogue(dialogue);
     }
 
-    private void AdvanceDialogue() {
+    [Rpc(SendTo.Everyone)]
+    private void AdvanceDialogueRpc() {
         if (!dialogueComplete) {
             if (advanceEnabled) {
                 lineCounter++;

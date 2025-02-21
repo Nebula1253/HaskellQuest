@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -21,6 +22,6 @@ public class GameOverScreen : MonoBehaviour
     // }
 
     void RetryBattle() {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        NetworkManager.Singleton.SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
     }
 }

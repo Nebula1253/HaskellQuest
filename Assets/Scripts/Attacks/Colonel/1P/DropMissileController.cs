@@ -25,13 +25,7 @@ public class DropMissileController : AttackController
 
         audioSource = GetComponent<AudioSource>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
     public override bool AttackEnd()
     {
         if (missilesFired) {

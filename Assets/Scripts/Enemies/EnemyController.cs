@@ -5,12 +5,14 @@ using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
+    protected const string SWITCH_STR = "--- SWITCH ---";
     protected GameObject enemySprite, background;
     protected Button hackButton;
     protected bool battleEnded = false;
     protected DialogBox dbox;
     public static EnemyController Instance { get; private set; }
     public bool skipDialogue;
+    protected bool startCalled = false;
 
     private void Awake() 
     { 
@@ -32,7 +34,10 @@ public class EnemyController : MonoBehaviour
         enemySprite = transform.Find("EnemySprite").gameObject;
         background = transform.Find("Background").gameObject;
         dbox = DialogBox.Instance;
-        hackButton = GameObject.Find("HackButton").GetComponent<Button>();
+        hackButton = GameObject.FindGameObjectWithTag("HackButton").GetComponent<Button>();
+        Debug.Log(hackButton);
+
+        startCalled = true;
     }
 
     public virtual void BattleEnd() {

@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 93f5a7c1ba6c0fc46a2c5bd8e5ecbc4c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - codeEditorBG: {instanceID: 0}
+  - helpScreenBG: {instanceID: 0}
+  - errorScreenBG: {instanceID: 0}
+  - codeEditorP1Sprite: {instanceID: 0}
+  - codeEditorP2Sprite: {instanceID: 0}
+  - helpScreenP1Sprite: {instanceID: 0}
+  - helpScreenP2Sprite: {instanceID: 0}
+  - errorScreenP1Sprite: {instanceID: 0}
+  - errorScreenP2Sprite: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

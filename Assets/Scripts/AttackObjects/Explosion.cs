@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
-    private PlayerAvatar playerToDamage;
 
     // Start is called before the first frame update
     void Start()
@@ -18,16 +17,20 @@ public class Explosion : MonoBehaviour
         
     }
 
-    public void BeginExplosion(PlayerAvatar player) {
-        playerToDamage = player;
+    public void BeginExplosion() {
         StartCoroutine(explode());
     }
 
     IEnumerator explode() {
-        playerToDamage.TakeDamage(5);
-
         yield return new WaitForSeconds(0.5f);
 
         Destroy(gameObject);
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Player")) {
+            other.gameObject.GetComponent<PlayerAvatar>().TakeDamage(5);
+        }
     }
 }

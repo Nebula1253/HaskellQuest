@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.49803925, g: 0.65882355, b: 0.89019614, a: 1}
+  m_Color: {r: 0.4745098, g: 0.83137256, b: 0.46666667, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -351,7 +351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.007843138, g: 0.101960786, b: 0.23529412, a: 1}
+  m_Color: {r: 0.006928101, g: 0.18431373, b: 0.0039215684, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -519,8 +519,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4287617772
-  m_fontColor: {r: 0.92549026, g: 0.854902, b: 0.56078434, a: 1}
+    rgba: 4286545891
+  m_fontColor: {r: 0.89019614, g: 0.49803925, b: 0.49803925, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -954,7 +954,7 @@ GameObject:
   - component: {fileID: 7254850939367186806}
   m_Layer: 5
   m_Name: HackButton
-  m_TagString: Untagged
+  m_TagString: HackButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1290,7 +1290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.0627451, g: 0.16470589, b: 0.31764707, a: 1}
+  m_Color: {r: 0.0073467493, g: 0.18431373, b: 0.0039215684, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2016,8 +2016,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4287617772
-  m_fontColor: {r: 0.92549026, g: 0.854902, b: 0.56078434, a: 1}
+    rgba: 4286043257
+  m_fontColor: {r: 0.4745098, g: 0.83137256, b: 0.46666667, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2150,8 +2150,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4290013236
-  m_fontColor: {r: 0.20358667, g: 0.4077225, b: 0.7075472, a: 1}
+    rgba: 4281434419
+  m_fontColor: {r: 0.19927524, g: 0.506, b: 0.193798, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

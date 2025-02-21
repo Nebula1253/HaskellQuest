@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.Netcode;
 using UnityEngine;
+using System;
 
 public class PlayerAvatar : NetworkBehaviour
 {
@@ -17,7 +18,7 @@ public class PlayerAvatar : NetworkBehaviour
     public float playerSpeed;
     public float movementMagnitude;
     public int whichPlayer;
-    public bool isFrozen = false;
+    private NetworkVariable<bool> isFrozen = new NetworkVariable<bool>(false);
 
     public Color freezeColor;
 
@@ -44,6 +45,18 @@ public class PlayerAvatar : NetworkBehaviour
 
         animator = GetComponent<Animator>();
         hurtSound = GetComponent<AudioSource>();
+
+        isFrozen.OnValueChanged += FreezeChangeColor;
+    }
+
+    private void FreezeChangeColor(bool previousValue, bool newValue)
+    {
+        if (newValue) {
+            GetComponent<SpriteRenderer>().color = freezeColor;
+        }
+        else {
+            GetComponent<SpriteRenderer>().color = Color.white;
+        }
     }
 
     // Update is called once per frame
@@ -53,7 +66,7 @@ public class PlayerAvatar : NetworkBehaviour
 
         movementDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         movementDir.Normalize();
-        if (isFrozen) {
+        if (isFrozen.Value) {
             movementDir = Vector2.zero;
         }
 
@@ -85,12 +98,12 @@ public class PlayerAvatar : NetworkBehaviour
     }
 
     IEnumerator FreezeCoroutine(float freezeDuration) {
-        GetComponent<SpriteRenderer>().color = freezeColor; // need to do this better
-        isFrozen = true;
+        // GetComponent<SpriteRenderer>().color = freezeColor; // need to do this better
+        isFrozen.Value = true;
 
         yield return new WaitForSeconds(freezeDuration);
 
-        isFrozen = false;
-        GetComponent<SpriteRenderer>().color = Color.white;
+        isFrozen.Value = false;
+        // GetComponent<SpriteRenderer>().color = Color.white;
     }
 }

@@ -18,7 +18,7 @@ public class Cutscene : MonoBehaviour
 
     IEnumerator startCutscene() {
         // dbox.StartDialogue(cutsceneText, cutsceneAudio);
-        dbox.StartDialogue(cutsceneText);
+        // dbox.StartDialogue(cutsceneText);
         while (!dbox.GetDialogueComplete()) {
             yield return null;
         }

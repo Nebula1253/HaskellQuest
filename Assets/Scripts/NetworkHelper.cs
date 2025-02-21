@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using ParrelSync;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class NetworkHelper : NetworkBehaviour
 {
@@ -11,6 +14,8 @@ public class NetworkHelper : NetworkBehaviour
     public bool IsPlayerOne { get; private set; }
     public int debugNrPlayers;
     public static NetworkHelper Instance { get; private set; }
+    public GameObject disconnectOverlay;
+    private Button backToMenuButton;
 
     private void Awake() 
     {
@@ -36,9 +41,26 @@ public class NetworkHelper : NetworkBehaviour
         }
         else if (debugNrPlayers == 0) {
             // actual game
-            IsPlayerOne = IsServer;
-            IsMultiplayer = IsPlayerOne ? NetworkManager.ConnectedClientsList.Count > 1 : true;
+            IsPlayerOne = NetworkManager.Singleton.IsHost;
+            IsMultiplayer = IsPlayerOne ? NetworkManager.Singleton.ConnectedClientsList.Count > 1 : true;
         }
+
+        backToMenuButton = disconnectOverlay.GetComponentInChildren<Button>();
+        backToMenuButton.onClick.AddListener(BackToMenu);
+
+        NetworkManager.Singleton.OnClientDisconnectCallback += Disconnect;
+    }
+
+    private void Disconnect(ulong obj)
+    {
+        Debug.Log("DISCONNECT DETECTED");
+        Time.timeScale = 0f;
+        disconnectOverlay.SetActive(true);
+    }
+
+    void BackToMenu() {
+        NetworkManager.Singleton.Shutdown();
+        SceneManager.LoadScene(0);
     }
 
     // Start is called before the first frame update

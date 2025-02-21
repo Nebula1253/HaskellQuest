@@ -16,6 +16,8 @@ TagManager:
   - Help
   - Error
   - Multiplayer
+  - Landmine
+  - HackButton
   layers:
   - Default
   - TransparentFX

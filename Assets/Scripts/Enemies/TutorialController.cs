@@ -44,7 +44,7 @@ public class TutorialController : EnemyController
     }
 
     IEnumerator endDialogue() {
-        dbox.StartDialogue(endingText, hologramColor, "HOLOGRAM", hologramDialog);
+        // dbox.StartDialogue(endingText, hologramColor, "HOLOGRAM", hologramDialog);
         while (!dbox.GetDialogueComplete()) {
             yield return null;
         }
@@ -55,10 +55,10 @@ public class TutorialController : EnemyController
         hackButton.interactable = false;
         for (int i = 0; i < phaseZeroText.Length; i++) {
             if (i % 2 != 0) {
-                dbox.StartDialogue(phaseZeroText[i], hologramColor, "HOLOGRAM", hologramDialog);
+                // dbox.StartDialogue(phaseZeroText[i], hologramColor, "HOLOGRAM", hologramDialog);
             }
             else {
-                dbox.StartDialogue(phaseZeroText[i], lambdaManColor, "LAMBDA-MAN", lambdaManDialog);
+                // dbox.StartDialogue(phaseZeroText[i], lambdaManColor, "LAMBDA-MAN", lambdaManDialog);
             }
             if (i == 9) {
                 AudioSource audioSource = GetComponent<AudioSource>();
@@ -83,10 +83,10 @@ public class TutorialController : EnemyController
         }
         for (int i = 0; i < text.Length; i++) {
             if (i % 2 == 0) {
-                dbox.StartDialogue(text[i], hologramColor, "HOLOGRAM", hologramDialog);
+                // dbox.StartDialogue(text[i], hologramColor, "HOLOGRAM", hologramDialog);
             }
             else {
-                dbox.StartDialogue(text[i], lambdaManColor, "LAMBDA-MAN", lambdaManDialog);
+                // dbox.StartDialogue(text[i], lambdaManColor, "LAMBDA-MAN", lambdaManDialog);
             }
             while (!dbox.GetDialogueComplete()) {
                 yield return null;

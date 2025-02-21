@@ -5,6 +5,7 @@ using UnityEngine;
 public class HomingMissile : MonoBehaviour
 {
     private Transform target;
+    private Vector3 targetPos;
     private float speed;
     private float rotateSpeed; // rotation speed in radians/second
     private float lockDelay;
@@ -13,7 +14,7 @@ public class HomingMissile : MonoBehaviour
     private AudioSource source;
     private bool doesDamage = true;
 
-    public void SetTarget(Transform target) {
+    public void SetTargetTransform(Transform target) {
         this.target = target;
     }
 
@@ -28,6 +29,10 @@ public class HomingMissile : MonoBehaviour
     public void SetLockDelay(float lockDelay) {
         this.lockDelay = lockDelay;
     }
+
+    public void SetTargetPosition(Vector3 targetPos) {
+        this.targetPos = targetPos;
+    }
     
     // Start is called before the first frame update
     void Start()
@@ -41,7 +46,13 @@ public class HomingMissile : MonoBehaviour
     void Update()
     {
         if (!missileLocked) {
-            Vector3 targetDir = target.position - transform.position;
+            Vector3 targetDir;
+            if (target != null) {
+                targetDir = target.position - transform.position;
+            }
+            else {
+                targetDir = targetPos - transform.position;
+            }
 
             float singleStep = rotateSpeed * Time.deltaTime;
 
@@ -70,11 +81,15 @@ public class HomingMissile : MonoBehaviour
                 other.gameObject.GetComponent<PlayerAvatar>().TakeDamage(5);
             }
         }
-        Destroy(gameObject);
+        if (NetworkHelper.Instance.IsPlayerOne) {
+            Destroy(gameObject);
+        }
     }
 
     void OnBecameInvisible() {
-        Destroy(gameObject);
+        if (NetworkHelper.Instance.IsPlayerOne) {
+            Destroy(gameObject);
+        }
     }
 
     public void Deactivate() {

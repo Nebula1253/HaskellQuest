@@ -27,11 +27,12 @@ public class DropMissile : MonoBehaviour
             if (doesDamage) {
                 other.gameObject.GetComponent<PlayerAvatar>().TakeDamage(5);
             }
+            Destroy(gameObject);
         }
         else if (other.gameObject.CompareTag("Projectile")) {
             Destroy(other.gameObject);
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
     }
 
     void OnBecameInvisible() {

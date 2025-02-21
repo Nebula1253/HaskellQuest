@@ -28,12 +28,6 @@ public class ComboMissileController : AttackController
         audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public override bool AttackEnd()
     {
         if (!missilesFired) return false;
@@ -59,7 +53,7 @@ public class ComboMissileController : AttackController
         GameObject newMissile = Instantiate(homingMissile, position + missileStartOffset, missileRotation, transform.parent);
         Debug.Log(newMissile);
         Debug.Log(target);
-        newMissile.GetComponent<HomingMissile>().SetTarget(target);
+        newMissile.GetComponent<HomingMissile>().SetTargetTransform(target);
         newMissile.GetComponent<HomingMissile>().SetSpeed(homingMissileSpeed);
         newMissile.GetComponent<HomingMissile>().SetRotateSpeed(homingMissileRotateSpeed);
         newMissile.GetComponent<HomingMissile>().SetLockDelay(homingMissileLockDelay);

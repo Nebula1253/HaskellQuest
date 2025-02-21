@@ -36,3 +36,36 @@ coordsGen i = (1, 1) -- same principle
 
 main :: IO()
 main = do
+    let missiles = [Missile 1 True, Missile 2 False, Missile 3 True, Missile 4 True]
+    let landmines = [Landmine (1, 1) True, Landmine (2, 2) True, Landmine (3, 3) False, Landmine (4, 4) True]
+
+    let newMissiles = filterMissiles missiles
+    let newLandmines = filterLandmines landmines
+
+    let missilesCheck = and [b == False | (Missile _ b) <- newMissiles] 
+                        && not (null newMissiles) 
+                        && and [a == b | (Missile a _) <- newMissiles | (Missile b _) <- missiles] 
+                        && (length missiles == length newMissiles)
+
+    let landminesCheck = and [b == False | (Landmine _ b) <- newLandmines] 
+                        && not (null newLandmines) 
+                        && and [a == b | (Landmine a _) <- newLandmines | (Landmine b _) <- landmines] 
+                        && (length landmines == length newLandmines)
+
+    if missilesCheck
+        then
+            if landminesCheck
+                then do
+                    print "True"
+                    print "Additional: Both work"
+                else do
+                    print "error: Filtering missiles works, but filtering landmines doesn't!"
+                    print "Additional: Only missile works"
+        else
+            if landminesCheck
+                then do
+                    print "error: Filtering landmines works, but filtering missiles doesn't!"
+                    print "Additional: Only landmine works"
+                else do
+                    print "error: Neither function works as expected!"
+                    print "Additional: Neither works"
