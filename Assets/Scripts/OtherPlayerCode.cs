@@ -62,7 +62,7 @@ public class OtherPlayerCode : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!NetworkHelper.Instance.IsPlayerOne && NetworkManager.IsConnectedClient) { // let's give SOMETHING to the client, ya know?
+        if (!NetworkHelper.Instance.IsPlayerOne && NetworkHelper.Instance.IsMultiplayer && NetworkManager.Singleton.IsConnectedClient) { // let's give SOMETHING to the client, ya know?
             timer += Time.deltaTime;
             if (timer >= syncInterval) {
                 timer = 0f;

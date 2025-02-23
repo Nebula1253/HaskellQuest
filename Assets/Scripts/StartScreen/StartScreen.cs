@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using TMPro;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -39,8 +40,13 @@ public class StartScreen : MonoBehaviour
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     if (singleplayer) {
+                        Destroy(NetworkManager.Singleton.GetComponent<UnityTransport>());
+                        UnityTransport newTransport = NetworkManager.Singleton.gameObject.AddComponent<UnityTransport>();
+                        newTransport.SetConnectionData("127.0.0.1", 7777, "0.0.0.0");
+                        NetworkManager.Singleton.NetworkConfig.NetworkTransport = newTransport;
+
                         NetworkManager.Singleton.StartHost();
-                        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                        NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(1), LoadSceneMode.Single);
                     }
                     else {
                         setup2PUI.SetActive(true);

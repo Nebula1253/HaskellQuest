@@ -13,6 +13,7 @@ public class HomingMissile : MonoBehaviour
     private bool missileLocked = false;
     private AudioSource source;
     private bool doesDamage = true;
+    public bool destroyedByMines;
 
     public void SetTargetTransform(Transform target) {
         this.target = target;
@@ -82,7 +83,14 @@ public class HomingMissile : MonoBehaviour
             }
         }
         if (NetworkHelper.Instance.IsPlayerOne) {
-            Destroy(gameObject);
+            if (other.gameObject.CompareTag("Landmine")) {
+                if (destroyedByMines) {
+                    Destroy(gameObject);
+                }
+            }
+            else {
+                Destroy(gameObject);
+            }
         }
     }
 

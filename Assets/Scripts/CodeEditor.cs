@@ -220,7 +220,7 @@ public class CodeEditor : NetworkBehaviour
         string openTag = "<color=" + colorCode + ">";
         string closeTag = "</color>";
 
-        Debug.Log(codeLines.Length);
+        // Debug.Log(codeLines.Length);
 
         for (int i = 0; i < codeLines.Length; i++) {
             string line = codeLines[i];
@@ -400,7 +400,7 @@ public class CodeEditor : NetworkBehaviour
 
     [Rpc(SendTo.Everyone)]
     private void EnemyMoveTriggerRpc(bool result, string additionalConditions) {
-        Debug.Log(additionalConditions);
+        // Debug.Log(additionalConditions);
         battlefield.GetComponent<BattleField>().ActivateBattlefield();
 
         if (GetComponent<HelpScreen>().helpScreenActive) {
@@ -510,7 +510,7 @@ public class CodeEditor : NetworkBehaviour
                 AddErrorToDisplayRpc("<color=#ff0000>Test failed!</color>\n");
             }
             else if (result.Contains("error")) {
-                AddErrorToDisplayRpc(result);
+                AddErrorToDisplayRpc("<color=#ff0000>" + result + "</color>\n");
             }
 
             EnemyMoveTriggerRpc(result == "True", additional);

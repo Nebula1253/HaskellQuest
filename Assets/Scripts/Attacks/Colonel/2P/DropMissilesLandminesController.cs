@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class DropMissilesLandminesController : AttackController
@@ -36,6 +37,7 @@ public class DropMissilesLandminesController : AttackController
 
     public override void Trigger(bool result)
     {
+        SetFilters("Neither works");
         StartCoroutine(DropMinesMissiles());
     }
 
@@ -113,6 +115,8 @@ public class DropMissilesLandminesController : AttackController
         if (!audioSource.isPlaying) {
             audioSource.Play();
         }
+
+        mine.GetComponent<NetworkObject>().Spawn();
     }
 
     IEnumerator DropMinesMissiles() {
@@ -143,6 +147,8 @@ public class DropMissilesLandminesController : AttackController
                     GameObject currMissile = Instantiate(missile, new Vector3(minX + missileX, minY, transform.position.z), Quaternion.identity, transform.parent);
                     currMissile.GetComponent<DropMissile>().setSpeed(missileSpeed);
                     currMissile.GetComponent<DropMissile>().setDoesDamage(false);
+
+                    currMissile.GetComponent<NetworkObject>().Spawn();
                     audioSource.Play();
                 }
                 else {
@@ -150,6 +156,8 @@ public class DropMissilesLandminesController : AttackController
                         GameObject currMissile = Instantiate(missile, new Vector3(minX + missileX, minY, transform.position.z), Quaternion.identity, transform.parent);
                         currMissile.GetComponent<DropMissile>().setSpeed(missileSpeed);
                         currMissile.GetComponent<DropMissile>().setDoesDamage(true);
+
+                        currMissile.GetComponent<NetworkObject>().Spawn();
                         if (!audioSource.isPlaying) {
                             audioSource.Play();
                         }

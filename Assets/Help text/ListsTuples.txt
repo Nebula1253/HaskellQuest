@@ -1,8 +1,11 @@
-Lists and tuples are Haskell's fundamental structures for managing multiple values. Lists, bounded by '[' and ']', store multiple values of the same type, and they have no limit to the number of elements.
+Lists, bounded by '[' and ']', store multiple values of the same type, and they have no limit to the number of elements.
 
-Haskell defines a ':' operator, to add an element to the head of any list: the expression "1 : [2, 3]" yields the list value "[1, 2, 3]". It also has a list concatenation operator: the expression "[1, 2] ++ [3, 4]" yields the list "[1, 2, 3, 4]". Haskell has 'length' and 'reverse' functions for lists, which do exactly what they say on the tin.
+Haskell has a ':' operator to add an element to the head of any list. The expression "1 : [2, 3]" yields the list value "[1, 2, 3]". 
+It also has a list concatenation ('++') operator: "[1, 2] ++ [3, 4]" yields "[1, 2, 3, 4]". 
 
-Tuples, meanwhile, are bounded by '(' and ')', and can store values of multiple different types, but you can't add elements to them once they're declared.
+Haskell has 'length' and 'reverse' functions for lists, which do exactly what they say on the tin.
+
+Tuples are bounded by '(' and ')', and can store values of multiple different types, but you can't add elements to them once they're declared.
 
 To retrieve elements from either structure, you can use pattern-matching. but Haskell provides functions to help:
 

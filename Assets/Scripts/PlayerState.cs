@@ -21,7 +21,6 @@ public class PlayerState : NetworkBehaviour
     public GameObject multiplayerHealthBars;
     private EnemyController enemyController;
     public static PlayerState Instance { get; private set; }
-    public string nextSceneName = "Scenes/Credits";
 
     private void Awake() 
     { 
@@ -147,7 +146,7 @@ public class PlayerState : NetworkBehaviour
 
     private void AdvanceScene() {
         if (battleDone) {
-            NetworkManager.Singleton.SceneManager.LoadScene(nextSceneName, LoadSceneMode.Single);
+            NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1), LoadSceneMode.Single);
             // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }

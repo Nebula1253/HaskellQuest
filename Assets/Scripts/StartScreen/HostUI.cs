@@ -37,7 +37,7 @@ public class HostUI : MonoBehaviour
         NetworkManager.Singleton.OnClientDisconnectCallback -= ClientDisconnect;
         NetworkManager.Singleton.ConnectionApprovalCallback -= ConnectApproval;
 
-        NetworkManager.Singleton.SceneManager.LoadScene("Scenes/ColonelBattleNetwork", LoadSceneMode.Single);
+        NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(1), LoadSceneMode.Single);
     }
 
     public async void StartHost() {

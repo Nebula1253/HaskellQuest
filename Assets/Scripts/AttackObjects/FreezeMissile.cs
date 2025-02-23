@@ -13,6 +13,9 @@ public class FreezeMissile : MonoBehaviour
         if (other.gameObject.CompareTag("Player") && IsActive) {
             other.gameObject.GetComponent<PlayerAvatar>().Freeze(freezeDuration);
         }
+        else if (other.gameObject.CompareTag("Landmine")) {
+            other.GetComponent<Landmine>().FreezeRpc();
+        }
     }
 
     public void Deactivate() {

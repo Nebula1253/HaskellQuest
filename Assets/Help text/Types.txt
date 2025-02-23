@@ -4,17 +4,16 @@ There are a few standard types in Haskell:
 1) Int: an integer within the range -2<sup>29</sup> to (2<sup>29</sup> - 1), and Integer: an unbounded integer
 2) Float: a floating-point number, and Double: a double-precision float
 3) Char: a single character (e.g. 'a', '1', '$')
-4) Bool: a boolean value, either True or False
+4) Bool: either True or False
 
 As well, there are two type-related keywords in Haskell, which will come up in the challenges you face.
 
-1) The 'type' keyword simply defines a type as an alias for another type - this is known as a 'type synonym'. For instance, the line "type Temp = Float" means that later lines can treat 'Temp' and 'Float' interchangeably. Indeed, in Haskell, the String type is defined this way, as an alias for a list of Char.
+1) The 'type' keyword just defines a type as an alias for another type - a 'type synonym'. For instance, the line "type Temp = Float" means that you can treat 'Temp' and 'Float' interchangeably. In Haskell, the String type is defined this way, as an alias for a list of Chars.
 
-2) The 'data' keyword, meanwhile, is used to declare an entirely new type. Let's look at an example:
+2) The 'data' keyword is used to declare an entirely new type. Here's an example:
 
     data Shape = Circle Float Float Float | Rectangle Float Float Float Float
 
-Here, 'Circle' and 'Rectangle' are both <i>data constructors</i>; the '|' character allows you to declare multiple possible constructors for a given type. These constructors are essentially functions that take the listed parameters (so 'Circle' takes 3 Float values) and return a value of type Shape. 
-
-In this example, Circle takes 2 floats to define the coordinates for the centre, and the third float defines the circle's radius. Rectangle, meanwhile, takes 2 floats to define the upper left corner, and 2 floats to define the lower right corner.
+'Circle' and 'Rectangle' are both <i>data constructors</i>. The '|' character allows you to declare multiple possible constructors for a given type. 
+These constructors are essentially functions that take the listed parameters and return a value of type Shape. 
     

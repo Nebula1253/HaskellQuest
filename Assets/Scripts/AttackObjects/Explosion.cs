@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class Explosion : MonoBehaviour
@@ -18,7 +19,10 @@ public class Explosion : MonoBehaviour
     }
 
     public void BeginExplosion() {
-        StartCoroutine(explode());
+        if (NetworkHelper.Instance.IsPlayerOne) {
+            GetComponent<NetworkObject>().Spawn();
+            StartCoroutine(explode());
+        }
     }
 
     IEnumerator explode() {

@@ -39,11 +39,18 @@ main = do
     let fMissiles = launchFreeze 5
 
     let newHMissiles = retarget hMissiles "enemy"
-    let retargetCheck = (and [t == "enemy" | (HomingMissile t _) <- newHMissiles]) && not (null newHMissiles) && (and [a == b | (HomingMissile _ a) <- newHMissiles | (HomingMissile _ b) <- hMissiles]) && (length hMissiles == length newHMissiles)
-    let invalidTargets = [t | HomingMissile t _ <- newHMissiles, t /= "enemy"]
+    let retargetCheck = (and [t == "enemy" | (HomingMissile t _) <- newHMissiles]) 
+                        && not (null newHMissiles) 
+                        && (and [a == b | (HomingMissile _ a) <- newHMissiles | (HomingMissile _ b) <- hMissiles]) 
+                        && (length hMissiles == length newHMissiles)
+                        
+    -- let invalidTargets = [t | HomingMissile t _ <- newHMissiles, t /= "enemy"]
 
     let newFMissiles = disable fMissiles
-    let freezeCheck = not (and [b | (FreezeMissile b) <- newFMissiles]) && not (null newFMissiles) && (length fMissiles == length newFMissiles) && (and [a == b | (FreezeMissile _ a) <- fMissiles | (FreezeMissile _ b) <- newFMissiles])
+    let freezeCheck = not (and [b | (FreezeMissile b _) <- newFMissiles]) 
+                        && not (null newFMissiles) 
+                        && (length fMissiles == length newFMissiles) 
+                        && (and [a == b | (FreezeMissile _ a) <- fMissiles | (FreezeMissile _ b) <- newFMissiles])
 
     if retargetCheck
         then

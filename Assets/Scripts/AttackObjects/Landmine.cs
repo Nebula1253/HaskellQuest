@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Landmine : MonoBehaviour
+public class Landmine : NetworkBehaviour
 {
     public GameObject explosionPrefab;
     private Vector3 targetPos, targetIncrementPerSecond;
     private bool targetSet = false;
     public float settingTime;
     private bool isDamaging;
+    public Color freezeColor;
 
     public void setTargetPos(Vector3 targetPos) {
         targetIncrementPerSecond = (targetPos - transform.position) / settingTime;
@@ -41,7 +43,15 @@ public class Landmine : MonoBehaviour
             
             explosion.GetComponent<Explosion>().BeginExplosion();
 
-            Destroy(gameObject);
+            if (NetworkHelper.Instance.IsPlayerOne) {
+                Destroy(gameObject);
+            }
         }
+    }
+
+    [Rpc(SendTo.Everyone)] 
+    public void FreezeRpc() {
+        isDamaging = false;
+        GetComponent<SpriteRenderer>().color = freezeColor;
     }
 }

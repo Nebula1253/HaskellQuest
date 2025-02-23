@@ -27,15 +27,20 @@ public class DropMissile : MonoBehaviour
             if (doesDamage) {
                 other.gameObject.GetComponent<PlayerAvatar>().TakeDamage(5);
             }
-            Destroy(gameObject);
+            if (NetworkHelper.Instance.IsPlayerOne) {
+                Destroy(gameObject);
+            }
         }
         else if (other.gameObject.CompareTag("Projectile")) {
-            Destroy(other.gameObject);
-            Destroy(gameObject);
+            Debug.Log("IS PLAYER ONE: " + NetworkHelper.Instance.IsPlayerOne);
+            if (NetworkHelper.Instance.IsPlayerOne) {
+                Destroy(other.gameObject);
+                Destroy(gameObject);
+            }
         }
     }
 
     void OnBecameInvisible() {
-        Destroy(gameObject);
+        if (NetworkHelper.Instance.IsPlayerOne) Destroy(gameObject);
     }
 }

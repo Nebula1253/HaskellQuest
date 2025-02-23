@@ -32,7 +32,7 @@ public class HomingFreezeMissileController : AttackController
 
     public override void Trigger(bool result)
     {
-        // Debug.Log("ABSOLUTELY NOT!!");
+        SetRetargetDisable("Neither works");
         StartCoroutine(fireMissiles());
     }
 

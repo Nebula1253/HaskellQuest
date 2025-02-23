@@ -1,6 +1,7 @@
 type Health = Int
-data Player = Player Health 
+data Player = Player Health
 
+-- PLAYER CODE
 hurtPlayer :: Player -> Player
 hurtPlayer (Player health) = Player (health - 10) 
 

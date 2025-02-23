@@ -91,8 +91,8 @@ main = do
         else
             if freezeCheck
                 then do
-                    print "error: "
+                    print "error: The freeze missile redirection works, but the homing missile redirection doesn't!"
                     print "Additional: Only freeze redirect works"
                 else do
-                    print "False"
+                    print "error: Neither function works as expected!"
                     print "Additional: Neither work"
