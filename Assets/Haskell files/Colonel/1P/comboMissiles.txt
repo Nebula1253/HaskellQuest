@@ -25,7 +25,7 @@ retarget :: HMissile -> Target -> HMissile
 retarget (HMissile _ a) t = HMissile t a
 
 backfire :: [Missile] -> [HMissile] -> [HMissile]
-backfire m_list hm_list = -- INPUT HERE --
+backfire m_list hm_list = undefined -- INPUT HERE --
 
 -- TEST CODE
 angleGen :: Int -> Float

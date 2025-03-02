@@ -1,13 +1,13 @@
 Expressions are sections of code that can be evaluated - they produce a value. For instance, 2 + 2 is an expression that yields the value 4.
-They can be as simple as a single value (e.g. '4' on its own) or as complex as multiple nested function calls with multiple arguments.
+They can be as simple as a single value (e.g. '4') or as complex as multiple nested function calls with multiple arguments.
 
-Functions, meanwhile, are like the mathematical definition: they take input value(s) and return an output value.
-Haskell functions need to follow a specific format. Here's an example:
+Functions are like the mathematical definition: they take input value(s) and return an output value.
+Haskell functions need to follow a specific format. For example:
 
     incrementInt :: Int -> Int
     incrementInt x = x + 1
     
-The first line is a <i>type signature</i>; we define that this takes an Int input and returns an Int output.
-The second line is the <i>declaration</i>: an expression that shows what the output value should be.
+The first line is a <i>type signature</i>: this takes an Int input and returns an Int output.
+The second line is the <i>declaration</i>: an expression showing how the input is transformed.
 
-A function can have multiple input values in Haskell: a function of type "Int -> Int -> Int" takes two Ints and returns an Int.
+A function can have multiple input values in Haskell. A function of type "Int -> Int -> Int" takes two Ints and returns an Int.

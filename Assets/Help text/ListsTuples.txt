@@ -1,14 +1,20 @@
 Lists, bounded by '[' and ']', store multiple values of the same type, and they have no limit to the number of elements.
 
-Haskell has a ':' operator to add an element to the head of any list. The expression "1 : [2, 3]" yields the list value "[1, 2, 3]". 
-It also has a list concatenation ('++') operator: "[1, 2] ++ [3, 4]" yields "[1, 2, 3, 4]". 
+Haskell has a ':' operator to prepend an element to any list. The expression "1 : [2, 3]" yields the list "[1, 2, 3]". 
+The '++' operator concatenates lists: "[1, 2] ++ [3, 4]" yields "[1, 2, 3, 4]". 
 
-Haskell has 'length' and 'reverse' functions for lists, which do exactly what they say on the tin.
+Haskell's 'length' and 'reverse' functions for lists do exactly what they say on the tin.
 
 Tuples are bounded by '(' and ')', and can store values of multiple different types, but you can't add elements to them once they're declared.
 
-To retrieve elements from either structure, you can use pattern-matching. but Haskell provides functions to help:
+To retrieve elements from either structure, you can use pattern-matching. For instance:
 
-1) Tuples have the 'fst' and 'snd' functions, which retrieve the first and second elements from tuples respectively. However, these <i>only</i> work on pairs, and will not work on longer tuples.
+    headIncrement :: [Int] -> Int
+    headIncrement (x:xs) = x + 1
 
-2) Lists use the '!!' operator, to retrieve the element at a specific index: the expression "[1, 2, 3] !! 0" returns 1, for instance. Additionally, 'take n x' returns a list containing the first n elements of x, and 'drop n x' returns a list with the first n elements of x removed.
+Haskell also provides functions to help:
+
+1) For tuples, 'fst' and 'snd' retrieve the first and second elements from tuples respectively, but these <i>only</i> work on pairs. They will not work on longer tuples.
+
+2) For lists, the '!!' operator retrieves the element at a specific index. For instance, "[1, 2, 3] !! 0" returns 1. 
+'take n x' returns a list containing the first n elements of x, and 'drop n x' returns a list with the first n elements of x removed - both leave the original list intact.

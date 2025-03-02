@@ -13,7 +13,7 @@ launch n = [Missile i (randomGen i) | i <- [1..n]]
 -- write a function to include only the INACTIVE missiles: 
 -- we'll be using this to interfere with the attack!
 filterMissiles :: [Missile] -> [Missile]
-filterMissiles missiles = -- INPUT HERE --
+filterMissiles missiles = undefined -- INPUT HERE --
 
 -- TEST CODE
 randomGen :: Int -> Bool

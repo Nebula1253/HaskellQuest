@@ -1,19 +1,20 @@
 type Health = Int
 data Player = Player Health
 
+damages :: [Int]
+damages = [-10,-5,0,5,10]
+-- as before, this'll be passed to hurtPlayer
+
+-- PLAYER CODE
 hurtPlayer :: Player -> [Int] -> Player
 hurtPlayer player [] = player
 hurtPlayer (Player h) (d:ds)
     | d >= 0    = hurtPlayer (Player (h - d)) ds
     | otherwise = hurtPlayer (Player h) ds
 
--- you might have realised that this is basically doing the 
--- same thing as the previous script; in fact, this is how 
--- the 'sum' function from there is implemented.
-
-damages :: [Int]
-damages = [-10,-5,0,5,10]
--- as before, this'll be passed to hurtPlayer
+-- This is basically doing the same thing as the previous 
+-- script; in fact, this is how the 'sum' function from 
+-- there is implemented.
 
 -- TEST CODE
 health :: Player -> Int
@@ -25,5 +26,5 @@ main = do
     let damagedPlayer = hurtPlayer player damages
     let difference = health player - health damagedPlayer
 
-    print(difference <= 0) -- how can I retrofit this to allow for variable amounts of damage?
+    print(difference <= 0)
     print("Additional: " ++ show difference);

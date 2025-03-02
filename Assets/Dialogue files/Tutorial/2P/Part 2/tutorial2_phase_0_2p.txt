@@ -1,0 +1,18 @@
+I can't believe we made it out of that crash! 
+--- SWITCH ---
+I thought we were goners for sure...
+--- SWITCH ---
+I always had faith in you, Lambda-Men. Haskell City is all the better for having you two in it.
+I believe our training got cut short?
+--- SWITCH ---
+Yeah, I think you were about to start telling us about... what was it?
+--- SWITCH ---
+"Rec"-something...?
+--- SWITCH ---
+Ah, yes! Recursion! It's a powerful tool in any Haskell user's arsenal.
+Basically, it's a way of defining functions where the function is applied within its own definition.
+I've uploaded the data about it to your Gauntlet... are you ready for the attack?
+--- SWITCH ---
+After the Colonel? We can take anything you can throw at us!
+--- SWITCH ---
+Yeah, you know what? Bring it on!

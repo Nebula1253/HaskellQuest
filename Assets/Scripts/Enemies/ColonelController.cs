@@ -43,7 +43,7 @@ public class ColonelController : EnemyController
         hackButton.interactable = false;
         var isMultiplayer = NetworkHelper.Instance.IsMultiplayer;
 
-        TextAsset dialogue = initDialogue1P;
+        TextAsset dialogue = isMultiplayer ? initDialogue2P : initDialogue1P;
         switch (phase) {
             case 0:
                 dialogue = isMultiplayer ? initDialogue2P : initDialogue1P;

@@ -44,7 +44,7 @@ public class BattleField : NetworkBehaviour
                     player = Instantiate(playerPrefab, spawnPoint, Quaternion.identity, transform);
                 }
                 
-                player.GetComponent<NetworkObject>().SpawnAsPlayerObject(OwnerClientId);
+                player.GetComponent<NetworkObject>().SpawnAsPlayerObject(OwnerClientId, true);
 
                 Debug.Log("HOST SPAWNED");
             }

@@ -1,0 +1,60 @@
+data Bolt = IntBolt Int |
+            FloatBolt Float |
+            NodeBolt (Bolt, Bolt) 
+
+launchBolt :: Int -> Bolt
+launchBolt 1 = NodeBolt (IntBolt 10, FloatBolt 0.9)
+launchBolt n = NodeBolt (launchBolt (n - 1), launchBolt (n - 1))
+
+-- PLAYER CODE
+-- Dr Fractal's launched an energy bolt that splits itself into a tree!
+-- write a function to traverse the tree, find the bolts that do damage,
+-- and negate them!
+disableBolts :: Bolt -> Bolt
+disableBolts bolt = undefined 
+
+-- hint: you'll need three cases, one for each Bolt constructor
+
+-- TEST CODE
+findIntDmg :: Bolt -> Maybe Int
+findIntDmg (IntBolt i) = Just i
+findIntDmg (FloatBolt f) = Nothing 
+findIntDmg (NodeBolt (a, b)) = case findIntDmg a of
+                                Nothing -> findIntDmg b
+                                Just i -> Just i
+
+findFloatDmg :: Bolt -> Maybe Float
+findFloatDmg (IntBolt _) = Nothing 
+findFloatDmg (FloatBolt f) = Just f
+findFloatDmg (NodeBolt (a, b)) = case findFloatDmg a of
+                                    Nothing -> findFloatDmg b
+                                    Just i -> Just i
+
+main :: IO()
+main = do
+    let initBolt = launchBolt 3
+    let altBolt = disableBolts initBolt
+
+    let intDmg = case findIntDmg altBolt of
+                    Nothing -> 10
+                    Just n -> n
+
+    let floatDmg = case findFloatDmg altBolt of
+                    Nothing -> 0.9
+                    Just n -> n
+
+    if intDmg > 0
+        then
+            if floatDmg < 1
+                then
+                    print "error: The IntBolts and FloatBolts still cause damage!"
+                else
+                    print "error: The FloatBolts are disabled, but the IntBolts still cause damage!"
+        else
+            if floatDmg < 1
+                then
+                    print "error: The IntBolts are disabled, but the FloatBolts still cause damage!"
+                else
+                    print True
+
+    print (intDmg, floatDmg)

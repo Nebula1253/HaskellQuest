@@ -9,14 +9,17 @@ fire (Fractal n) = Laser (power n)
 -- the power of the laser is based on the size of this Fractal
 -- so lasers from smaller Fractals would cause less damage
 
--- write a function that splits Dr. Fractal into two halves,
--- then recursively splits those halves, stopping when 
--- you reach a Fractal with an odd size!
-split :: Fractal -> [Fractal]
-split fractal = --INPUT HERE--
+-- PLAYER 1 CODE
+-- write a function that halves Dr. Fractal into two Fractals,
+-- then recursively halves those Fractals -- the result should
+-- be a list of the split Fractals. The function should 
+-- stop when you reach a Fractal with an odd size!
 
--- hint: the 'div' function in Haskell does integer division, 
--- i.e. div 7 2 == 3, not 3.5
+split :: Fractal -> [Fractal]
+split fractal = undefined -- INPUT HERE --
+
+-- hint: Haskell has 'even' and 'odd' functions that return
+-- a Bool, and a 'div' function that performs integer division
 
 -- TEST CODE
 power :: Size -> Power
@@ -24,7 +27,7 @@ power n = n -- doesn't really matter
 
 splitRef :: Fractal -> [Fractal]
 splitRef (Fractal n)
-    | n `mod` 2 == 0 = splitRef (Fractal (div n 2)) ++ splitRef (Fractal (div n 2))
+    | even n         = splitRef (Fractal (div n 2)) ++ splitRef (Fractal (div n 2))
     | otherwise      = [Fractal n]
 
 fireRef :: Fractal -> Laser
@@ -44,6 +47,6 @@ main = do
     let fireCheck = fire (Fractal 8) == fireRef (Fractal 8)
     if not fireCheck
         then
-            print("error: You've modified the fire function! You can't do that!")
+            print "error: You've modified the fire function! You can't do that!"
         else
-            print(splitF == splitFRef)
+            print (splitF == splitFRef)

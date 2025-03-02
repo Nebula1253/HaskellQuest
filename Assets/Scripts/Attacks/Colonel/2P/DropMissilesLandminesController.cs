@@ -120,7 +120,7 @@ public class DropMissilesLandminesController : AttackController
     }
 
     IEnumerator DropMinesMissiles() {
-        int safeLandmine = UnityEngine.Random.Range(0, nrLandmines - 1);
+        int safeLandmine = UnityEngine.Random.Range(0, nrLandmines);
         for (int i = 0; i < nrLandmines; i++) {
             yield return new WaitForSecondsRealtime(landmineTimeDelay);
 

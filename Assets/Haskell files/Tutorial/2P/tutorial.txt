@@ -1,0 +1,67 @@
+-- This panel shows the code that you can't change.
+-- There will be vital information here for the
+-- challenges you face.
+
+type Health = Int
+
+data Player = Player Health
+
+-- PLAYER 1 CODE
+-- Player 1: you can interact with the code here freely!
+
+hurtPlayer :: Player -> Player
+hurtPlayer (Player health) = Player (health - 10)
+
+-- You have to edit this to make sure you don't lose health,
+-- but you can't do it alone! 
+
+-- Use the '2P Code' button to look at what your comrade
+-- is working on!
+
+-- PLAYER 2 CODE
+-- Player 2: you can interact with the code here freely!
+
+weakenPlayer :: Player -> Player
+weakenPlayer (Player health) = Player (round (fromIntegral health * 0.8))
+
+-- The 'fromIntegral' function converts from an Int to a
+-- Float, and the 'round' function does the reverse.
+
+-- You have to edit this to make sure you don't lose health,
+-- but you can't do it alone! 
+
+-- Use the '1P Code' button to look at what your comrade
+-- is working on!
+
+-- TEST CODE
+health :: Player -> Int
+health (Player h) = h
+
+percentDiff :: Player -> Player -> Float
+percentDiff (Player ogHealth) (Player altHealth)= fromIntegral altHealth / fromIntegral ogHealth
+
+main :: IO()
+main = do
+    let player = Player 100
+    let damagedPlayer = hurtPlayer player
+    let healthDamage = health player - health damagedPlayer
+
+    let player2 = Player 100
+    let damagedPlayer2 = weakenPlayer player2
+    let healthPercent = percentDiff player2 damagedPlayer2
+
+    if healthDamage <= 0
+        then
+            if healthPercent >= 1
+                then
+                    print "True"
+                else
+                    print "error: Player 1's function works but Player 2's function doesn't!"
+        else
+            if healthPercent >= 1
+                then
+                    print "error: Player 2's function works but Player 1's function doesn't!"
+                else
+                    print "error: Neither function works as expected!"
+
+    print ("Additional: " ++ show (healthDamage, healthPercent))

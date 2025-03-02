@@ -35,7 +35,7 @@ retarget :: HomingMissile -> Target -> HomingMissile
 retarget (HomingMissile _ a) t = HomingMissile t a
 
 backfire :: [Missile] -> [HomingMissile] -> [HomingMissile]
-backfire m_list hm_list = -- INPUT HERE --
+backfire m_list hm_list = undefined -- INPUT HERE --
 
 -- PLAYER 2 CODE
 -- write a function to make the freeze missiles
@@ -46,7 +46,7 @@ resetAim :: FreezeMissile -> Coords -> FreezeMissile
 resetAim (FreezeMissile _ a) c = FreezeMissile c a
 
 freezeMines :: [Landmine] -> [FreezeMissile] -> [FreezeMissile]
-freezeMines mines fm_list = -- INPUT HERE --
+freezeMines mines fm_list = undefined -- INPUT HERE --
 
 -- TEST CODE
 idGen :: Int -> ID

@@ -12,4 +12,4 @@ These are known as the recursive case and base case respectively - case expressi
 
 Of course, this still fails to terminate when supplied with a negative number, but that's true of the actual factorial function as well.
 
-Recursion is an incredibly powerful tool, and it comes in handy for splitting a larger problem into multiple smaller sub-problems.
+Recursion is an incredibly powerful tool for splitting a larger problem into multiple smaller sub-problems.

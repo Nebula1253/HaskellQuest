@@ -29,12 +29,14 @@ public class MultiplayerSetupManager : MonoBehaviour
         NetworkManager.Singleton.Shutdown();
         joinUI.SetActive(true);
         hostUI.SetActive(false);
+        hostUI.GetComponent<HostUI>().RemoveCallbacks();
     }
 
     void Back() {
         NetworkManager.Singleton.Shutdown();
         hostUI.SetActive(false);
         joinUI.SetActive(false);
+        hostUI.GetComponent<HostUI>().RemoveCallbacks();
 
         multiplayerSetupUI.SetActive(false);
         initUI.SetActive(true);

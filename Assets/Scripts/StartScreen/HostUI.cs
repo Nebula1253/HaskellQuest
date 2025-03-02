@@ -44,13 +44,14 @@ public class HostUI : MonoBehaviour
         NetworkManager.Singleton.OnClientConnectedCallback += ClientConnect;
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnect;
         NetworkManager.Singleton.ConnectionApprovalCallback += ConnectApproval;
+        joinCodeText.text = "";
 
         try {
             var joinCode = await StartHostWithRelay();
             joinCodeText.text = joinCode;
         }
         catch (Exception e) {
-            connectStatus.text = e.Message;
+            connectStatus.text = e.GetType().ToString();
         }
         
     }
@@ -95,5 +96,11 @@ public class HostUI : MonoBehaviour
             response.Approved = true;
             response.Pending = false;
         }
+    }
+
+    public void RemoveCallbacks() {
+        NetworkManager.Singleton.OnClientConnectedCallback -= ClientConnect;
+        NetworkManager.Singleton.OnClientDisconnectCallback -= ClientDisconnect;
+        NetworkManager.Singleton.ConnectionApprovalCallback -= ConnectApproval;
     }
 }

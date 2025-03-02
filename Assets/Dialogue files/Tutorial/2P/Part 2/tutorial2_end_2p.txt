@@ -1,0 +1,14 @@
+Yes! We did it!
+--- SWITCH ---
+Is it just me, or are these getting easier?
+--- SWITCH ---
+Well done! I've healed you both up again.
+--- SWITCH ---
+So is that it then? Is our training over?
+--- SWITCH ---
+Have we learned everything there is to know about Haskell?
+--- SWITCH ---
+Ha! Far from it, but it's all I can teach you for now.
+In any case, it should be enough for you to deal with your next opponent.
+--- SWITCH ---
+What? What's come up now?

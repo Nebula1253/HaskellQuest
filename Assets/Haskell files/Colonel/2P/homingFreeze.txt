@@ -21,13 +21,13 @@ launchFreeze n = [FreezeMissile True (angleGen i) | i <- [1..n]]
 -- write a function to retarget all HomingMissiles
 -- we'll be using this to fire them back at the enemy!
 retarget :: [HomingMissile] -> Target -> [HomingMissile]
-retarget missiles t = -- INPUT HERE --
+retarget missiles t = undefined -- INPUT HERE --
 
 -- PLAYER 2 CODE
 -- write a function that deactivates the FreezeMissiles
 -- they shouldn't pose a problem after this!
 disable :: [FreezeMissile] -> [FreezeMissile]
-disable missiles = -- INPUT HERE --
+disable missiles = undefined -- INPUT HERE --
 
 -- TEST CODE
 angleGen :: Int -> Float

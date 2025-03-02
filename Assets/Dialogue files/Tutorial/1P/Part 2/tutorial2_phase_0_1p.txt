@@ -1,0 +1,12 @@
+I can't believe I made it out of that crash! I thought I was a goner for sure...
+--- SWITCH ---
+I always had faith in you, Lambda-Man. Haskell City is all the better for having you in it.
+I believe our training got cut short?
+--- SWITCH ---
+Yeah, I think you were about to start telling me about "rec"... something?
+--- SWITCH ---
+Ah, yes! Recursion! It's a powerful tool in any Haskell user's arsenal.
+Basically, it's a way of defining functions where the function is applied within its own definition.
+I've uploaded the data about it to your Gauntlet... are you ready for the attack?
+--- SWITCH ---
+Yeah, you know what? Bring it on!

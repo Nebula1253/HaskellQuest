@@ -93,6 +93,15 @@ public class PlayerAvatar : NetworkBehaviour
         hurtSound.Play();
     }
 
+    public void TakeDamage(float damageRatio) {
+        playerState.updateHealth(damageRatio, whichPlayer);
+
+        if (hurtSound.isPlaying) {
+            hurtSound.Stop();
+        }
+        hurtSound.Play();
+    }
+
     public void Freeze(float freezeDuration) {
         StartCoroutine(FreezeCoroutine(freezeDuration));
     }

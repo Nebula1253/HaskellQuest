@@ -14,8 +14,6 @@ public class PlayerState : NetworkBehaviour
     public int maxHealth;
     private NetworkList<int> health;
     private List<HealthBar> bars = new List<HealthBar>();
-    private Button screenClick;
-    private bool battleDone = false;
     public GameObject gameOverOverlay, dialogBox;
     public GameObject singlePlayerHealthBar;
     public GameObject multiplayerHealthBars;
@@ -62,9 +60,6 @@ public class PlayerState : NetworkBehaviour
             bars.Add(bar);
         }
 
-        screenClick = GameObject.Find("ScreenClick").GetComponent<Button>();
-        screenClick.onClick.AddListener(AdvanceScene);
-
         enemyController = GameObject.Find("EnemyView").GetComponent<EnemyController>();
     }
 
@@ -107,6 +102,17 @@ public class PlayerState : NetworkBehaviour
         }
     }
 
+    public void updateHealth(float healthRatio, int player) {
+        if (IsServer) {
+            health[player] = (int)Mathf.Clamp(health[player] * healthRatio, 0, maxHealth);
+            bars[player].setHealth(health[player], maxHealth);
+        }
+        
+        if (health[player] <= 0) { // TODO probably needs to be changed
+            GameOver();
+        }
+    }
+
     private void GameOver() {
         var mainBattle = PlayerHUD.Instance;
         mainBattle.moveToCentreCall(false, true);
@@ -131,23 +137,18 @@ public class PlayerState : NetworkBehaviour
         }
     }
 
-    public void DisplayScore() {
-        StartCoroutine(DisplayScoreCoroutine());
+    public void LoadNextScene() {
+        StartCoroutine(LoadSceneCoroutine());
     }
 
-    IEnumerator DisplayScoreCoroutine() {
+    IEnumerator LoadSceneCoroutine() {
         // if there's an ending dialogue, wait for it to finish
         while (!enemyController.IsBattleEnded()) {
             yield return null;
         }
-        
-        battleDone = true;
-    }
 
-    private void AdvanceScene() {
-        if (battleDone) {
-            NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1), LoadSceneMode.Single);
-            // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        }
+        yield return new WaitForSecondsRealtime(0.75f);
+
+        NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1), LoadSceneMode.Single);
     }
 }

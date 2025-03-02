@@ -35,7 +35,7 @@ retarget :: HomingMissile -> Target -> HomingMissile
 retarget (HomingMissile _ a) t = HomingMissile t a
 
 backfire :: [Missile] -> [HomingMissile] -> [HomingMissile]
-backfire m_list hm_list = -- INPUT HERE --
+backfire m_list hm_list = undefined -- INPUT HERE --
 
 -- PLAYER 2 CODE
 -- write a function to make the freeze missiles
@@ -46,7 +46,7 @@ resetAim :: FreezeMissile -> Coords -> FreezeMissile
 resetAim (FreezeMissile _ a) c = FreezeMissile c a
 
 freezeMines :: [Landmine] -> [FreezeMissile] -> [FreezeMissile]
-freezeMines mines fm_list = -- INPUT HERE --
+freezeMines mines fm_list = undefined -- INPUT HERE --
 
 -- TEST CODE
 idGen :: Int -> ID
@@ -91,8 +91,8 @@ main = do
         else
             if freezeCheck
                 then do
-                    print "error: "
+                    print "error: The freeze missile redirection works, but the homing missile redirection doesn't!"
                     print "Additional: Only freeze redirect works"
                 else do
-                    print "False"
+                    print "error: Neither function works as expected!"
                     print "Additional: Neither work"

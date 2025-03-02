@@ -1,0 +1,58 @@
+What... what is this place? What's happening?
+--- SWITCH ---
+These suits, they've just latched onto us!
+--- SWITCH ---
+Hey, relax. You've both managed to stumble into the Lambda Cave. You've been granted... a great power, to say the least.
+--- SWITCH ---
+The Lambda Cave...? 
+--- SWITCH ---
+But, doesn't that make you...?
+--- SWITCH ---
+Yes. I am... what remains of... LAMBDA-MAN, famed hero and bastion of functional programming.
+In... the final battle, I was greatly injured. What you see now is just a hologram; my body heals in the chamber beneath.
+--- SWITCH ---
+We all thought you died! The world's been going to hell! 
+--- SWITCH ---
+It's been overrun by selfish idiots misusing Haskell's power!
+--- SWITCH ---
+Yes. That is why you two must take over as the new LAMBDA-MEN.
+You've both been chosen by the new LAMBDA SUITS.
+They're mostly protective, though; the real highlights are the LAMBDA GAUNTLETS, on your right arms.
+--- SWITCH ---
+The Lambda Gauntlet? What does it do?
+--- SWITCH ---
+Seems like some sort of code interface...
+--- SWITCH ---
+It's advanced science, so advanced it's almost magic.
+It allows you to access the Haskell code of your adversaries, and, most importantly, <i>change</i> that code.
+It can save your lives; it's saved mine on many occasions.
+The two gauntlets are linked - you can, at any time, see what code the other is working on.
+--- SWITCH ---
+That's incredible! Are you sure you trust us with this power?
+--- SWITCH ---
+Yeah... you've basically just met us, and that was complete chance.
+--- SWITCH ---
+I have little choice... but I can help prepare you.
+In all the challenges to come, one thing will be true.
+Your adversaries will try to attack you, and you'll have to write Haskell to deflect that attack.
+Their attacks are smarter and more dangerous than in my day, and you'll both have to work together to win.
+So... what better way to help you prepare than attacking you myself?
+--- SWITCH ---
+Wait, <i>what</i>?!
+--- SWITCH ---
+That's insane!
+--- SWITCH ---
+No, no, don't worry! It's quite a simple attack to deflect. It'll help you get used to using the Gauntlets.
+Plus, if you two do get hurt, I'll heal you once you've succeeded.
+--- SWITCH ---
+But... we've never written Haskell before?
+--- SWITCH ---
+How can you be so sure we're up to this?
+--- SWITCH ---
+Your suits have an internal database; you can look up Haskell information at any time.
+I've just uploaded the information to do with types, expressions, functions and pattern-matching.
+Also, in case you do make a mistake in your code, you can look at the errors at any time too.
+--- SWITCH ---
+I guess that'll have to do... 
+--- SWITCH ---
+Alright. Bring it!

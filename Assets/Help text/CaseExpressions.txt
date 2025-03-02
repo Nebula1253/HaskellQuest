@@ -1,33 +1,41 @@
-Functions can do different things based on the input values.
+Functions can behave differently based on their input values.
 
-A function to halve an integer and rounded it down could be define that as n/2 for an even n, but (n-1) / 2 for an odd n. In Haskell, this function would look like:
-
-    floorHalve :: Int -> Int
-    floorHalve n
-        | x `mod` 2 == 0 = n / 2
-        | otherwise      = (n - 1) / 2
-
-You can use as many Bool conditions as you like: the 'otherwise' clause gets executed if none of them hold true.
-Haskell has 'if-then-else' statements, but these <i>case expressions</i> are a lot more readable for multiple conditions.
-
-The concept of pattern-matching can be used here - you can specify patterns that your input value should match to, and define the function differently for each.
-Here's a trivial example of this:
+Pattern-matching allows you to specify patterns to match your input value to, and define the function differently for each.
+For example:
 
     lucky :: Int -> String
     lucky 7 = "Lucky!"
     lucky x = "Unlucky..."
 
-Here, the ordering matters; if the "lucky x" pattern came first, then the function would incorrectly return "Unlucky..." for 7.
+Ordering matters - placing "lucky x" first would cause the function to incorrectly return "Unlucky..." for 7.
 
 You can use this with types that have multiple data constructors. For instance:
 
     data Shape = Circle Float Float Float | Rectangle Float Float Float Float
 
-If you wanted a 'size' function for any Shape, it would be written as follows:
+A 'size' function for any Shape would look like this:
 
     size :: Shape -> Float
     size (Circle x y r) = ...
     size (Rectangle x y a b) = ...
 
-Pattern-matching against the constructors allows us to extract the floats supplied when creating the Shape, to use in the function definitions.
-You can use patterns <i>anywhere</i> in an expression to extract information from inputs or variables. 
+Pattern-matching against the constructors allows us to extract the floats from the Shape, to use in the function definition.
+Patterns can be used <i>anywhere</i> in an expression to extract information from inputs or variables.
+
+Top-level patterns can also have boolean <i>guards</i>. A function to halve an integer and round it down could return n/2 for an even n, but (n-1) / 2 for an odd n. 
+In Haskell, this function would look like:
+
+    floorHalve :: Int -> Int
+    floorHalve n
+        | mod n 2 == 0 = div n 2
+        | otherwise      = div (n - 1) 2
+
+Multiple guards can be used. The 'otherwise' clause gets executed if none of them hold true.
+While Haskell has 'if-then-else' statements, these are a lot more readable for multiple conditions.
+
+Pattern-matching is just syntactic sugar for <i>case expressions</i>. The earlier function, rewritten, would look like:
+
+    floorHalve :: Int -> Int
+    floorHalve n = case mod n 2 of
+                            0 -> div n 2
+                            _ -> div (n - 1) 2

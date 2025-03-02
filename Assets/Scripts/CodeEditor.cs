@@ -85,7 +85,7 @@ public class CodeEditor : NetworkBehaviour
 
         codeEditorXPos = -960;
 
-        DisableInteractRpc(NetworkManager.Singleton.LocalClientId);
+        DisableInteract();
 
         playerHUDScript = PlayerHUD.Instance;
 
@@ -285,8 +285,8 @@ public class CodeEditor : NetworkBehaviour
         SubmitToJDoodle();
     }
 
-    [Rpc(SendTo.Everyone)]
-    private void DisableInteractRpc(ulong callingClientID, bool isSubmittingCode = false) {
+    // functionality separated purely for the call in Start to make sense
+    private void DisableInteract() {
         interactable = false;
         codeField.interactable = false;
         codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
@@ -300,6 +300,11 @@ public class CodeEditor : NetworkBehaviour
         if (NetworkHelper.Instance.IsMultiplayer) {
             GetComponent<OtherPlayerCode>().ButtonInteractable(false);
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void DisableInteractRpc(ulong callingClientID, bool isSubmittingCode = false) {
+        DisableInteract();
 
         if (isSubmittingCode) {
             AcknowledgeDisableInteractRpc(callingClientID);
@@ -355,7 +360,7 @@ public class CodeEditor : NetworkBehaviour
         }
 
         if (wonBattle) {
-            playerState.DisplayScore();
+            playerState.LoadNextScene();
         }
         else if (changeScript) {
             currentScript++;

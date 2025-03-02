@@ -9,6 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/StartScreen.unity
     guid: 397ecdece01adf04e89432d5ffd093a1
   - enabled: 1
+    path: Assets/Scenes/Tutorial1BattleNetwork.unity
+    guid: 7c46351a910c3584888c96e4e3958e9b
+  - enabled: 1
     path: Assets/Scenes/ColonelBattleNetwork.unity
     guid: 17418517cbe4a3c43bc50ee4dcdb88ce
+  - enabled: 1
+    path: Assets/Scenes/Tutorial2BattleNetwork.unity
+    guid: f6028bddd54f49b4a83886c2fee63fc9
   m_configObjects: {}

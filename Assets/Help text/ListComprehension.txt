@@ -1,24 +1,32 @@
 List comprehensions allow you to create a list based on the elements of another list.
 
-If you wanted to define a list with all the even numbers from 1 to 50, you could do it like so:
+Generating a list with all the even numbers from 1 to 5 would look like this:
+
     [x | x <- [1..50], x `mod` 2 == 0]
 
-Here, 'x <- [1..50]' is a <i>generator</i>: it feeds each element to the expression before the '|'. 'x `mod` 2 == 0' is a <i>guard</i>: a Bool expression, used to filter the elements of the list fed through.
+Here, 'x <- [1..50]' is a <i>generator</i>: it feeds each element to the expression before the '|'. 
+'x `mod` 2 == 0' is a <i>guard</i>: a Bool expression used to filter the elements of the list.
 
-You can use multiple generators in a list comprehension. Here's an example:
+You can use multiple generators in a list comprehension. For example:
+
     [(i,j) | i <- ['a','b'], j <- [1,2]]
 
-This expression evaluates out to the list:
+This expression evaluates out to:
+
     [(a,1),(a,2),(b,1),(b,2)]
 
 Importantly, 'j' fully iterates through the second list before 'i' moves on to the next element of the first list.
 
-To iterate through both lists <i>simultaneously</i>, you can use the 'zip' function: it takes two lists and returns a list of tuples. For instance, the expression:
+To iterate through both lists <i>simultaneously</i>, the 'zip' function takes two lists and returns a list of tuples. For instance, the expression:
+
     zip [1,2,3] [1,2]
+
 ...returns the list [(1, 1), (2, 2)]. The longer list is truncated to match the length of the shorter one. 
 
-This list can then be used in a list comprehension. For instance, if you want the sum of two lists of ints, it would be:
+This list can then be used in a list comprehension. For instance, if you want the sum of two lists of ints:
+
     [ i + j | (i, j) <- zip [1,2,3] [1,2] ]
 
-Haskell also offers a feature called <i>parallel</i> list comprehension, which does the same thing with more intuitive syntax. The above example becomes:
+Haskell also supports <i>parallel</i> list comprehension, which supports more intuitive syntax for the same operation:
+
     [ i + j | i <- [1,2,3] | j <- [1,2] ]

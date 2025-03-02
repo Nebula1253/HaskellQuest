@@ -1,0 +1,12 @@
+Whoa! I did it! I actually did it!
+--- SWITCH ---
+Indeed you did! Let me heal you up.
+--- SWITCH ---
+So, am I ready? Or have you got more in store?
+--- SWITCH ---
+I do have more to teach you... You have to learn about lists and tuples.
+They're Haskell's fundamental structures for storing multiple values.
+Lists, in particular, are powerful tools because of list comprehension.
+I've just uploaded information about them to your Gauntlet.
+--- SWITCH ---
+Alright, let's go! I can take anything you've got!

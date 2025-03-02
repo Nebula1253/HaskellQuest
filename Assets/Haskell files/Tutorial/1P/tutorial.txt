@@ -1,7 +1,13 @@
+-- This panel shows the code that you can't change.
+-- There will be vital information here for the
+-- challenges you face.
+
 type Health = Int
 data Player = Player Health
 
 -- PLAYER CODE
+-- You can interact with the code here freely!
+
 hurtPlayer :: Player -> Player
 hurtPlayer (Player health) = Player (health - 10) 
 
@@ -11,7 +17,7 @@ hurtPlayer (Player health) = Player (health - 10)
 -- Once you hit the submit button, the enemy's attack 
 -- will play out; you can use WASD or the arrow keys 
 -- to try to dodge it. In this case, though, the 
--- attack itself is un-dodge-able.
+-- attack is un-dodge-able.
 
 -- TEST CODE
 health :: Player -> Int

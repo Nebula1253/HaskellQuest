@@ -117,7 +117,7 @@ public class HomingFreezeMissileController : AttackController
             }
         }
 
-        int whichMissileFreezes = Random.Range(1, nrMissiles / 2);
+        int whichMissileFreezes = Random.Range(1, (nrMissiles / 2) + 1);
 
         int nrMissilesFiredP1 = 0;
         int nrMissilesFiredP2 = 0;

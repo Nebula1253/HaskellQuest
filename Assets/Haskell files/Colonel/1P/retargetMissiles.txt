@@ -13,7 +13,7 @@ launch t n = [Missile t (angleGen i) | i <- [1..n]]
 -- write a function to retarget all Missiles
 -- we'll be using this to fire them back at the enemy!
 retarget :: [Missile] -> Target -> [Missile]
-retarget missiles t = -- INPUT HERE --
+retarget missiles t = undefined -- INPUT HERE --
 
 -- TEST CODE
 angleGen :: Int -> Float

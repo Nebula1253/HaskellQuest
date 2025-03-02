@@ -8,16 +8,13 @@ public class FlashController : AttackController
 {
     private int damage = 10;
     public float maxAlpha, timeForOneFlash;
-    public GameObject heart;
     public Image image;
-    private PlayerAvatar playerHeart;
     private bool attackEnded = false;
 
     // Start is called before the first frame update
     void Start()
     {
         maxAlpha = Mathf.Clamp(maxAlpha, 0, 1);
-        playerHeart = heart.GetComponent<PlayerAvatar>();
     }
 
     // Update is called once per frame
@@ -29,21 +26,21 @@ public class FlashController : AttackController
     public override void Trigger(bool result)
     {
         attackEnded = false;
-        StartCoroutine(FlashRed(result));
+        StartCoroutine(FlashRed());
     }
 
     public override void Trigger(bool result, string additionalConditions)
     {
         attackEnded = false;
         damage = int.Parse(additionalConditions);
-        StartCoroutine(FlashRed(result));
+        StartCoroutine(FlashRed());
     }
 
-    IEnumerator FlashRed(bool result) {
+    IEnumerator FlashRed() {
         yield return new WaitForSecondsRealtime(1.5f);
         float alpha;
 
-        playerHeart.TakeDamage(damage);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAvatar>().TakeDamage(damage);
 
         // red -> transparent
         for (float t = 0; t <= timeForOneFlash; t += Time.deltaTime) {

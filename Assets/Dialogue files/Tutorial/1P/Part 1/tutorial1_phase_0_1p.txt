@@ -1,0 +1,41 @@
+What... what is this place? What's happening?
+This armor, it's just latched onto me!
+--- SWITCH ---
+Hey, relax. You've managed to stumble into the Lambda Cave. You've been granted... a great power, to say the least.
+--- SWITCH ---
+The Lambda Cave...? But, doesn't that make you...?
+--- SWITCH ---
+Yes. I am... what remains of... LAMBDA-MAN, famed hero and bastion of functional programming.
+In... the final battle, I was greatly injured. What you see now is just a hologram; my body heals in the chamber beneath.
+--- SWITCH ---
+We all thought you died! The world's been going to hell! It's swarmed by selfish idiots misusing Haskell's power!
+--- SWITCH ---
+Yes. That is why you must take over as the new LAMBDA-MAN.
+The armor that chose you, it's the new LAMBDA SUIT.
+It's mostly protective, though; the real highlight is the LAMBDA GAUNTLET, on your right arm.
+--- SWITCH ---
+The Lambda Gauntlet? What does it do?
+--- SWITCH ---
+It's advanced science, so advanced it's almost magic.
+It allows you to access the Haskell code of your adversaries, and, most importantly, <i>change</i> that code.
+It can save your life; it's saved mine on many occasions.
+--- SWITCH ---
+That's incredible! Are you sure you trust me with this power?
+--- SWITCH ---
+I have little choice... but I can help prepare you.
+In all the challenges to come, one thing will be true.
+Your adversaries will try to attack you, and you'll have to write Haskell to deflect that attack.
+What better way to help you prepare than attacking you myself?
+--- SWITCH ---
+Wait, <i>what</i>?!
+--- SWITCH ---
+No, no, don't worry! It's quite a simple attack to deflect. It'll help you get used to using the Gauntlet.
+Plus, if you do get hurt, I'll heal you once you've succeeded.
+--- SWITCH ---
+But I don't know the first thing about writing Haskell!
+--- SWITCH ---
+Your suit has an internal database; it can store Haskell information for you to look up at any time.
+I've just uploaded the information to do with types, expressions, functions and pattern-matching.
+Also, in case you do make a mistake in your code, you can look at the errors at any time too.
+--- SWITCH ---
+I guess that'll have to do... Alright. Bring it!
