@@ -80,7 +80,7 @@ public class HomingFreezeMissileController : AttackController
         newMissile.GetComponent<HomingMissile>().SetRotateSpeed(homingRotateSpeed);
         newMissile.GetComponent<HomingMissile>().SetLockDelay(homingLockDelay);
 
-        newMissile.GetComponent<NetworkObject>().Spawn();
+        newMissile.GetComponent<NetworkObject>().Spawn(destroyWithScene:true);
 
         return newMissile;
     }
@@ -103,7 +103,7 @@ public class HomingFreezeMissileController : AttackController
             newMissile.GetComponent<HomingMissile>().Deactivate();
         }
 
-        newMissile.GetComponent<NetworkObject>().Spawn();
+        newMissile.GetComponent<NetworkObject>().Spawn(destroyWithScene:true);
     }
 
     IEnumerator fireMissiles() {

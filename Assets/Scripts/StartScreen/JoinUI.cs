@@ -22,6 +22,7 @@ public class JoinUI : MonoBehaviour
     void Start()
     {
         connectButton.onClick.AddListener(async () => await ConnectToHost());
+        joinCodeInputField.onValueChanged.AddListener(delegate {OnTextChange(); });
     }
 
     async Task ConnectToHost() {
@@ -59,5 +60,9 @@ public class JoinUI : MonoBehaviour
         var joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode: joinCode);
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, "dtls"));
         return !string.IsNullOrEmpty(joinCode) && NetworkManager.Singleton.StartClient();
+    }
+
+    void OnTextChange() {
+        joinCodeInputField.text = joinCodeInputField.text.ToUpper();
     }
 }

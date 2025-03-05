@@ -95,7 +95,7 @@ public class AllOutAttackController : AttackController
         newMissile.GetComponent<HomingMissile>().SetRotateSpeed(homingRotateSpeed);
         newMissile.GetComponent<HomingMissile>().SetLockDelay(homingLockDelay);
 
-        newMissile.GetComponent<NetworkObject>().Spawn();
+        newMissile.GetComponent<NetworkObject>().Spawn(destroyWithScene:true);
 
         return newMissile;
     }
@@ -113,7 +113,7 @@ public class AllOutAttackController : AttackController
         newMissile.GetComponent<HomingMissile>().SetRotateSpeed(freezeRotateSpeed);
         newMissile.GetComponent<HomingMissile>().SetLockDelay(freezeLockDelay);
 
-        newMissile.GetComponent<NetworkObject>().Spawn();
+        newMissile.GetComponent<NetworkObject>().Spawn(destroyWithScene:true);
     }
 
     private void InstantiateLandmine() {
@@ -161,7 +161,7 @@ public class AllOutAttackController : AttackController
             audioSource.Play();
         }
 
-        mine.GetComponent<NetworkObject>().Spawn();
+        mine.GetComponent<NetworkObject>().Spawn(destroyWithScene:true);
     }
 
     IEnumerator Attack() {
@@ -186,7 +186,7 @@ public class AllOutAttackController : AttackController
             GameObject currMissile = Instantiate(dropMissile, new Vector3(minX + missileX, minY, transform.position.z), Quaternion.identity, transform.parent);
             currMissile.GetComponent<DropMissile>().setSpeed(dropMissileSpeed);
             currMissile.GetComponent<DropMissile>().setDoesDamage(true);
-            currMissile.GetComponent<NetworkObject>().Spawn();
+            currMissile.GetComponent<NetworkObject>().Spawn(destroyWithScene:true);
 
             dropMissiles[i] = currMissile;
 

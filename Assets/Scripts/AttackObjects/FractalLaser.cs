@@ -6,22 +6,25 @@ public class FractalLaser : MonoBehaviour
 {
     // Start is called before the first frame update
     private float speed;
-    private bool fractalSplit;
+    private int damage;
     private AudioSource audioSource;
     void Start()
     {
-        var player = GameObject.Find("Player");
-        var playerPos = player.transform.position;
-        var direction = (playerPos - transform.position).normalized;
-
-        transform.Rotate(Quaternion.LookRotation(transform.forward, direction).eulerAngles);
         audioSource = GetComponent<AudioSource>();
         audioSource.Play();
     }
 
-    public void SetVariables(float speed, bool fractalSplit) {
+    public void SetVariables(float speed, int damage) {
         this.speed = speed;
-        this.fractalSplit = fractalSplit;
+        this.damage = damage;
+    }
+
+    public void SetWhichPlayer(int whichPlayer = 0) {
+        var player = GameObject.FindGameObjectsWithTag("Player")[whichPlayer];
+        var playerPos = player.transform.position;
+        var direction = (playerPos - transform.position).normalized;
+
+        transform.Rotate(Quaternion.LookRotation(transform.forward, direction).eulerAngles);
     }
 
     // Update is called once per frame
@@ -31,19 +34,17 @@ public class FractalLaser : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if (other.gameObject.CompareTag("Player")) {
+        if (other.gameObject.CompareTag("Player") && NetworkHelper.Instance.IsPlayerOne) {
             var player = other.gameObject.GetComponent<PlayerAvatar>();
-            if (fractalSplit) {
-                player.TakeDamage(1);
-            }
-            else {
-                player.TakeDamage(10);
-            }
+            player.TakeDamage(damage);
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
+        
     }
 
     void OnBecameInvisible() {
-        Destroy(gameObject);
+        if (NetworkHelper.Instance.IsPlayerOne) {
+            Destroy(gameObject);
+        }
     }
 }

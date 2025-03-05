@@ -20,7 +20,7 @@ public class Explosion : MonoBehaviour
 
     public void BeginExplosion() {
         if (NetworkHelper.Instance.IsPlayerOne) {
-            GetComponent<NetworkObject>().Spawn();
+            GetComponent<NetworkObject>().Spawn(destroyWithScene:true);
             StartCoroutine(explode());
         }
     }

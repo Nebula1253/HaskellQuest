@@ -40,7 +40,7 @@ public class HomingMissileController : AttackController
         newMissile.GetComponent<HomingMissile>().SetRotateSpeed(missileRotateSpeed);
         newMissile.GetComponent<HomingMissile>().SetLockDelay(missileLockDelay);
 
-        newMissile.GetComponent<NetworkObject>().Spawn();
+        newMissile.GetComponent<NetworkObject>().Spawn(destroyWithScene:true);
 
         return newMissile;
     }

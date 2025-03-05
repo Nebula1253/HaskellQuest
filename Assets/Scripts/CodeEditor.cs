@@ -386,10 +386,6 @@ public class CodeEditor : NetworkBehaviour
             yield return null;
         }
         yield return new WaitForSecondsRealtime(1);
-        foreach (var mine in GameObject.FindGameObjectsWithTag("Landmine"))
-        {
-            Destroy(mine);
-        }
 
         EndOfEnemyMoveRpc(phaseOver);
     }
@@ -456,12 +452,13 @@ public class CodeEditor : NetworkBehaviour
 
     private void EvaluateResult(string output) {
         string additional = "";
-        if (output.Contains("Additional: ")) {
+        Debug.Log(output);
+        if (output != null && output.Contains("Additional: ")) {
             additional = output.Split('\n')[3].Remove(0,13);
             additional = additional.Remove(additional.Length - 1, 1);
         }
         
-        if (output.Contains("Timeout") || output == null) {
+        if (output.Contains("Timeout") || string.IsNullOrEmpty(output) || output.Equals("[1 of 1] Compiling Main             ( jdoodle.hs, jdoodle.o )\n")) {
             if (controllers[currentScript].IsRecursionHandled()) {
 
                 AddErrorToDisplayRpc("<color=#ff0000>Your code recurses infinitely!</color>\n");
@@ -478,29 +475,22 @@ public class CodeEditor : NetworkBehaviour
                 EnableInteractRpc();
             }
         }
-        else if (output.Split('\n').Length >= 4 && output.Split('\n')[3].Contains("error")) {
-            // put error details on screen, trigger enemy fire
-            
+        else if (output.Contains("error")) {
             var outputSplit = output.Split('\n');
-            var error = "DUMMY: SHOULD NEVER BE DISPLAYED";
+            string errMsg = "";
 
-            if (outputSplit[3].Contains("jdoodle.hs")) { // JDoodle errors
-                error = outputSplit[4];
+            foreach (string line in outputSplit) {
+                string trimLine = line.Trim();
+                if (!trimLine.Contains("Additional: ") && 
+                    !line.Equals("[1 of 1] Compiling Main             ( jdoodle.hs, jdoodle.o )") &&
+                    !line.Equals("Linking jdoodle ...") &&
+                    !line.Equals(""))
+                {
+                    errMsg += line + '\n';
+                } 
             }
-            else { // custom error messages
-                error = outputSplit[3].Replace("\"", "");
-            }
-            
-            AddErrorToDisplayRpc("<color=#ff0000>" + error + "</color>\n");
 
-            EnemyMoveTriggerRpc(false, additional);
-        }
-        else if (output.Split('\n')[2].Contains("Non-exhaustive")) {
-            var errorStart = output.Split('\n')[2].IndexOf("Non-exhaustive");
-            var error = output.Split('\n')[2].Substring(errorStart);
-            
-            AddErrorToDisplayRpc("<color=#ff0000>" + error + "</color>\n");
-
+            AddErrorToDisplayRpc("<color=#ff0000>" + errMsg + "</color>\n");
             EnemyMoveTriggerRpc(false, additional);
         }
         else {
@@ -514,9 +504,9 @@ public class CodeEditor : NetworkBehaviour
             else if (result == "False") {
                 AddErrorToDisplayRpc("<color=#ff0000>Test failed!</color>\n");
             }
-            else if (result.Contains("error")) {
-                AddErrorToDisplayRpc("<color=#ff0000>" + result + "</color>\n");
-            }
+            // else if (result.Contains("error")) {
+            //     AddErrorToDisplayRpc("<color=#ff0000>" + result + "</color>\n");
+            // }
 
             EnemyMoveTriggerRpc(result == "True", additional);
         }

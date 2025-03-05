@@ -38,11 +38,6 @@ public class SaveFractalController : AttackController
 
     public override void Trigger(bool result)
     {
-        var preexisting = GameObject.FindGameObjectsWithTag("Fractal");
-        foreach (var fractal in preexisting) {
-            Destroy(fractal);
-        }
-
         spawnedFractal = Instantiate(fractal, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, transform.parent).transform;
         StartCoroutine(fireLasers(result));
     }
@@ -54,7 +49,13 @@ public class SaveFractalController : AttackController
             for (int i = 0; i < nrLasers; i++) {
                 var laserInstance = Instantiate(laser, new Vector3(spawnedFractal.position.x, spawnedFractal.position.y - 1.1f, spawnedFractal.position.z), 
                                                 Quaternion.identity, transform.parent);
-                laserInstance.GetComponent<FractalLaser>().SetVariables(laserSpeed, result);
+                laserInstance.GetComponent<FractalLaser>().SetVariables(laserSpeed, 10);
+                if (NetworkHelper.Instance.IsMultiplayer) {
+                    laserInstance.GetComponent<FractalLaser>().SetWhichPlayer(i % 2);
+                }
+                else {
+                    laserInstance.GetComponent<FractalLaser>().SetWhichPlayer();
+                }
                 yield return new WaitForSecondsRealtime(0.25f);
             }
         }

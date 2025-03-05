@@ -18,6 +18,7 @@ TagManager:
   - Multiplayer
   - Landmine
   - HackButton
+  - Bolt
   layers:
   - Default
   - TransparentFX

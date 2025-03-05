@@ -400,6 +400,81 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &266285168
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 266285169}
+  - component: {fileID: 266285171}
+  - component: {fileID: 266285170}
+  m_Layer: 5
+  m_Name: HalfScreenFlash
+  m_TagString: EffectUI
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &266285169
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266285168}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 519671305}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -480, y: 0}
+  m_SizeDelta: {x: 960, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &266285170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266285168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.9709952, g: 0.7688679, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &266285171
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266285168}
+  m_CullTransparentMesh: 1
 --- !u!1 &409935218
 GameObject:
   m_ObjectHideFlags: 0
@@ -981,8 +1056,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 266285169}
   - {fileID: 1270265046}
-  - {fileID: 582660675}
   - {fileID: 1921846977}
   - {fileID: 1455561387}
   - {fileID: 1634099128}
@@ -1130,81 +1205,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524664851}
   m_CullTransparentMesh: 1
---- !u!1 &582660674
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 582660675}
-  - component: {fileID: 582660677}
-  - component: {fileID: 582660676}
-  m_Layer: 5
-  m_Name: DamageFlash
-  m_TagString: EffectUI
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &582660675
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582660674}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 519671305}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -480.01, y: 0}
-  m_SizeDelta: {x: 960.02, y: 1080}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &582660676
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582660674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 0}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &582660677
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582660674}
-  m_CullTransparentMesh: 1
 --- !u!1 &652776272
 GameObject:
   m_ObjectHideFlags: 0
@@ -1215,7 +1215,7 @@ GameObject:
   m_Component:
   - component: {fileID: 652776273}
   - component: {fileID: 652776276}
-  - component: {fileID: 652776275}
+  - component: {fileID: 652776277}
   - component: {fileID: 652776274}
   m_Layer: 0
   m_Name: FractalOverhead2P
@@ -1254,28 +1254,7 @@ MonoBehaviour:
   fractal: {fileID: 5902659078412009789, guid: d9496b1c36d90bd44bea5c30cdea5f21, type: 3}
   laser: {fileID: 4673728435673211641, guid: 7fd57c12d2c59b34ca6315b0a2c574ca, type: 3}
   laserSpeed: 8
-  nrLasers: 8
---- !u!114 &652776275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 652776272}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 495f7a04fa06e724290d5ab6aca9c9a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drFractal: {fileID: 5902659078412009789, guid: d9496b1c36d90bd44bea5c30cdea5f21, type: 3}
-  laser: {fileID: 4673728435673211641, guid: 7fd57c12d2c59b34ca6315b0a2c574ca, type: 3}
-  screenFlash: {fileID: 0}
-  laserSpeed: 8
-  fractalBorderGap: 1.5
-  timeForOneFlash: 0.5
-  nrLasersWhenLost: 8
-  nrLasersWhenWon: 3
-  nrFractals: 8
+  nrLasers: 16
 --- !u!114 &652776276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1285,18 +1264,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 652776272}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Script: {fileID: 11500000, guid: b2a599657b96e4b439594023831eee96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2383399570
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
+  drFractal: {fileID: 5902659078412009789, guid: d9496b1c36d90bd44bea5c30cdea5f21, type: 3}
+  laser: {fileID: 4673728435673211641, guid: 7fd57c12d2c59b34ca6315b0a2c574ca, type: 3}
+  laserSpeed: 8
+  fractalBorderGap: 1.5
+  timeForOneFlash: 0.5
+  nrFractalsWhenSplit: 8
+  screenFlash: {fileID: 266285170}
+--- !u!114 &652776277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652776272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acee9a6aeb39eda4084d862532a12f2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boltLayers: 2
+  fractalLayers: 2
+  timeForOneFlash: 0.5
+  fractalBorderGap: 1.5
+  boltAngle: 60
+  boltSpeed: -1.65
+  screenFlash: {fileID: 266285170}
+  drFractal: {fileID: 5902659078412009789, guid: d9496b1c36d90bd44bea5c30cdea5f21, type: 3}
+  nodeBolt: {fileID: 4673728435673211641, guid: 2759cbc4525feb04f859603755201896, type: 3}
 --- !u!1 &723496315
 GameObject:
   m_ObjectHideFlags: 0
@@ -3145,8 +3143,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1560941047}
-  - component: {fileID: 1560941048}
   - component: {fileID: 1560941050}
+  - component: {fileID: 1560941051}
   - component: {fileID: 1560941049}
   m_Layer: 0
   m_Name: FractalOverhead1P
@@ -3170,27 +3168,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1134431593}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1560941048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1560941046}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4073723404
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &1560941049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3221,13 +3198,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drFractal: {fileID: 5902659078412009789, guid: d9496b1c36d90bd44bea5c30cdea5f21, type: 3}
   laser: {fileID: 4673728435673211641, guid: 7fd57c12d2c59b34ca6315b0a2c574ca, type: 3}
-  screenFlash: {fileID: 0}
+  screenFlash: {fileID: 266285170}
   laserSpeed: 8
   fractalBorderGap: 1.5
   timeForOneFlash: 0.5
   nrLasersWhenLost: 8
   nrLasersWhenWon: 3
   nrFractals: 8
+--- !u!114 &1560941051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1560941046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38cf2bcebc3d9a84b8f8dcbbecb60a1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nrLayers: 3
+  boltAngle: 60
+  boltSpeed: -1.65
+  nodeBolt: {fileID: 4673728435673211641, guid: 2759cbc4525feb04f859603755201896, type: 3}
+  fractal: {fileID: 5902659078412009789, guid: d9496b1c36d90bd44bea5c30cdea5f21, type: 3}
 --- !u!1 &1634099127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3688,7 +3682,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1860433866}
-  - component: {fileID: 1860433867}
   - component: {fileID: 1860433868}
   - component: {fileID: 1860433869}
   m_Layer: 0
@@ -3715,29 +3708,6 @@ Transform:
   - {fileID: 1335130784}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1860433867
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1860433863}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 968424215356fef4dbc4e778667d31bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skipDialogue: 0
-  initDialogue1P: {fileID: 4900000, guid: 2f03e96698ba7b848b5ba4215726751e, type: 3}
-  endText1P: {fileID: 4900000, guid: 8b608e945fdbc184f92ee87b409ed08f, type: 3}
-  initDialogue2P: {fileID: 4900000, guid: 1ccdf9e3499ffcc48b4b4c34ec5d50fa, type: 3}
-  endText2P: {fileID: 4900000, guid: 29f4410be6d0b27409947d9ddbfc64eb, type: 3}
-  lambdaManDialog: {fileID: 8300000, guid: c6ff30dc8bda327499b4a8594c61386b, type: 3}
-  hologramDialog: {fileID: 8300000, guid: 958e8e75b790c5341b3677bddf05e58f, type: 3}
-  lambdaManColor: {r: 1, g: 0.54901963, b: 0, a: 0}
-  hologramColor: {r: 0.65882355, g: 0.8, b: 1, a: 0}
-  player1Color: {r: 1, g: 0.5176471, b: 0.5176471, a: 0}
-  player2Color: {r: 0.5137255, g: 1, b: 0.5058824, a: 0}
 --- !u!114 &1860433868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3750,35 +3720,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25ae9b57dc093634282dd7247c78c9bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skipDialogue: 1
-  dialog: {fileID: 0}
-  phaseZeroText:
-  - {fileID: 4900000, guid: df6bcfc6f9ded684dbb39e14410bfe21, type: 3}
-  - {fileID: 4900000, guid: 21d358e7dd957df4caa1450247c5497a, type: 3}
-  - {fileID: 4900000, guid: 5e2c13b689f587c4797063443c5a42fd, type: 3}
-  - {fileID: 4900000, guid: 7fd469d9cb7cff4479545009c05b5ef2, type: 3}
-  - {fileID: 4900000, guid: dda6bccbca3b53746b12dd5a2cb32d1b, type: 3}
-  - {fileID: 4900000, guid: cff1fdcb932a08141a86ccabd158d514, type: 3}
-  - {fileID: 4900000, guid: 5091c5867e1f4b84cbfc41534a1dc6e3, type: 3}
-  - {fileID: 4900000, guid: 0517c1d4b0de30a4eaaba92c66a20140, type: 3}
-  - {fileID: 4900000, guid: 10d7b11fe60282d42b1ae373ad66b183, type: 3}
-  - {fileID: 4900000, guid: a685fc6d6d9613d4583c0b3e6fe1e9fd, type: 3}
-  - {fileID: 4900000, guid: 6ce58248848952f47818dd8fb562cd73, type: 3}
-  - {fileID: 4900000, guid: f09647b52eeffae45b42d09d238cfc18, type: 3}
-  phaseOneText:
-  - {fileID: 4900000, guid: 931a50602bfb74845ad1fb2de5651c42, type: 3}
-  - {fileID: 4900000, guid: 58b8ce83883a2cf4f99ab22fdc2ab1bc, type: 3}
-  - {fileID: 4900000, guid: d4f74d34bbc3ee54da73b7871bcbf2b1, type: 3}
-  endText:
-  - {fileID: 4900000, guid: 7cf8bd69149b8794ea3030503e4c5a64, type: 3}
-  - {fileID: 4900000, guid: 36384836b2b0187479569aa4493c8ee9, type: 3}
-  - {fileID: 4900000, guid: f877ee7137f89de4fb149011f8f54021, type: 3}
+  skipDialogue: 0
+  dialog: {fileID: 1270265045}
+  phase0Text1P: {fileID: 4900000, guid: 2272a1c732e1044449b377a2aeeae569, type: 3}
+  phase1Text1P: {fileID: 4900000, guid: e14a7109ea3a7a54795415ab3ab53af9, type: 3}
+  phase2Text1P: {fileID: 4900000, guid: 4f5548549f8fbdd42b698cdb73921394, type: 3}
+  endText1P: {fileID: 4900000, guid: fc624c704ed66b6459bbdb049a86ee19, type: 3}
+  phase0Text2P: {fileID: 4900000, guid: 34c91e0f349aad749bff319e9d601fc2, type: 3}
+  phase1Text2P: {fileID: 4900000, guid: 8ad55ccbde4c6ed44b00e6a95ea081be, type: 3}
+  phase2Text2P: {fileID: 4900000, guid: 4c2dd4418e13976428dfb3ca8815f613, type: 3}
+  endText2P: {fileID: 4900000, guid: 2a8547cb3cccfe74092a77f673f8c226, type: 3}
   lambdaManDialog: {fileID: 8300000, guid: c6ff30dc8bda327499b4a8594c61386b, type: 3}
   fractalDialog: {fileID: 8300000, guid: 099d86f9e4a475b48a9dab9c029b583d, type: 3}
   kowalewskiDialog: {fileID: 8300000, guid: c6ff30dc8bda327499b4a8594c61386b, type: 3}
   lambdaManColor: {r: 1, g: 0.54901963, b: 0, a: 0}
   fractalColor: {r: 0.698225, g: 0, b: 1, a: 0}
   kowalewskiColor: {r: 0.4203898, g: 0.5050641, b: 0.6320754, a: 0}
+  player1Color: {r: 1, g: 0.5176471, b: 0.5176471, a: 0}
+  player2Color: {r: 0.5137255, g: 1, b: 0.5058824, a: 0}
   kowalewski: {fileID: 9100000, guid: 6f15228b19e6cda45a4b48c0931cbeb0, type: 2}
 --- !u!82 &1860433869
 AudioSource:
@@ -4670,6 +4629,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1134431592}
     - target: {fileID: 7335874115675977564, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
+      propertyPath: currentScript
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335874115675977564, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
       propertyPath: overheadEnemy
       value: 
       objectReference: {fileID: 0}
@@ -4697,6 +4660,34 @@ PrefabInstance:
       propertyPath: codeFiles.Array.data[2]
       value: 
       objectReference: {fileID: 4900000, guid: 47f6fe1b41808b84da315a8eab27cbf6, type: 3}
+    - target: {fileID: 7335874115675977564, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
+      propertyPath: multiplayerCodeFiles.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335874115675977564, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
+      propertyPath: singleplayerCodeFiles.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335874115675977564, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
+      propertyPath: multiplayerCodeFiles.Array.data[0]
+      value: 
+      objectReference: {fileID: 4900000, guid: 071310bc92f105340b64139b49c55c33, type: 3}
+    - target: {fileID: 7335874115675977564, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
+      propertyPath: multiplayerCodeFiles.Array.data[1]
+      value: 
+      objectReference: {fileID: 4900000, guid: c42f0410b3bb1804daf97d283a7567d4, type: 3}
+    - target: {fileID: 7335874115675977564, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
+      propertyPath: singleplayerCodeFiles.Array.data[0]
+      value: 
+      objectReference: {fileID: 4900000, guid: 01ed4548f0d65334484a79a11864171f, type: 3}
+    - target: {fileID: 7335874115675977564, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
+      propertyPath: singleplayerCodeFiles.Array.data[1]
+      value: 
+      objectReference: {fileID: 4900000, guid: 492315db937e4444ead5c31c9c76b9dc, type: 3}
+    - target: {fileID: 7335874115675977564, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
+      propertyPath: singleplayerCodeFiles.Array.data[2]
+      value: 
+      objectReference: {fileID: 4900000, guid: 91054894851af22438f887c06e6dc6aa, type: 3}
     - target: {fileID: 7520265956338604241, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
       propertyPath: m_IsActive
       value: 1

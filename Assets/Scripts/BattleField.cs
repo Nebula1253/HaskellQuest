@@ -24,10 +24,14 @@ public class BattleField : NetworkBehaviour
         battlefieldBG.SetActive(true);
         // enemyOverhead1P.GetComponent<SpriteRenderer>().enabled = true;
         if (NetworkHelper.Instance.IsMultiplayer) {
-            enemyOverhead2P.GetComponent<SpriteRenderer>().enabled = true;
+            if (enemyOverhead2P.GetComponent<SpriteRenderer>() != null) {
+                enemyOverhead2P.GetComponent<SpriteRenderer>().enabled = true;
+            }
         }
         else {
-            enemyOverhead1P.GetComponent<SpriteRenderer>().enabled = true;
+            if (enemyOverhead1P.GetComponent<SpriteRenderer>() != null) {
+                enemyOverhead1P.GetComponent<SpriteRenderer>().enabled = true;
+            }
         }
 
         if (!spawnedPlayer) {
@@ -72,8 +76,12 @@ public class BattleField : NetworkBehaviour
     public void DeactivateBattlefield() {
         battlefieldBG.SetActive(false);
         
-        enemyOverhead1P.GetComponent<SpriteRenderer>().enabled = false;
-        enemyOverhead2P.GetComponent<SpriteRenderer>().enabled = false;
+        if (enemyOverhead1P.GetComponent<SpriteRenderer>() != null) {
+            enemyOverhead1P.GetComponent<SpriteRenderer>().enabled = false;
+        }
+        if (enemyOverhead2P.GetComponent<SpriteRenderer>() != null) {
+            enemyOverhead2P.GetComponent<SpriteRenderer>().enabled = false;
+        }
         
         var playerPrefabs = GameObject.FindGameObjectsWithTag("Player");
         foreach (var player in playerPrefabs)
@@ -82,6 +90,18 @@ public class BattleField : NetworkBehaviour
         }
         playerRefs = playerPrefabs;
         IsActive = false;
+
+        if (NetworkHelper.Instance.IsPlayerOne) {
+            foreach (var mine in GameObject.FindGameObjectsWithTag("Landmine"))
+            {
+                Destroy(mine);
+            }
+
+            foreach (var fractal in GameObject.FindGameObjectsWithTag("Fractal"))
+            {
+                Destroy(fractal);
+            }
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -91,7 +111,7 @@ public class BattleField : NetworkBehaviour
         Vector3 playerSpawn = new Vector3(spawnPoint.x + multiplayerXOffset, spawnPoint.y, spawnPoint.z);
 
         var player = Instantiate(player2Prefab, playerSpawn, Quaternion.identity, transform);
-        player.GetComponent<NetworkObject>().SpawnAsPlayerObject(serverRpcParams.Receive.SenderClientId);
+        player.GetComponent<NetworkObject>().SpawnAsPlayerObject(serverRpcParams.Receive.SenderClientId, true);
 
         Debug.Log("CLIENT SPAWNED");
     }

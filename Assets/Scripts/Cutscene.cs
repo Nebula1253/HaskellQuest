@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,11 +18,11 @@ public class Cutscene : MonoBehaviour
     }
 
     IEnumerator startCutscene() {
-        // dbox.StartDialogue(cutsceneText, cutsceneAudio);
+        dbox.StartDialogue(cutsceneText.text, cutsceneAudio);
         // dbox.StartDialogue(cutsceneText);
         while (!dbox.GetDialogueComplete()) {
             yield return null;
         }
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1), LoadSceneMode.Single);
     }
 }

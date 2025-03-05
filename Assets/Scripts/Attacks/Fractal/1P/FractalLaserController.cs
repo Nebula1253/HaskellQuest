@@ -57,10 +57,8 @@ public class FractalLaserController : AttackController
         // if the player fails, spawn 1 big enemy
         int nrLasers = nrLasersWhenLost;
 
-        if (fractals == null) {
-            fractals = new GameObject[1];
-            fractals[0] = Instantiate(drFractal, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, transform.parent);
-        }
+        fractals = new GameObject[1];
+        fractals[0] = Instantiate(drFractal, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, transform.parent);
 
         yield return new WaitForSecondsRealtime(1f);
 
@@ -108,7 +106,8 @@ public class FractalLaserController : AttackController
                 GameObject currLaser = Instantiate(laser, new Vector3(fractal.transform.position.x, fractal.transform.position.y - yOffset, fractal.transform.position.z), 
                                                     Quaternion.identity, transform.parent);
                 if (result) currLaser.transform.localScale *= 0.5f;
-                currLaser.GetComponent<FractalLaser>().SetVariables(laserSpeed, result);
+                currLaser.GetComponent<FractalLaser>().SetVariables(laserSpeed, result ? 1 : 10);
+                currLaser.GetComponent<FractalLaser>().SetWhichPlayer();
                 yield return new WaitForSecondsRealtime(0.7f);
             }
         }

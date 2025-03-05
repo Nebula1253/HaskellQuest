@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,6 +22,8 @@ public class Credits : MonoBehaviour
         creditsTMP = GetComponentInChildren<TMP_Text>();
 
         StartCoroutine(secret());
+
+        NetworkManager.Singleton.Shutdown();
     }
 
     IEnumerator secret() {
@@ -67,6 +70,6 @@ public class Credits : MonoBehaviour
     IEnumerator ExitScene() {
         yield return new WaitForSeconds(1f);
         Debug.Log("Exiting scene");
-        UnityEngine.SceneManagement.SceneManager.LoadScene("IntroCutscene");
+        SceneManager.LoadScene(0);
     }
 }

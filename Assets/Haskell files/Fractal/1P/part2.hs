@@ -1,15 +1,17 @@
 data Bolt = IntBolt Int |
             FloatBolt Float |
             NodeBolt (Bolt, Bolt) 
+-- The IntBolts damage the player by a constant amount
+-- The FloatBolts multiply the player's health by some fraction
 
 launchBolt :: Int -> Bolt
 launchBolt 1 = NodeBolt (IntBolt 10, FloatBolt 0.9)
 launchBolt n = NodeBolt (launchBolt (n - 1), launchBolt (n - 1))
 
 -- PLAYER CODE
--- Dr Fractal's launched an energy bolt that splits itself into a tree!
--- write a function to traverse the tree, find the bolts that do damage,
--- and negate them!
+-- Dr Fractal's creating an energy bolt that splits itself into 
+-- a tree! Write a function to traverse the tree, find the 
+-- Int and Float Bolts, and negate their damage!
 disableBolts :: Bolt -> Bolt
 disableBolts bolt = undefined 
 
@@ -57,4 +59,4 @@ main = do
                 else
                     print True
 
-    print (intDmg, floatDmg)
+    print ("Additional: " ++ show (intDmg, floatDmg))
