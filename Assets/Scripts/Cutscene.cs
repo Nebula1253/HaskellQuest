@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class Cutscene : MonoBehaviour
 {
-    public TextAsset cutsceneText;
+    public TextAsset cutsceneText1P, cutsceneText2P;
     public AudioClip cutsceneAudio;
     private DialogBox dbox;
     // Start is called before the first frame update
@@ -18,11 +18,19 @@ public class Cutscene : MonoBehaviour
     }
 
     IEnumerator startCutscene() {
-        dbox.StartDialogue(cutsceneText.text, cutsceneAudio);
-        // dbox.StartDialogue(cutsceneText);
+        if (NetworkHelper.Instance.IsMultiplayer) {
+            dbox.StartDialogue(cutsceneText2P.text, cutsceneAudio);
+        }
+        else {
+            dbox.StartDialogue(cutsceneText1P.text, cutsceneAudio);
+        }
+        
         while (!dbox.GetDialogueComplete()) {
             yield return null;
         }
-        NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1), LoadSceneMode.Single);
+
+        if (NetworkHelper.Instance.IsPlayerOne) {
+            NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1), LoadSceneMode.Single);
+        }
     }
 }

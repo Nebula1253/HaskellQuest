@@ -157,11 +157,17 @@ public class AllOutAttackController : AttackController
         mine.GetComponent<Landmine>().setTargetPos(mineTargetPos);
         landminePositions.Add(mineTargetPos);
 
-        if (!audioSource.isPlaying) {
-            audioSource.Play();
-        }
+        PlaySoundRpc();
 
         mine.GetComponent<NetworkObject>().Spawn(destroyWithScene:true);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    void PlaySoundRpc() {
+        if (audioSource.isPlaying) {
+            audioSource.Stop();
+        }
+        audioSource.Play();
     }
 
     IEnumerator Attack() {
@@ -191,7 +197,7 @@ public class AllOutAttackController : AttackController
             dropMissiles[i] = currMissile;
 
             missileX += missileXInc;
-            audioSource.Play();
+            PlaySoundRpc();
         }
 
         yield return new WaitForSecondsRealtime(1f);
@@ -210,7 +216,19 @@ public class AllOutAttackController : AttackController
         // fire homing missiles
         Transform target;
         for (int i = 0; i < nrMissiles; i++) {
-            target = homingRedirect ? dropMissiles[i].transform : players[i % 2].transform;
+            if (homingRedirect) {
+                if (dropMissiles[i] != null) {
+                    target = dropMissiles[i].transform;
+                }
+                else {
+                    // TODO: FIX!! incredibly unfair lol
+                    target = players[i % 2].transform;
+                }
+            }
+            else {
+                target = players[i % 2].transform;
+            }
+            // target = homingRedirect ? dropMissiles[i].transform : players[i % 2].transform;
             InstantiateHomingMissile(transform.position, target);
         }
 

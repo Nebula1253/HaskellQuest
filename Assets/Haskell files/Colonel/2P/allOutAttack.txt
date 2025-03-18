@@ -10,26 +10,29 @@ data Missile = Missile ID Position
 
 launch :: Int -> [Missile]
 launch n = [Missile (idGen i) i | i <- [1..n]]
+-- this launches n missiles, each with a unique ID
 
 data HomingMissile = HomingMissile Target Angle
 
 launchHoming :: Target -> Int -> [HomingMissile]
-launchHoming t n = [HomingMissile t (angleGen i)| i <- [1..n]]
+launchHoming t n = [HomingMissile t (angleGen i) | i <- [1..n]]
+-- this launches n homing missiles, each with a random start angle
 
 data Landmine = Landmine Coords
 
 setMines :: Int -> [Landmine]
 setMines n = [Landmine (coordsGen i) | i <- [1..n]]
+-- this launches n landmines, each with a random position
 
 data FreezeMissile = FreezeMissile Coords Angle
 
 launchFreeze :: Coords -> Int -> [FreezeMissile]
 launchFreeze c n = [FreezeMissile c (angleGen i) | i <- [1..n]]
+-- this launches n freezing missiles, each with a random start angle
 
 -- PLAYER 1 CODE
--- write a function to make the homing missiles target
--- one of the regular missiles each, so they wipe
--- each other out!
+-- write a function to make the homing missiles target one of the regular missiles each, 
+-- so they wipe each other out!
 
 retarget :: HomingMissile -> Target -> HomingMissile
 retarget (HomingMissile _ a) t = HomingMissile t a

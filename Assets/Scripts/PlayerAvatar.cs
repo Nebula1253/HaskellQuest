@@ -87,15 +87,17 @@ public class PlayerAvatar : NetworkBehaviour
     public void TakeDamage(int damage) {
         playerState.updateHealth(-damage, whichPlayer);
 
-        if (hurtSound.isPlaying) {
-            hurtSound.Stop();
-        }
-        hurtSound.Play();
+        HurtSoundRpc();
     }
 
     public void TakeDamage(float damageRatio) {
         playerState.updateHealth(damageRatio, whichPlayer);
 
+        HurtSoundRpc();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    void HurtSoundRpc() {
         if (hurtSound.isPlaying) {
             hurtSound.Stop();
         }

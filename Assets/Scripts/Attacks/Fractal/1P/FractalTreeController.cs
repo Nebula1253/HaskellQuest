@@ -50,7 +50,7 @@ public class FractalTreeController : AttackController
     }
 
     void SpawnRootNode() {
-        Instantiate(fractal, new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z), Quaternion.identity, transform.parent);
+        Instantiate(fractal, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, transform.parent);
 
         GameObject node = Instantiate(nodeBolt, transform.position, Quaternion.identity, battlefield.transform);
 

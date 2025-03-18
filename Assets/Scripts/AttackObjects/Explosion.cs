@@ -30,11 +30,4 @@ public class Explosion : MonoBehaviour
 
         Destroy(gameObject);
     }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Player")) {
-            other.gameObject.GetComponent<PlayerAvatar>().TakeDamage(5);
-        }
-    }
 }

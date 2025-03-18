@@ -22,7 +22,10 @@ public class BattleField : NetworkBehaviour
 
     public void ActivateBattlefield() {
         battlefieldBG.SetActive(true);
-        // enemyOverhead1P.GetComponent<SpriteRenderer>().enabled = true;
+
+        // this is stupid lol
+        // the sprites are identical, the only advantage of having different objects is attaching different attack scripts
+        // which in itself is a problematic choice given the sheer amount of code duplication
         if (NetworkHelper.Instance.IsMultiplayer) {
             if (enemyOverhead2P.GetComponent<SpriteRenderer>() != null) {
                 enemyOverhead2P.GetComponent<SpriteRenderer>().enabled = true;
@@ -36,27 +39,33 @@ public class BattleField : NetworkBehaviour
 
         if (!spawnedPlayer) {
             if (NetworkHelper.Instance.IsPlayerOne) {
-                // host spawns new player for itself
-                GameObject player;
                 if (NetworkHelper.Instance.IsMultiplayer) {
-                    // multiplayer
-                    Vector3 playerSpawn = new Vector3(spawnPoint.x - multiplayerXOffset, spawnPoint.y, spawnPoint.z);
-                    player = Instantiate(player1Prefab, playerSpawn, Quaternion.identity, transform);
+                    // multiplayer - spawn both player objects
+                    Vector3 player1Spawn = new Vector3(spawnPoint.x - multiplayerXOffset, spawnPoint.y, spawnPoint.z);
+                    GameObject player1 = Instantiate(player1Prefab, player1Spawn, Quaternion.identity, transform);
+
+                    player1.GetComponent<NetworkObject>().SpawnAsPlayerObject(OwnerClientId, true);
+
+                    Vector3 player2Spawn = new Vector3(spawnPoint.x + multiplayerXOffset, spawnPoint.y, spawnPoint.z);
+                    GameObject player2 = Instantiate(player2Prefab, player2Spawn, Quaternion.identity, transform);
+
+                    ulong player2ID = 1;
+                    foreach (var x in NetworkManager.Singleton.ConnectedClientsIds) {
+                       if (x != OwnerClientId) {
+                        player2ID = x;
+                       }
+                    }
+
+                    player2.GetComponent<NetworkObject>().SpawnAsPlayerObject(player2ID, true);
+                    player2.GetComponent<NetworkObject>().ChangeOwnership(player2ID);
                 }
                 else {
                     // single-player
-                    player = Instantiate(playerPrefab, spawnPoint, Quaternion.identity, transform);
+                    GameObject player = Instantiate(playerPrefab, spawnPoint, Quaternion.identity, transform);
+                    player.GetComponent<NetworkObject>().SpawnAsPlayerObject(OwnerClientId, true);
                 }
-                
-                player.GetComponent<NetworkObject>().SpawnAsPlayerObject(OwnerClientId, true);
+            }
 
-                Debug.Log("HOST SPAWNED");
-            }
-            else {
-                // tell server to spawn new player owned by client
-                SpawnPlayerServerRpc();
-                Debug.Log("CLIENT SPAWNED");
-            }
             spawnedPlayer = true;
         }
         else {
@@ -66,11 +75,6 @@ public class BattleField : NetworkBehaviour
             }
         }
         IsActive = true;
-
-        // if (IsServer) {
-        //     // start attack
-        //     GameObject.FindGameObjectWithTag("Enemy").GetComponent<AttackController>().Trigger(false);
-        // }
     }
 
     public void DeactivateBattlefield() {
@@ -102,17 +106,5 @@ public class BattleField : NetworkBehaviour
                 Destroy(fractal);
             }
         }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    void SpawnPlayerServerRpc(ServerRpcParams serverRpcParams = default) {
-        // assumption - in a singe-player game, the player starts as the host and there are no clients
-        // therefore, if the server / host received this RPC, there has to have been a client, and we are in 2P mode - thus the offset needs to be added
-        Vector3 playerSpawn = new Vector3(spawnPoint.x + multiplayerXOffset, spawnPoint.y, spawnPoint.z);
-
-        var player = Instantiate(player2Prefab, playerSpawn, Quaternion.identity, transform);
-        player.GetComponent<NetworkObject>().SpawnAsPlayerObject(serverRpcParams.Receive.SenderClientId, true);
-
-        Debug.Log("CLIENT SPAWNED");
     }
 }

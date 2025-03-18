@@ -88,6 +88,10 @@ public class HomingMissile : MonoBehaviour
                     Destroy(gameObject);
                 }
             }
+            else if (other.gameObject.CompareTag("Projectile")) {
+                // do ABSOLUTELY NOTHING
+                // drop missiles will destroy the homing missile anyway
+            }
             else {
                 Destroy(gameObject);
             }

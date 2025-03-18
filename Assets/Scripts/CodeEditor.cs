@@ -50,10 +50,13 @@ public class CodeEditor : NetworkBehaviour
     public string errorPlaceholderText;
     private int disableInteractAcksReceived = 0;
     public GameObject singleplayerButtons, multiplayerButtons;
+    public bool useLocalCompiler = false;
+    private PauseScreen pauseScreen;
 
     // Start is called before the first frame update
     void Start()
     {
+        Time.timeScale = 1;
         codeField = GetComponentInChildren<TMP_InputField>();
         errorDisplay = statusDisplayObj.GetComponentInChildren<TMP_Text>();
         errorDisplay.text = errorPlaceholderText;
@@ -105,13 +108,15 @@ public class CodeEditor : NetworkBehaviour
         enemyController = EnemyController.Instance;
 
         enemyController.PhaseTransition(currentScript);
+
+        pauseScreen = GameObject.Find("PauseOverlay").GetComponent<PauseScreen>();
     }
 
     // Update is called once per frame
     void Update()
     {
         if (interactable) {
-            if (Input.GetKeyDown(KeyCode.Escape)) {
+            if (Input.GetKeyDown(KeyCode.Escape) && !pauseScreen.canBePaused) {
                 BackRpc();
             }
         }
@@ -272,6 +277,7 @@ public class CodeEditor : NetworkBehaviour
 
     IEnumerator SubmitCoroutine() {
         DisableInteractRpc(NetworkManager.Singleton.LocalClientId, true);
+        
         // NEED to make sure UI is disabled on all game instances before call to JDoodle is made
         // therefore, we have this fucking bullshit, because Unity Netcode does not make RPCs awaitable
 
@@ -289,7 +295,7 @@ public class CodeEditor : NetworkBehaviour
     private void DisableInteract() {
         interactable = false;
         codeField.interactable = false;
-        codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
+        // codeField.transform.Find("Text Area").transform.Find("Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
 
         submitButton.interactable = false;
         resetButton.interactable = false;
@@ -366,10 +372,12 @@ public class CodeEditor : NetworkBehaviour
             currentScript++;
             
             ChangeScript();
-            
+            errorDisplay.text = errorPlaceholderText;
+
             filename.GetComponent<TMP_Text>().text = codeFiles[currentScript].name + ".hs";
             enemyController.PhaseTransition(currentScript);
         }
+        pauseScreen.canBePaused = true;
     }
 
     [Rpc(SendTo.Everyone)]
@@ -392,6 +400,7 @@ public class CodeEditor : NetworkBehaviour
 
     public void MoveOffScreenGameOver() {
         gameOver = true;
+        controllers[currentScript].StopAllCoroutines();
         StartCoroutine(MoveOffScreen(false));
     }
 
@@ -401,17 +410,16 @@ public class CodeEditor : NetworkBehaviour
 
     [Rpc(SendTo.Everyone)]
     private void EnemyMoveTriggerRpc(bool result, string additionalConditions) {
-        // Debug.Log(additionalConditions);
-        battlefield.GetComponent<BattleField>().ActivateBattlefield();
-
         if (GetComponent<HelpScreen>().helpScreenActive) {
             GetComponent<HelpScreen>().ImmediateDeactivate();
         }
         if (GetComponent<ErrorScreen>().errorDisplayActive) {
             GetComponent<ErrorScreen>().ImmediateDeactivate();
         }
+        battlefield.GetComponent<BattleField>().ActivateBattlefield();
+        
+        if (NetworkHelper.Instance.IsPlayerOne) {
 
-        if (IsServer) {
             if (additionalConditions == "") {
                 controllers[currentScript].Trigger(result);
             }
@@ -426,6 +434,7 @@ public class CodeEditor : NetworkBehaviour
 
     IEnumerator MoveOnScreen() {
         Debug.Log("moving on screen");
+        pauseScreen.canBePaused = false;
         while (GetComponent<RectTransform>().anchoredPosition.x > codeEditorXPos) {
             var newX = GetComponent<RectTransform>().anchoredPosition.x - distanceDelta * Time.deltaTime;
             if (newX < codeEditorXPos) {
@@ -444,10 +453,10 @@ public class CodeEditor : NetworkBehaviour
 
     [Rpc(SendTo.Everyone)]
     private void AddErrorToDisplayRpc(string error) {
-        if (errorDisplay.text == errorPlaceholderText) {
-            errorDisplay.text = "";
-        }
-        errorDisplay.text += error;
+        // if (errorDisplay.text == errorPlaceholderText) {
+        //     errorDisplay.text = "";
+        // }
+        errorDisplay.text = error;
     }
 
     private void EvaluateResult(string output) {
@@ -490,6 +499,8 @@ public class CodeEditor : NetworkBehaviour
                 } 
             }
 
+            errMsg = errMsg.Replace("\"", "");
+
             AddErrorToDisplayRpc("<color=#ff0000>" + errMsg + "</color>\n");
             EnemyMoveTriggerRpc(false, additional);
         }
@@ -521,89 +532,90 @@ public class CodeEditor : NetworkBehaviour
             script += CleanColorFormatting(codeField.text) + testCode;
         }
 
-        string executeURL = "https://api.jdoodle.com/v1/execute";
+        string executeURL = useLocalCompiler ? "https://oxrush.tardis.ac/haskellquest/api/execute" : "https://api.jdoodle.com/v1/execute";
         string creditsURL = "https://api.jdoodle.com/v1/credit-spent";
 
         try {
-            HttpWebRequest creditsHTTPRequest = (HttpWebRequest)WebRequest.Create(creditsURL);
-            creditsHTTPRequest.Method = "POST";
-            creditsHTTPRequest.ContentType = "application/json";
+            if (!useLocalCompiler) {
+                HttpWebRequest creditsHTTPRequest = (HttpWebRequest)WebRequest.Create(creditsURL);
+                creditsHTTPRequest.Method = "POST";
+                creditsHTTPRequest.ContentType = "application/json";
 
-            JDoodleCreditsRequest creditsRequest = new JDoodleCreditsRequest();
-            string creditsInput = JsonUtility.ToJson(creditsRequest);
+                JDoodleCreditsRequest creditsRequest = new JDoodleCreditsRequest();
+                string creditsInput = JsonUtility.ToJson(creditsRequest);
 
-            using (StreamWriter streamWriter = new StreamWriter(creditsHTTPRequest.GetRequestStream()))
-            {
-                streamWriter.Write(creditsInput);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            HttpWebResponse creditsHTTPResponse = (HttpWebResponse)creditsHTTPRequest.GetResponse();
-
-            if (creditsHTTPResponse.StatusCode != HttpStatusCode.OK)
-            {
-                throw new WebException("Please check your inputs: HTTP error code: " + (int)creditsHTTPResponse.StatusCode);
-            }
-
-            JDoodleCreditsResponse creditsResponse;
-            using (Stream dataStream = creditsHTTPResponse.GetResponseStream())
-            using (StreamReader reader = new StreamReader(dataStream))
-            {
-                string output = reader.ReadToEnd();
-                creditsResponse = JsonUtility.FromJson<JDoodleCreditsResponse>(output);
-                Debug.Log(output);
-            }
-
-            if (creditsResponse.error != null) {
-                errorDisplay.color = Color.red;
-                errorDisplay.text = creditsResponse.error;
-            }
-            else if (creditsResponse.used <= CREDIT_LIMIT) {
-                HttpWebRequest executeRequest = (HttpWebRequest)WebRequest.Create(executeURL);
-                executeRequest.Method = "POST";
-                executeRequest.ContentType = "application/json";
-
-                JDoodleRequest inputRequest = new JDoodleRequest(script);
-                string input = JsonUtility.ToJson(inputRequest);
-
-                using (StreamWriter streamWriter = new StreamWriter(executeRequest.GetRequestStream()))
+                using (StreamWriter streamWriter = new StreamWriter(creditsHTTPRequest.GetRequestStream()))
                 {
-                    streamWriter.Write(input);
+                    streamWriter.Write(creditsInput);
                     streamWriter.Flush();
                     streamWriter.Close();
                 }
 
-                HttpWebResponse response = (HttpWebResponse)executeRequest.GetResponse();
+                HttpWebResponse creditsHTTPResponse = (HttpWebResponse)creditsHTTPRequest.GetResponse();
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (creditsHTTPResponse.StatusCode != HttpStatusCode.OK)
                 {
-                    throw new WebException("Please check your inputs: HTTP error code: " + (int)response.StatusCode);
+                    throw new WebException("Please check your inputs: HTTP error code: " + (int)creditsHTTPResponse.StatusCode);
                 }
 
-                JDoodleResponse outputResponse;
-                using (Stream dataStream = response.GetResponseStream())
+                JDoodleCreditsResponse creditsResponse;
+                using (Stream dataStream = creditsHTTPResponse.GetResponseStream())
                 using (StreamReader reader = new StreamReader(dataStream))
                 {
                     string output = reader.ReadToEnd();
-                    outputResponse = JsonUtility.FromJson<JDoodleResponse>(output);
+                    creditsResponse = JsonUtility.FromJson<JDoodleCreditsResponse>(output);
                     Debug.Log(output);
                 }
+                creditsHTTPResponse.Close();
 
-                EvaluateResult(outputResponse.output);
+                if (creditsResponse.error != null) {
+                    errorDisplay.color = Color.red;
+                    AddErrorToDisplayRpc("<color=#ff0000>" + creditsResponse.error + "</color>\n");
+                    return;
+                }
+                else if (creditsResponse.used > CREDIT_LIMIT) {
+                    AddErrorToDisplayRpc("<color=#ffff00>There are no more compiler credits remaining today - please try again tomorrow.</color>\n");
+                    EnableInteractRpc();
+                    return;
+                }
+            }
+            HttpWebRequest executeRequest = (HttpWebRequest)WebRequest.Create(executeURL);
+            executeRequest.Method = "POST";
+            executeRequest.ContentType = "application/json";
+
+            JDoodleRequest inputRequest = new JDoodleRequest(script);
+            string input = JsonUtility.ToJson(inputRequest);
+
+            using (StreamWriter streamWriter = new StreamWriter(executeRequest.GetRequestStream()))
+            {
+                streamWriter.Write(input);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            HttpWebResponse response = (HttpWebResponse)executeRequest.GetResponse();
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new WebException("Please check your inputs: HTTP error code: " + (int)response.StatusCode);
+            }
+
+            JDoodleResponse outputResponse;
+            using (Stream dataStream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(dataStream))
+            {
+                string output = reader.ReadToEnd();
+                outputResponse = JsonUtility.FromJson<JDoodleResponse>(output);
+                Debug.Log(output);
+            }
+
+            EvaluateResult(outputResponse.output);
                 
-                response.Close();
-
-            }
-            else {
-                AddErrorToDisplayRpc("<color=#ffff00>There are no more compiler credits remaining today - please try again tomorrow.</color>\n");
-                EnableInteractRpc();
-            }
-            creditsHTTPResponse.Close();
+            response.Close();
         }
         catch (WebException e)
         {
-            AddErrorToDisplayRpc("<color=#ffff00>There was an error with the request. Please try again.\n" + e.Message + "</color>\n");
+            AddErrorToDisplayRpc("<color=#ffff00>There was an issue with the request. Please try again.\n" + e.Message + "</color>\n");
             EnableInteractRpc();
         }
     } 

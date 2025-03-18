@@ -10,28 +10,26 @@ fire (Fractal n) = Laser (power n)
 -- so lasers from smaller Fractals would cause less damage
 
 -- PLAYER 1 CODE
--- write a function that halves Dr. Fractal into two Fractals,
--- then recursively halves those Fractals -- the result should
--- be a list of the split Fractals. The function should 
--- stop when you reach a Fractal with an odd size!
+-- write a function that halves Dr. Fractal into two Fractals, then recursively halves those Fractals;
+-- the result should be a list of the split Fractals. 
+-- The function should stop when you reach a Fractal with an odd size!
 
 split :: Fractal -> [Fractal]
 split fractal = undefined -- INPUT HERE --
 
--- hint: Haskell has 'even' and 'odd' functions that return
--- a Bool, and a 'div' function that performs integer division
+-- hint: Haskell has 'even' and 'odd' functions that return a Bool, 
+-- and a 'div' function that performs integer division
 
 -- PLAYER 2 CODE
--- write a function that halves a Laser into two Lasers, then
--- recursively halves those Lasers -- the result should be a
--- list of the split Lasers. The recursion should stop when
--- you reach a Laser with an odd power!
+-- write a function that halves a Laser into two Lasers, then recursively halves those Lasers;
+-- the result should be a list of the split Lasers. 
+-- The recursion should stop when you reach a Laser with an odd power!
 
 depower :: Laser -> [Laser]
 depower laser = undefined -- INPUT HERE --
 
--- hint: Haskell has 'even' and 'odd' functions that return
--- a Bool, and a 'div' function that performs integer division
+-- hint: Haskell has 'even' and 'odd' functions that return a Bool, 
+-- and a 'div' function that performs integer division
 
 -- TEST CODE
 power :: Size -> Power

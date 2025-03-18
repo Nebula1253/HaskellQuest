@@ -10,7 +10,7 @@ launch t n = [Missile t (angleGen i) | i <- [1..n]]
 -- this launches n missiles at target t with random start angles
 
 -- PLAYER CODE
--- write a function to retarget all Missiles
+-- write a function to change the target of a list of Missiles
 -- we'll be using this to fire them back at the enemy!
 retarget :: [Missile] -> Target -> [Missile]
 retarget missiles t = undefined -- INPUT HERE --

@@ -45,6 +45,11 @@ public class FractalTreeController2P : AttackController
     public override void Trigger(bool result, string additionalConditions)
     {
         ParseDamageVals(additionalConditions);
+        
+    }
+
+    [Rpc(SendTo.Everyone)]
+    void StartAttackRpc() {
         StartCoroutine(Attack());
     }
 
@@ -113,14 +118,18 @@ public class FractalTreeController2P : AttackController
             screenFlash.color = new Color(screenFlash.color.r, screenFlash.color.g, screenFlash.color.b, 0);
         }
 
-        for (int i = 0; i < fractals.Length; i++) {
-            if (i % 2 == 1) {
-                GameObject node = Instantiate(nodeBolt, fractals[i].transform.position, Quaternion.identity, battlefield.transform);
+        if (NetworkHelper.Instance.IsPlayerOne) {
+            for (int i = 0; i < fractals.Length; i++) {
+                if (i % 2 == 1) {
+                    GameObject node = Instantiate(nodeBolt, fractals[i].transform.position, Quaternion.identity, battlefield.transform);
 
-                var boltScript = node.GetComponent<NodeBolt>();
-                boltScript.SetLayer(boltLayers);
-                boltScript.SetAngleSpeed(boltAngle, boltSpeed);
-                boltScript.SetDamageValues(intDamage, floatDamage);
+                    var boltScript = node.GetComponent<NodeBolt>();
+                    boltScript.SetLayer(boltLayers);
+                    boltScript.SetAngleSpeed(boltAngle, boltSpeed);
+                    boltScript.SetDamageValues(intDamage, floatDamage);
+
+                    node.GetComponent<NetworkObject>().Spawn(true);
+                }
             }
         }
 

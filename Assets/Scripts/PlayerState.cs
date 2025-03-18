@@ -116,11 +116,11 @@ public class PlayerState : NetworkBehaviour
     private void GameOver() {
         var mainBattle = PlayerHUD.Instance;
         mainBattle.moveToCentreCall(false, true);
-;
+
         var codeEditor = GameObject.FindGameObjectWithTag("CodeEditor").GetComponent<CodeEditor>();
         codeEditor.MoveOffScreenGameOver();
 
-        gameOverOverlay.SetActive(true);
+        gameOverOverlay.GetComponent<GameOverScreen>().EnableScreen();
 
         GameObject.Find("EnemyView").GetComponent<EnemyController>().stopMusic();
 
@@ -149,6 +149,8 @@ public class PlayerState : NetworkBehaviour
 
         yield return new WaitForSecondsRealtime(0.75f);
 
-        NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1), LoadSceneMode.Single);
+        if (NetworkHelper.Instance.IsPlayerOne) {
+            NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1), LoadSceneMode.Single);
+        }
     }
 }

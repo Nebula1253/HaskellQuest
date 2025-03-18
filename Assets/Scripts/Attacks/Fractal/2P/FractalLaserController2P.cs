@@ -84,7 +84,7 @@ public class FractalLaserController2P : AttackController
 
     [Rpc(SendTo.Everyone)]
     void StartAttackRpc(bool split) {
-        Debug.Log("Rpc called!");
+        Debug.Log("Fractal attack started!");
         StartCoroutine(AttackPart1(split));
     }
 
@@ -164,7 +164,7 @@ public class FractalLaserController2P : AttackController
 
     [Rpc(SendTo.Everyone)]
     void ContinueAttackRpc(bool split) {
-        Debug.Log("Rpc called!");
+        Debug.Log("Fractal attack continues!");
         StartCoroutine(AttackPart2(split));
     }
 

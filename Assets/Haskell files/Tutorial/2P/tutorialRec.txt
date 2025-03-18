@@ -16,8 +16,7 @@ hurtPlayer (Player h) (d:ds)
     | d >= 0    = hurtPlayer (Player (h - d)) ds
     | otherwise = hurtPlayer (Player h) ds
 
--- The 'sum' function from the previous tutorial was 
--- implemented with recursion!
+-- The 'sum' function from the previous tutorial was implemented with recursion!
 
 -- PLAYER 2 CODE
 weakenPlayer :: Player -> [Float] -> Player
@@ -28,8 +27,7 @@ weakenPlayer (Player h) (d:ds)
     | otherwise = 
         weakenPlayer (Player h) ds
 
--- The 'product' function from the previous tutorial was 
--- implemented with recursion!
+-- The 'product' function from the previous tutorial was implemented with recursion!
 
 -- TEST CODE
 health :: Player -> Int

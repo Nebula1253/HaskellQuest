@@ -84,6 +84,10 @@ public class NodeBolt : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         // what to do here? pretty sure i want it to damage the player, but how severely?
+        if (collision.gameObject.CompareTag("Player")) {
+            collision.gameObject.GetComponent<PlayerAvatar>().TakeDamage(intDamage);
+            collision.gameObject.GetComponent<PlayerAvatar>().TakeDamage(floatDamage);
+        }
     }
 
     void OnBecameInvisible() {

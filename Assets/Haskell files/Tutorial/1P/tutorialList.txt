@@ -10,10 +10,9 @@ hurtPlayer :: Player -> [Int] -> Player
 hurtPlayer (Player health) dList = Player (health - damage)
     where damage = sum [d | d <- dList, d >= 0]
     
--- The 'where' clause is quite useful; it allows you to
--- define variables and functions entirely within the scope 
--- of a function. If you tried to access 'damage' outside of 
--- 'hurtPlayer', it'd throw an error.
+-- The 'where' clause is quite useful; it allows you to define variables and functions 
+-- entirely within the scope of a function. 
+-- If you tried to access 'damage' outside of 'hurtPlayer', it'd throw an error.
 
 -- You know the drill; change the code so you take no damage!
 

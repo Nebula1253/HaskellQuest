@@ -44,13 +44,11 @@ main = do
 
     let missilesCheck = and [b == False | (Missile _ b) <- newMissiles] 
                         && not (null newMissiles) 
-                        && and [a == b | (Missile a _) <- newMissiles | (Missile b _) <- missiles] 
-                        && (length missiles == length newMissiles)
+                        && and [a == b | (Missile a _) <- newMissiles | (Missile b x) <- missiles, not x] 
 
     let landminesCheck = and [b == False | (Landmine _ b) <- newLandmines] 
                         && not (null newLandmines) 
-                        && and [a == b | (Landmine a _) <- newLandmines | (Landmine b _) <- landmines] 
-                        && (length landmines == length newLandmines)
+                        && and [a == b | (Landmine a _) <- newLandmines | (Landmine b x) <- landmines, not x] 
 
     if missilesCheck
         then

@@ -2,29 +2,29 @@ type Target = String
 type Angle = Float
 
 data HomingMissile = HomingMissile Target Angle
--- represents homing missiles; the angle is the starting 
--- angle of the missile
+-- represents homing missiles; 
+-- the angle is the starting angle of the missile
 
 launch :: Target -> Int -> [HomingMissile]
 launch t n = [HomingMissile t (angleGen i) | i <- [1..n]]
 -- this launches n missiles at target t with random start angles
 
 data FreezeMissile = FreezeMissile Bool Angle
--- represents missiles that can freeze you in place; the bool is
--- whether the missile is active or not
+-- represents missiles that can freeze you in place; 
+-- the bool is whether the missile is active or not
 
 launchFreeze :: Int -> [FreezeMissile]
 launchFreeze n = [FreezeMissile True (angleGen i) | i <- [1..n]]
 -- this launches n missiles that can freeze you in place
 
 -- PLAYER 1 CODE
--- write a function to retarget all HomingMissiles
+-- write a function to retarget all HomingMissiles!
 -- we'll be using this to fire them back at the enemy!
 retarget :: [HomingMissile] -> Target -> [HomingMissile]
 retarget missiles t = undefined -- INPUT HERE --
 
 -- PLAYER 2 CODE
--- write a function that deactivates the FreezeMissiles
+-- write a function that deactivates the FreezeMissiles!
 -- they shouldn't pose a problem after this!
 disable :: [FreezeMissile] -> [FreezeMissile]
 disable missiles = undefined -- INPUT HERE --

@@ -43,6 +43,8 @@ public class Landmine : NetworkBehaviour
             
             explosion.GetComponent<Explosion>().BeginExplosion();
 
+            other.gameObject.GetComponent<PlayerAvatar>().TakeDamage(5);
+
             if (NetworkHelper.Instance.IsPlayerOne) {
                 Destroy(gameObject);
             }

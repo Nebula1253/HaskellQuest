@@ -17,6 +17,7 @@ namespace Unity.Multiplayer.Samples.Utilities.ClientAuthority
         /// </summary>
         protected override bool OnIsServerAuthoritative()
         {
+            Debug.Log("CLIENT NETWORK TRANSFORM EXISTS");
             return false;
         }
     }

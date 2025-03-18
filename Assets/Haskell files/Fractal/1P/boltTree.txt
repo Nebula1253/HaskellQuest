@@ -7,9 +7,9 @@ launchBolt 1 = NodeBolt (IntBolt 10, FloatBolt 0.9)
 launchBolt n = NodeBolt (launchBolt (n - 1), launchBolt (n - 1))
 
 -- PLAYER CODE
--- Dr Fractal's creating an energy bolt that splits itself into 
--- a tree! Write a function to traverse the tree, find the 
--- Int and Float Bolts, and negate their damage!
+-- Dr Fractal's creating an energy bolt that splits itself into a tree! 
+-- Write a function to traverse the tree, find the Int and Float Bolts, 
+-- and negate their damage!
 disableBolts :: Bolt -> Bolt
 disableBolts bolt = undefined 
 

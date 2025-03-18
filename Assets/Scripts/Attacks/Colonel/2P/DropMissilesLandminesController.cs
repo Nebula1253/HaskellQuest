@@ -112,11 +112,17 @@ public class DropMissilesLandminesController : AttackController
         // mine.GetComponent<Landmine>().setIsDamaging(isDamaging);
         mine.GetComponent<Landmine>().setTargetPos(mineTargetPos);
 
-        if (!audioSource.isPlaying) {
-            audioSource.Play();
-        }
+        PlaySoundRpc();
 
         mine.GetComponent<NetworkObject>().Spawn(destroyWithScene:true);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    void PlaySoundRpc() {
+        if (audioSource.isPlaying) {
+            audioSource.Stop();
+        }
+        audioSource.Play();
     }
 
     IEnumerator DropMinesMissiles() {
@@ -149,7 +155,7 @@ public class DropMissilesLandminesController : AttackController
                     currMissile.GetComponent<DropMissile>().setDoesDamage(false);
 
                     currMissile.GetComponent<NetworkObject>().Spawn(destroyWithScene:true);
-                    audioSource.Play();
+                    PlaySoundRpc();
                 }
                 else {
                     if (!missilesFiltered) {
@@ -158,9 +164,7 @@ public class DropMissilesLandminesController : AttackController
                         currMissile.GetComponent<DropMissile>().setDoesDamage(true);
 
                         currMissile.GetComponent<NetworkObject>().Spawn(destroyWithScene:true);
-                        if (!audioSource.isPlaying) {
-                            audioSource.Play();
-                        }
+                        PlaySoundRpc();
                     }
                 }
                 missileX += missileXInc;

@@ -16,6 +16,9 @@ CHIPTONE by SFBGAMES
 <color=#aac1f5>Sound Editing</color>
 AUDACITY by THE AUDACITY TEAM
 
+<color=#aac1f5>Multiplayer Testing</color>
+PARRELSYNC by VERIORPIES
+
 <size=52px><color=#aac1f5>Assets Used</size></color>
 <color=#aac1f5>Music</color>
 TIM FOLLIN - 'Time Trax' OST: Title Theme
@@ -43,14 +46,20 @@ OREN WATSON - NeoLetters - DaFont.com
 BRACKEYS - "How to make a HEALTH BAR in Unity!"
 BRACKEYS - "How to make a Homing Missile in Unity"
 COUCHFERRET MAKES GAMES - "Unity Top Down Character Controller with Animation and Movement"
+CODE MONKEY - "COMPLETE Unity Multiplayer Tutorial (Netcode for Game Objects)"
 
 <size=52px><color=#aac1f5>'Dr. Fractal' Battle Concept</size></color>
 KRZYSZTOF GRYKIEL
+
+<size=52px><color=#aac1f5>Haskell Tutorial Info</size></color>
+LEARN YOU A HASKELL FOR GREAT GOOD by MIRAN LIPOVACA
 
 <size=52px><color=#aac1f5>Special Thanks</size></color>
 DON SANNELLA
 
 <size=52px><color=#aac1f5>Playtesters - THANK YOU!</size></color>
+
+<size=48px><color=#aac1f5>Year 1</size></color>
 ALESSANDRA TERRANOVA
 ANDREAS HIROPEDI
 ANDREW TWIGG

@@ -9,18 +9,33 @@ EditorBuildSettings:
     path: Assets/Scenes/StartScreen.unity
     guid: 397ecdece01adf04e89432d5ffd093a1
   - enabled: 1
-    path: Assets/Scenes/IntroCutscene.unity
+    path: Assets/Scenes/Cutscenes/IntroCutscene.unity
     guid: 3f23eff29f7c11f42bea98a5dfc398c4
   - enabled: 1
-    path: Assets/Scenes/Tutorial1BattleNetwork.unity
+    path: Assets/Scenes/Battles/Tutorial1BattleNetwork.unity
     guid: 7c46351a910c3584888c96e4e3958e9b
   - enabled: 1
-    path: Assets/Scenes/ColonelBattleNetwork.unity
+    path: Assets/Scenes/Cutscenes/ColonelCutscene.unity
+    guid: 99ad8532821b3d8408f42d029f5eaf27
+  - enabled: 1
+    path: Assets/Scenes/Battles/ColonelBattleNetwork.unity
     guid: 17418517cbe4a3c43bc50ee4dcdb88ce
   - enabled: 1
-    path: Assets/Scenes/Tutorial2BattleNetwork.unity
+    path: Assets/Scenes/Cutscenes/PostColonelCutscene.unity
+    guid: 1dee4cebcab2a6142a602bf9a742577e
+  - enabled: 1
+    path: Assets/Scenes/Battles/Tutorial2BattleNetwork.unity
     guid: f6028bddd54f49b4a83886c2fee63fc9
   - enabled: 1
-    path: Assets/Scenes/FractalBattleNetwork.unity
+    path: Assets/Scenes/Cutscenes/FractalCutscene.unity
+    guid: 8ec605ec7f1fd604283ba7939ff03e97
+  - enabled: 1
+    path: Assets/Scenes/Battles/FractalBattleNetwork.unity
     guid: 3a63e580deb8c634cb78892f4d7932b9
+  - enabled: 1
+    path: Assets/Scenes/Credits.unity
+    guid: c963a3fe83eab414690b199fd94a4ceb
+  - enabled: 0
+    path: Assets/Scenes/DemoEnd.unity
+    guid: d06ba6fe3deb36f459c32baef95329b8
   m_configObjects: {}

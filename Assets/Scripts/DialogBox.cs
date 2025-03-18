@@ -156,7 +156,7 @@ public class DialogBox : NetworkBehaviour
                 if (!source.isPlaying && clip != null) {
                     source.PlayOneShot(clip);
                 }
-                yield return new WaitForSecondsRealtime(0.03f);
+                yield return new WaitForSeconds(0.03f);
             }
             i++;
         }

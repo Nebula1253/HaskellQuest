@@ -18,7 +18,9 @@ public class MultiplayerSetupManager : MonoBehaviour
     }
 
     void Host() {
+        hostUI.GetComponent<HostUI>().RemoveCallbacks();
         NetworkManager.Singleton.Shutdown();
+
         hostUI.SetActive(true);
         joinUI.SetActive(false);
 
@@ -26,17 +28,19 @@ public class MultiplayerSetupManager : MonoBehaviour
     }
 
     void Join() {
+        hostUI.GetComponent<HostUI>().RemoveCallbacks();
         NetworkManager.Singleton.Shutdown();
+
         joinUI.SetActive(true);
         hostUI.SetActive(false);
-        hostUI.GetComponent<HostUI>().RemoveCallbacks();
     }
 
     void Back() {
+        hostUI.GetComponent<HostUI>().RemoveCallbacks();
         NetworkManager.Singleton.Shutdown();
+        
         hostUI.SetActive(false);
         joinUI.SetActive(false);
-        hostUI.GetComponent<HostUI>().RemoveCallbacks();
 
         multiplayerSetupUI.SetActive(false);
         initUI.SetActive(true);

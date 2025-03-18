@@ -12,9 +12,8 @@ hurtPlayer (Player h) (d:ds)
     | d >= 0    = hurtPlayer (Player (h - d)) ds
     | otherwise = hurtPlayer (Player h) ds
 
--- This is basically doing the same thing as the previous 
--- script; in fact, this is how the 'sum' function from 
--- there is implemented.
+-- This is basically doing the same thing as the previous script; 
+-- in fact, this is how the 'sum' function from there is implemented.
 
 -- TEST CODE
 health :: Player -> Int

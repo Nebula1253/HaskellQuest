@@ -3,62 +3,47 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 public class Credits : MonoBehaviour
 {
-    public AudioClip creditsMusic, secretMusic;
-    public TextAsset creditsText, secretText;
-    public float scrollSpeed, secretScrollSpeed, creditsEndY, secretEndY;
-    private float actualScrollSpeed, actualCreditsEndY;
+    public AudioClip creditsMusic;
+    public TextAsset creditsText;
+    public float scrollSpeed, creditsEndY;
     private AudioSource audioSource;
     private TMP_Text creditsTMP;
-    private bool creditsStarted = false;
-    private bool secretDone = false;
+
     // Start is called before the first frame update
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
         creditsTMP = GetComponentInChildren<TMP_Text>();
 
-        StartCoroutine(secret());
+        // StartCoroutine(secret());
+        audioSource.clip = creditsMusic;
+        creditsTMP.text = creditsText.text;
 
-        NetworkManager.Singleton.Shutdown();
+        audioSource.Play();
+
+        StartCoroutine(SafelyDestroyNetworkManager());
     }
 
-    IEnumerator secret() {
-        yield return new WaitForSecondsRealtime(0.8f);
-        creditsStarted = true;
-        audioSource.Play();
+    IEnumerator SafelyDestroyNetworkManager() {
+        yield return new WaitForSecondsRealtime(5f);
+
+        if (NetworkManager.Singleton != null) {
+            NetworkManager.Singleton.Shutdown();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Debug.Log("Credits started: " + creditsStarted);
-        // Debug.Log("Secret done: " + secretDone);
-        if (creditsStarted) {
-            transform.Translate(Vector3.up * actualScrollSpeed * Time.deltaTime);
-        }
-        else {
-            // silly!
-            if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.W)) {
-                if (!secretDone) {
-                    audioSource.clip = secretMusic;
-                    creditsTMP.text = secretText.text;
-                    actualScrollSpeed = secretScrollSpeed;
-                    actualCreditsEndY = secretEndY;
-                    secretDone = true;
-                } 
-            } else {
-                audioSource.clip = creditsMusic;
-                creditsTMP.text = creditsText.text;
-                actualScrollSpeed = scrollSpeed;
-                actualCreditsEndY = creditsEndY;
-            } 
-        }
+        transform.Translate(Vector3.up * scrollSpeed * Time.deltaTime);
+        
         Debug.Log(transform.position.y);
-        if (transform.position.y >= actualCreditsEndY) {
+        if (transform.position.y >= creditsEndY) {
             SceneManager.LoadScene("StartScreen");
         }
     }

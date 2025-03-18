@@ -1,0 +1,140 @@
+type Depth = Int
+
+data Stability = Inert | Unstable | Healed
+
+data Fractal = NodeFractal Depth Stability (Fractal, Fractal)
+                | LeafFractal
+-- the Bool in NodeFractal represents whether it's stable or not
+
+data MetaFractal = LeafMeta 
+                    | StableMeta (MetaFractal, MetaFractal)
+                    | UnstableMeta Fractal (MetaFractal, MetaFractal)
+-- MetaFractals form a larger meta-tree - some nodes contain Fractal trees
+
+createFractal :: Int -> Fractal
+createFractal 0 = LeafFractal
+createFractal n = NodeFractal n (randomGen n) children
+    where children = (createFractal (n - 1), createFractal (n - 1))
+
+createMeta :: Int -> Int -> MetaFractal
+createMeta 0 _ = LeafMeta
+createMeta n p 
+    | isUnstable n = 
+        UnstableMeta (createFractal p) children
+    | otherwise =
+        StableMeta children
+    where
+        children = (createMeta (n-1) p, createMeta (n-1) p)
+
+-- PLAYER 1 CODE
+-- Dr Fractal's inner workings are a complex tree structure, where some nodes contain Fractal trees 
+-- that need to be healed!
+
+-- Write a function to traverse the MetaFractal structure: if you encounter an UnstableMeta node, 
+-- call player 2's 'healFractal' function on the contained Fractal.
+
+healMeta :: MetaFractal -> MetaFractal
+healMeta meta = undefined 
+
+-- hint: The recursive step needs to behave differently depending on whether it's a Stable or UnstableMeta
+
+-- PLAYER 2 CODE
+-- The Fractal structure is unstable, but fixing this can save Dr. Kowalewski! 
+
+-- Write a function to traverse the structure: any NodeFractals that are Unstable should be Healed, 
+-- while the Inert ones should be ignored. 
+-- Keep the Depth values intact!
+
+healFractal :: Fractal -> Fractal
+healFractal fractal = undefined
+
+-- hint: The recursive step needs to behave differently depending on what the Stability is
+
+-- TEST CODE
+randomGen :: Int -> Stability
+randomGen n = case mod n 2 of
+                0 -> Inert
+                _ -> Unstable
+
+isUnstable :: Int -> Bool 
+isUnstable = odd
+
+testGen :: Int -> Stability
+testGen n = case mod n 2 of
+                0 -> Inert
+                _ -> Healed
+
+instance Eq Stability where
+    Inert == Inert = True 
+    Unstable == Unstable = True 
+    Healed == Healed = True
+    _ == _ = False
+    
+
+instance Eq Fractal where
+    LeafFractal == LeafFractal = True
+    NodeFractal n s (a, b) == NodeFractal n' s' (c, d) = (n == n') && (s == s') && (a == c) && (b == d)
+    _ == _ = False
+
+instance Eq MetaFractal where
+    LeafMeta == LeafMeta = True 
+    StableMeta (a, b) == StableMeta (c, d) = (a == c) && (b == d)
+    UnstableMeta f (a, b) == UnstableMeta f' (c, d) = (f == f') && (a == c) && (b == d)
+    _ == _ = False
+
+healthyFractal :: Int -> Fractal
+healthyFractal 0 = LeafFractal
+healthyFractal n = NodeFractal n (testGen n) children
+    where children = (healthyFractal (n - 1), healthyFractal (n - 1))
+
+healthyMeta :: Int -> Int -> MetaFractal
+healthyMeta 0 _ = LeafMeta
+healthyMeta n p 
+    | isUnstable n = 
+        UnstableMeta (healthyFractal p) children
+    | otherwise =
+        StableMeta children
+    where
+        children = (healthyMeta (n-1) p, healthyMeta (n-1) p)
+
+getFractal :: MetaFractal -> Maybe Fractal
+getFractal LeafMeta = Nothing 
+getFractal (UnstableMeta f _) = Just f
+getFractal (StableMeta (a, b)) = case getFractal a of
+                                    Nothing -> getFractal b
+                                    Just f -> Just f
+
+containsInert :: Fractal -> Bool
+containsInert LeafFractal = False 
+containsInert (NodeFractal _ s (a, b)) = case s of
+                                            Inert -> True 
+                                            _ -> containsInert a || containsInert b
+
+containsUnstable :: Fractal -> Bool 
+containsUnstable LeafFractal = False 
+containsUnstable (NodeFractal _ s (a, b)) = case s of
+                                            Unstable -> True 
+                                            _ -> containsUnstable a || containsUnstable b
+
+containsHealed :: Fractal -> Bool 
+containsHealed LeafFractal = False 
+containsHealed (NodeFractal _ s (a, b)) = case s of
+                                            Healed -> True 
+                                            _ -> containsHealed a || containsHealed b
+
+main :: IO()
+main = do
+    let ideal = healthyMeta 3 4
+    let check = healMeta (createMeta 3 4)
+    let checkFractal = getFractal check
+    
+    case checkFractal of
+        Nothing -> print "error: The MetaFractal tree doesn't have any Fractal structures in it!"
+        Just f ->
+            if not (containsHealed f)
+                then print "error: The Fractal doesn't contain any Healed nodes! Check your recursive case!"
+            else if not (containsInert f)
+                then print "error: The Fractal doesn't contain any Inert nodes! Check your recursive case!"
+            else if containsUnstable f
+                then print "error: The Fractal still contains Unstable nodes!"
+            else print (check == ideal)

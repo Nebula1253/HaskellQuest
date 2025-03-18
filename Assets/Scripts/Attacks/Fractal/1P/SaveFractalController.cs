@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -52,6 +53,7 @@ public class SaveFractalController : AttackController
                 laserInstance.GetComponent<FractalLaser>().SetVariables(laserSpeed, 10);
                 if (NetworkHelper.Instance.IsMultiplayer) {
                     laserInstance.GetComponent<FractalLaser>().SetWhichPlayer(i % 2);
+                    laserInstance.GetComponent<NetworkObject>().Spawn(true);
                 }
                 else {
                     laserInstance.GetComponent<FractalLaser>().SetWhichPlayer();

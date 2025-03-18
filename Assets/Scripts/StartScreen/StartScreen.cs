@@ -17,6 +17,8 @@ public class StartScreen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Time.timeScale = 1f;
+
         start1PButton = start1P.GetComponent<Button>();
         start2PButton = start2P.GetComponent<Button>();
         creditsButton = credits.GetComponent<Button>();

@@ -1,10 +1,13 @@
 -- This panel shows the code that you can't change.
--- There will be vital information here for the
--- challenges you face.
+-- There will be vital information here for the challenges you face.
 
 type Health = Int
-
 data Player = Player Health
+
+-- Use the HELP button to view information about Haskell!
+
+-- Use the ERRORS button to look at any error messages from the
+-- previous execution!
 
 -- PLAYER 1 CODE
 -- Player 1: you can interact with the code here freely!
@@ -12,11 +15,10 @@ data Player = Player Health
 hurtPlayer :: Player -> Player
 hurtPlayer (Player health) = Player (health - 10)
 
--- You have to edit this to make sure you don't lose health,
--- but you can't do it alone! 
+-- You have to edit this to make sure you don't lose health, but you can't do it alone! 
 
--- Use the '2P Code' button to look at what your comrade
--- is working on!
+-- Use the '2P Code' button to look at what your comrade is working on!
+-- You can see the changes in real time!
 
 -- PLAYER 2 CODE
 -- Player 2: you can interact with the code here freely!
@@ -27,11 +29,10 @@ weakenPlayer (Player health) = Player (round (fromIntegral health * 0.8))
 -- The 'fromIntegral' function converts from an Int to a
 -- Float, and the 'round' function does the reverse.
 
--- You have to edit this to make sure you don't lose health,
--- but you can't do it alone! 
+-- You have to edit this to make sure you don't lose health, but you can't do it alone! 
 
--- Use the '1P Code' button to look at what your comrade
--- is working on!
+-- Use the '1P Code' button to look at what your comrade is working on!
+-- You can see the changes in real time!
 
 -- TEST CODE
 health :: Player -> Int

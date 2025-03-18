@@ -1,9 +1,13 @@
 -- This panel shows the code that you can't change.
--- There will be vital information here for the
--- challenges you face.
+-- There will be vital information here for the challenges you face.
 
 type Health = Int
 data Player = Player Health
+
+-- Use the HELP button to view information about Haskell!
+
+-- Use the ERRORS button to look at any error messages from the
+-- previous execution!
 
 -- PLAYER CODE
 -- You can interact with the code here freely!
@@ -11,13 +15,11 @@ data Player = Player Health
 hurtPlayer :: Player -> Player
 hurtPlayer (Player health) = Player (health - 10) 
 
--- Your job: change the above function so that you 
--- take no damage at all!
+-- Your job: change the above function so that you take no damage at all!
 
--- Once you hit the submit button, the enemy's attack 
--- will play out; you can use WASD or the arrow keys 
--- to try to dodge it. In this case, though, the 
--- attack is un-dodge-able.
+-- Once you hit the submit button, the enemy's attack will play out; 
+-- you can use WASD or the arrow keys to try to dodge it. 
+-- In this case, though, the attack is un-dodge-able.
 
 -- TEST CODE
 health :: Player -> Int

@@ -13,19 +13,16 @@ createFractal n = NodeFractal n (randomGen n) children
     where children = (createFractal (n - 1), createFractal (n - 1))
 
 -- PLAYER CODE
--- The Fractal structure is unstable, but fixing this can save
--- Dr. Kowalewski! 
+-- The Fractal structure is unstable, but fixing this can save Dr. Kowalewski! 
 
 -- Write a function to traverse the structure:
--- any NodeFractals that are Unstable should be Healed, while
--- the Inert ones should be ignored. Keep the Depth values
--- intact!
+-- any NodeFractals that are Unstable should be Healed, while the Inert ones should be ignored. 
+-- Keep the Depth values intact!
 
 healFractal :: Fractal -> Fractal
 healFractal fractal = undefined
 
--- hint: The recursive step needs to behave differently
--- depending on what the Stability is
+-- hint: The recursive step needs to behave differently depending on what the Stability is
 
 -- TEST CODE
 randomGen :: Int -> Stability

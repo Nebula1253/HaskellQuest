@@ -1,7 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
+#if UNITY_EDITOR
 using ParrelSync;
+#endif
+
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -30,9 +34,11 @@ public class NetworkHelper : NetworkBehaviour
         }
 
         if (debugNrPlayers == 2) {
+#if UNITY_EDITOR
             // testing multiplayer
             IsMultiplayer = true;
             IsPlayerOne = !ClonesManager.IsClone();
+#endif
         }
         else if (debugNrPlayers == 1) {
             // testing singleplayer
@@ -73,5 +79,13 @@ public class NetworkHelper : NetworkBehaviour
     void Update()
     {
         // presumably handling of disconnects will go here
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (NetworkManager.Singleton != null) {
+            NetworkManager.Singleton.OnClientDisconnectCallback -= Disconnect;
+        }
     }
 }

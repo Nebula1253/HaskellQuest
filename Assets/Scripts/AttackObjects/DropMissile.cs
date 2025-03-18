@@ -32,10 +32,11 @@ public class DropMissile : MonoBehaviour
             }
         }
         else if (other.gameObject.CompareTag("Projectile")) {
-            Debug.Log("IS PLAYER ONE: " + NetworkHelper.Instance.IsPlayerOne);
             if (NetworkHelper.Instance.IsPlayerOne) {
-                Destroy(other.gameObject);
-                Destroy(gameObject);
+                if (other.gameObject.GetComponent<FreezeMissile>() == null) {
+                    Destroy(other.gameObject);
+                    Destroy(gameObject);
+                }
             }
         }
     }
