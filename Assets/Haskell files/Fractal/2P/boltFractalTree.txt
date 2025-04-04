@@ -2,23 +2,29 @@ data Bolt = IntBolt Int |
             FloatBolt Float |
             NodeBolt (Bolt, Bolt) 
 
+-- the IntBolts damage you by a constant amount, while the 
+-- floatBolts multiply your health by a fraction
+
 launchBolt :: Int -> Bolt
--- the argument is the number of NodeBolt layers in the tree
 launchBolt 1 = NodeBolt (IntBolt 10, FloatBolt 0.9)
 launchBolt n = NodeBolt (launchBolt (n - 1), launchBolt (n - 1))
+
+-- the argument is the number of NodeBolt layers in the tree
 
 data Fractal = DecoyFractal |
                 BoltFractal Bolt |
                 NodeFractal (Fractal, Fractal)
 
 createFractal :: Int -> Int -> Fractal
--- the first argument is the number of NodeFractal layers in the tree, 
--- the second argument is the argument supplied to launchBolt
+
 createFractal 1 n = 
     NodeFractal (DecoyFractal, BoltFractal (launchBolt n))
 
 createFractal f n = 
     NodeFractal (createFractal (f-1) n, createFractal (f-1) n)
+
+-- the first argument is the number of NodeFractal layers in the tree, 
+-- the second argument is the argument supplied to launchBolt
 
 -- PLAYER 1 CODE
 -- Dr Fractal's creating an energy bolt that splits itself into a tree!

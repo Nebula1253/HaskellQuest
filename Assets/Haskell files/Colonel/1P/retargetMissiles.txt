@@ -15,6 +15,9 @@ launch t n = [Missile t (angleGen i) | i <- [1..n]]
 retarget :: [Missile] -> Target -> [Missile]
 retarget missiles t = undefined -- INPUT HERE --
 
+-- keep the missile angle intact, though -- the Colonel's internal
+-- systems might notice if you don't!
+
 -- TEST CODE
 angleGen :: Int -> Float
 angleGen i = fromIntegral i -- the player's not going to see this, the definition is just here to stop a compiler error

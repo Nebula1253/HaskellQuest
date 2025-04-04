@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class OtherPlayerCode : NetworkBehaviour
 {
     public GameObject playerCodeBlock, playerCodeScrollbar, otherCodeBlock;
+    public RectTransform otherCodeRect;
     public float codeBlockHeightSingleplayer, codeBlockHeightMultiplayer, codeBlockYSingleplayer, codeBlockYMultiplayer;
     public float syncInterval;
     private float timer = 0f;
@@ -62,7 +63,8 @@ public class OtherPlayerCode : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!NetworkHelper.Instance.IsPlayerOne && NetworkHelper.Instance.IsMultiplayer && NetworkManager.Singleton.IsConnectedClient) { // let's give SOMETHING to the client, ya know?
+        if (!NetworkHelper.Instance.IsPlayerOne && NetworkHelper.Instance.IsMultiplayer && NetworkManager.Singleton.IsConnectedClient) { 
+            // let's give SOMETHING to the client, ya know?
             timer += Time.deltaTime;
             if (timer >= syncInterval) {
                 timer = 0f;
@@ -80,6 +82,7 @@ public class OtherPlayerCode : NetworkBehaviour
     [Rpc(SendTo.Server, RequireOwnership = false)]
     void P1ReceiveAndSendCodeRpc(string p2Code) {
         otherCodeBlock.GetComponentInChildren<TMP_Text>().text = p2Code;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(otherCodeRect);
 
         var p1Code = playerCodeBlock.GetComponent<TMP_InputField>().text;
 
@@ -89,6 +92,7 @@ public class OtherPlayerCode : NetworkBehaviour
     [Rpc(SendTo.NotServer, RequireOwnership = false)]
     void P2ReceiveCodeRpc(string p1Code) {
         otherCodeBlock.GetComponentInChildren<TMP_Text>().text = p1Code;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(otherCodeRect);
     }
 
     public void ButtonInteractable(bool interactable) {

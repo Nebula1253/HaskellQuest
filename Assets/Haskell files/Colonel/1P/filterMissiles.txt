@@ -15,6 +15,9 @@ launch n = [Missile i (randomGen i) | i <- [1..n]]
 filterMissiles :: [Missile] -> [Missile]
 filterMissiles missiles = undefined -- INPUT HERE --
 
+-- keep the missile angle position, though -- the Colonel's internal
+-- systems might notice if you don't!
+
 -- TEST CODE
 randomGen :: Int -> Bool
 randomGen i = False -- who cares lol the player's not gonna see this, the definition is just here to stop a compiler error

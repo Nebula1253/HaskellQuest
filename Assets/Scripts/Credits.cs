@@ -42,8 +42,7 @@ public class Credits : MonoBehaviour
     {
         transform.Translate(Vector3.up * scrollSpeed * Time.deltaTime);
         
-        Debug.Log(transform.position.y);
-        if (transform.position.y >= creditsEndY) {
+        if (GetComponent<RectTransform>().anchoredPosition.y >= creditsEndY) {
             SceneManager.LoadScene("StartScreen");
         }
     }

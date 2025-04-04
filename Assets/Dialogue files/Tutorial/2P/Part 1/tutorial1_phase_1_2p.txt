@@ -4,7 +4,7 @@ We did it! We actually did it!
 --- SWITCH ---
 Indeed you did! Let me heal you both up.
 --- SWITCH ---
-So, am we ready to go defend Haskell City?
+So, are we ready to go defend Haskell City?
 --- SWITCH ---
 No... it looks like he's got more for us.
 --- SWITCH ---

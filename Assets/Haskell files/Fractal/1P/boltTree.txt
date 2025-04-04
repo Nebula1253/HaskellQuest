@@ -2,6 +2,9 @@ data Bolt = IntBolt Int |
             FloatBolt Float |
             NodeBolt (Bolt, Bolt) 
 
+-- the IntBolts damage you by a constant amount, while the 
+-- floatBolts multiply your health by a fraction
+
 launchBolt :: Int -> Bolt
 launchBolt 1 = NodeBolt (IntBolt 10, FloatBolt 0.9)
 launchBolt n = NodeBolt (launchBolt (n - 1), launchBolt (n - 1))

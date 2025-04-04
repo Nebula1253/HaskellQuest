@@ -39,7 +39,7 @@ FARFADET46 - Laser Fire - OpenGameArt.org
 
 <color=#aac1f5>Fonts</color>
 ABACADABA - Determination Sans - FontSpace.com
-INGOFONTS - DePixel Schmal - DaFont.com
+ST GIGAFONT TYPEFACES - UnifontEX - FontSpace.com
 OREN WATSON - NeoLetters - DaFont.com
 
 <size=52px><color=#aac1f5>Tutorials Used</color></size>
@@ -48,13 +48,14 @@ BRACKEYS - "How to make a Homing Missile in Unity"
 COUCHFERRET MAKES GAMES - "Unity Top Down Character Controller with Animation and Movement"
 CODE MONKEY - "COMPLETE Unity Multiplayer Tutorial (Netcode for Game Objects)"
 
-<size=52px><color=#aac1f5>'Dr. Fractal' Battle Concept</size></color>
+<size=52px><color=#aac1f5>'Dr. Fractal' Battle Concepts</size></color>
 KRZYSZTOF GRYKIEL
+NORGG
 
 <size=52px><color=#aac1f5>Haskell Tutorial Info</size></color>
 LEARN YOU A HASKELL FOR GREAT GOOD by MIRAN LIPOVACA
 
-<size=52px><color=#aac1f5>Special Thanks</size></color>
+<size=52px><color=#aac1f5>Project Supervisor</size></color>
 DON SANNELLA
 
 <size=52px><color=#aac1f5>Playtesters - THANK YOU!</size></color>
@@ -81,6 +82,28 @@ PAULA SPARROW MUÑOZ
 RYAN HENERY
 SOUPARNA MANDAL
 YAN CHIN
+
+<size=48px><color=#aac1f5>Year 2</size></color>
+ABDULRAHMAN HESHAM AL BIN ALI
+ADAM PLEWCZYNSKI
+AMANDA TRONCOSO
+AUDREY LEWIS
+BUSRA KANBUR
+DAVID E GEORGE
+DYLAN DRUCKER
+FRASER GARROW
+HEFAN WANG
+HISHAM ALYAHYA
+HYUNSEO LEE
+LEA ANDRUSZ
+LISA EDELMAIER
+MARY TALLONTIRE
+MAX (JOHN PHYSICS)
+OLIVER SISSON
+PARDIS FARAHI
+VRISHAB SRIVATSA
+WEIXI ZHANG
+YI MAN CHAN
 
 
 

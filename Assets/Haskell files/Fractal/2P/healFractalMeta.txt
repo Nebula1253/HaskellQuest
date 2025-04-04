@@ -4,12 +4,11 @@ data Stability = Inert | Unstable | Healed
 
 data Fractal = NodeFractal Depth Stability (Fractal, Fractal)
                 | LeafFractal
--- the Bool in NodeFractal represents whether it's stable or not
 
 data MetaFractal = LeafMeta 
                     | StableMeta (MetaFractal, MetaFractal)
                     | UnstableMeta Fractal (MetaFractal, MetaFractal)
--- MetaFractals form a larger meta-tree - some nodes contain Fractal trees
+-- MetaFractals form a larger meta-tree - some nodes contain Fractals
 
 createFractal :: Int -> Fractal
 createFractal 0 = LeafFractal

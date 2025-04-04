@@ -2786,8 +2786,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a026d931a8afd0c4b90b14ad3e034de8, type: 2}
-  m_sharedMaterial: {fileID: -5594880723491512607, guid: a026d931a8afd0c4b90b14ad3e034de8, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4ae53c2243c24f448b34a76ee9d4c7d1, type: 2}
+  m_sharedMaterial: {fileID: 1683511650165376597, guid: 4ae53c2243c24f448b34a76ee9d4c7d1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2811,8 +2811,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2924,7 +2924,7 @@ MonoBehaviour:
     PlayerPrefab: {fileID: 0}
     Prefabs:
       NetworkPrefabsLists:
-      - {fileID: 11400000, guid: 473040fb5bb70f14e975e276cb3b5dc0, type: 2}
+      - {fileID: 11400000, guid: e503790def318de48993f918c835ebae, type: 2}
     TickRate: 50
     ClientConnectionBufferTimeout: 20
     ConnectionApproval: 1
@@ -2933,7 +2933,7 @@ MonoBehaviour:
     TimeResyncInterval: 30
     EnsureNetworkVariableLengthSafety: 0
     EnableSceneManagement: 1
-    ForceSamePrefabs: 0
+    ForceSamePrefabs: 1
     RecycleNetworkIds: 1
     NetworkIdRecycleDelay: 120
     RpcHashSize: 0
@@ -4132,7 +4132,7 @@ MonoBehaviour:
   m_HideSoftKeyboard: 0
   m_CharacterValidation: 0
   m_RegexValue: 
-  m_GlobalPointSize: 30
+  m_GlobalPointSize: 32
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
@@ -4166,7 +4166,7 @@ MonoBehaviour:
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
-  m_GlobalFontAsset: {fileID: 11400000, guid: a026d931a8afd0c4b90b14ad3e034de8, type: 2}
+  m_GlobalFontAsset: {fileID: 11400000, guid: 4ae53c2243c24f448b34a76ee9d4c7d1, type: 2}
   m_OnFocusSelectAll: 1
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
@@ -4468,8 +4468,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Enter text...
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a026d931a8afd0c4b90b14ad3e034de8, type: 2}
-  m_sharedMaterial: {fileID: -5594880723491512607, guid: a026d931a8afd0c4b90b14ad3e034de8, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4ae53c2243c24f448b34a76ee9d4c7d1, type: 2}
+  m_sharedMaterial: {fileID: 1683511650165376597, guid: 4ae53c2243c24f448b34a76ee9d4c7d1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4493,8 +4493,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

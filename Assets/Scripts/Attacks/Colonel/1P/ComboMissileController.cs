@@ -87,7 +87,9 @@ public class ComboMissileController : AttackController
             Debug.Log("Firing missile " + i);
             var target = GameObject.FindGameObjectWithTag("Player").transform;
             if (retarget) {
-                target = dropMissiles[i].transform;
+                if (dropMissiles[i] != null) {
+                    target = dropMissiles[i].transform;
+                }
             }
 
             InstantiateMissile(transform.position, target);

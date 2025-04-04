@@ -45,8 +45,8 @@ backfire m_list hm_list = undefined -- INPUT HERE --
 -- target one landmine each, so they freeze 
 -- the mines solid!
 
-resetAim :: FreezeMissile -> Coords -> FreezeMissile
-resetAim (FreezeMissile _ a) c = FreezeMissile c a
+divert :: FreezeMissile -> Coords -> FreezeMissile
+divert (FreezeMissile _ a) c = FreezeMissile c a
 
 freezeMines :: [Landmine] -> [FreezeMissile] -> [FreezeMissile]
 freezeMines mines fm_list = undefined -- INPUT HERE --

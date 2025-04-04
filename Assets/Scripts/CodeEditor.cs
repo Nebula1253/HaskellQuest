@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.Netcode;
 using JDoodle;
+using UnityEngine.Networking;
 
 public class CodeEditor : NetworkBehaviour
 {
@@ -20,6 +21,7 @@ public class CodeEditor : NetworkBehaviour
     private TMP_InputField codeField;
     private TMP_Text errorDisplay;
     public TMP_Text nonEditableCode;
+    public RectTransform nonEditableRectTransform;
 
     private Button submitButton, resetButton;
     public TextAsset[] singleplayerCodeFiles;
@@ -170,6 +172,7 @@ public class CodeEditor : NetworkBehaviour
                 nonEditableCode.text = playerCodeDivvy[0].Trim();
             }
 
+            LayoutRebuilder.ForceRebuildLayoutImmediate(nonEditableRectTransform);
             var p1p2Code = playerCodeDivvy[1].Split(MULTIPLAYER_P2_CODE_MARKER);
 
             var p1Code = p1p2Code[0].Trim();
@@ -194,6 +197,7 @@ public class CodeEditor : NetworkBehaviour
             else {
                 nonEditableCode.text = playerCodeDivvy[0].Trim();
             }
+            LayoutRebuilder.ForceRebuildLayoutImmediate(nonEditableRectTransform);
             codeField.text = playerCodeDivvy[1].Trim();
             playerEditableCode = playerCodeDivvy[1].Trim();
         }
@@ -288,7 +292,7 @@ public class CodeEditor : NetworkBehaviour
         }
         disableInteractAcksReceived = 0;
 
-        SubmitToJDoodle();
+        StartCoroutine(SubmitToJDoodle());
     }
 
     // functionality separated purely for the call in Start to make sense
@@ -418,6 +422,12 @@ public class CodeEditor : NetworkBehaviour
         }
         battlefield.GetComponent<BattleField>().ActivateBattlefield();
         
+        // needs to wait for players to have finished spawning before attack coroutine is triggered
+
+        while (!battlefield.GetComponent<BattleField>().IsActive) {
+            // do ABSOLUTELY NOTHING
+        }
+        
         if (NetworkHelper.Instance.IsPlayerOne) {
 
             if (additionalConditions == "") {
@@ -484,7 +494,7 @@ public class CodeEditor : NetworkBehaviour
                 EnableInteractRpc();
             }
         }
-        else if (output.Contains("error")) {
+        else if (output.Contains("error") || output.Contains("Non-exhaustive")) {
             var outputSplit = output.Split('\n');
             string errMsg = "";
 
@@ -523,7 +533,7 @@ public class CodeEditor : NetworkBehaviour
         }
     }
 
-    void SubmitToJDoodle() {
+    IEnumerator SubmitToJDoodle() {
         string script = "{-# LANGUAGE ParallelListComp #-}\n" + CleanColorFormatting(nonEditableCode.text);
         if (NetworkHelper.Instance.IsMultiplayer) {
             script += CleanColorFormatting(codeField.text) + CleanColorFormatting(GetComponent<OtherPlayerCode>().GetText()) + testCode;
@@ -535,88 +545,50 @@ public class CodeEditor : NetworkBehaviour
         string executeURL = useLocalCompiler ? "https://oxrush.tardis.ac/haskellquest/api/execute" : "https://api.jdoodle.com/v1/execute";
         string creditsURL = "https://api.jdoodle.com/v1/credit-spent";
 
-        try {
-            if (!useLocalCompiler) {
-                HttpWebRequest creditsHTTPRequest = (HttpWebRequest)WebRequest.Create(creditsURL);
-                creditsHTTPRequest.Method = "POST";
-                creditsHTTPRequest.ContentType = "application/json";
+        if (!useLocalCompiler) {
+            JDoodleCreditsRequest creditsRequest = new JDoodleCreditsRequest();
+            string creditsInput = JsonUtility.ToJson(creditsRequest);
 
-                JDoodleCreditsRequest creditsRequest = new JDoodleCreditsRequest();
-                string creditsInput = JsonUtility.ToJson(creditsRequest);
+            using (UnityWebRequest creditsWebRequest = UnityWebRequest.Post(creditsURL, creditsInput, "application/json")) {
+                yield return creditsWebRequest.SendWebRequest();
 
-                using (StreamWriter streamWriter = new StreamWriter(creditsHTTPRequest.GetRequestStream()))
-                {
-                    streamWriter.Write(creditsInput);
-                    streamWriter.Flush();
-                    streamWriter.Close();
+                if (creditsWebRequest.result != UnityWebRequest.Result.Success) {
+                    AddErrorToDisplayRpc("<color=#ffff00>" + creditsWebRequest.error + "</color>\n");
+                    EnableInteractRpc();
+                    yield break;
                 }
-
-                HttpWebResponse creditsHTTPResponse = (HttpWebResponse)creditsHTTPRequest.GetResponse();
-
-                if (creditsHTTPResponse.StatusCode != HttpStatusCode.OK)
-                {
-                    throw new WebException("Please check your inputs: HTTP error code: " + (int)creditsHTTPResponse.StatusCode);
-                }
-
-                JDoodleCreditsResponse creditsResponse;
-                using (Stream dataStream = creditsHTTPResponse.GetResponseStream())
-                using (StreamReader reader = new StreamReader(dataStream))
-                {
-                    string output = reader.ReadToEnd();
-                    creditsResponse = JsonUtility.FromJson<JDoodleCreditsResponse>(output);
-                    Debug.Log(output);
-                }
-                creditsHTTPResponse.Close();
+                Debug.Log(creditsWebRequest.downloadHandler.text);
+                JDoodleCreditsResponse creditsResponse = JsonUtility.FromJson<JDoodleCreditsResponse>(creditsWebRequest.downloadHandler.text);
 
                 if (creditsResponse.error != null) {
-                    errorDisplay.color = Color.red;
-                    AddErrorToDisplayRpc("<color=#ff0000>" + creditsResponse.error + "</color>\n");
-                    return;
+                    AddErrorToDisplayRpc("<color=#ffff00>" + creditsResponse.error + "</color>\n");
+                    EnableInteractRpc();
+                    yield break;
                 }
                 else if (creditsResponse.used > CREDIT_LIMIT) {
                     AddErrorToDisplayRpc("<color=#ffff00>There are no more compiler credits remaining today - please try again tomorrow.</color>\n");
                     EnableInteractRpc();
-                    return;
+                    yield break;
                 }
             }
-            HttpWebRequest executeRequest = (HttpWebRequest)WebRequest.Create(executeURL);
-            executeRequest.Method = "POST";
-            executeRequest.ContentType = "application/json";
+        }
 
-            JDoodleRequest inputRequest = new JDoodleRequest(script);
-            string input = JsonUtility.ToJson(inputRequest);
+        JDoodleRequest inputRequest = new JDoodleRequest(script);
+        string input = JsonUtility.ToJson(inputRequest);
 
-            using (StreamWriter streamWriter = new StreamWriter(executeRequest.GetRequestStream()))
-            {
-                streamWriter.Write(input);
-                streamWriter.Flush();
-                streamWriter.Close();
+        using (UnityWebRequest executeWebRequest = UnityWebRequest.Post(executeURL, input, "application/json")) {
+            yield return executeWebRequest.SendWebRequest();
+
+            if (executeWebRequest.result != UnityWebRequest.Result.Success) {
+                AddErrorToDisplayRpc("<color=#ffff00>" + executeWebRequest.error + "</color>\n");
+                EnableInteractRpc();
+                yield break;         
             }
 
-            HttpWebResponse response = (HttpWebResponse)executeRequest.GetResponse();
-
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new WebException("Please check your inputs: HTTP error code: " + (int)response.StatusCode);
-            }
-
-            JDoodleResponse outputResponse;
-            using (Stream dataStream = response.GetResponseStream())
-            using (StreamReader reader = new StreamReader(dataStream))
-            {
-                string output = reader.ReadToEnd();
-                outputResponse = JsonUtility.FromJson<JDoodleResponse>(output);
-                Debug.Log(output);
-            }
+            Debug.Log(executeWebRequest.downloadHandler.text);
+            JDoodleResponse outputResponse = JsonUtility.FromJson<JDoodleResponse>(executeWebRequest.downloadHandler.text);
 
             EvaluateResult(outputResponse.output);
-                
-            response.Close();
-        }
-        catch (WebException e)
-        {
-            AddErrorToDisplayRpc("<color=#ffff00>There was an issue with the request. Please try again.\n" + e.Message + "</color>\n");
-            EnableInteractRpc();
         }
     } 
 }

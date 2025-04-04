@@ -4769,6 +4769,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9187780842026449757, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3493908153
+      objectReference: {fileID: 0}
+    - target: {fileID: 9187780842026449757, guid: 625db264d16f26c4ea5654f05fda8a27, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 427879223
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4822,6 +4830,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 519671305}
     m_Modifications:
+    - target: {fileID: 768062077861741343, guid: 7ed0417b0d7b9a24aa1faf454e8762c5, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3089999926
+      objectReference: {fileID: 0}
     - target: {fileID: 3869269135849462735, guid: 7ed0417b0d7b9a24aa1faf454e8762c5, type: 3}
       propertyPath: m_Name
       value: GameOver-lay

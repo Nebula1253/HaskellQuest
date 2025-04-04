@@ -4,8 +4,6 @@ data Stability = Inert | Unstable | Healed
 
 data Fractal = NodeFractal Depth Stability (Fractal, Fractal)
                 | LeafFractal
--- the Bool in NodeFractal represents whether it's stable
--- or not
 
 createFractal :: Int -> Fractal
 createFractal 0 = LeafFractal

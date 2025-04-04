@@ -66,7 +66,7 @@ public class HomingMissileController : AttackController
 
             var missile = InstantiateMissile(transform.position, target);
             yield return new WaitForSecondsRealtime(0.5f);
-            if (redirect) {
+            if (redirect && missile != null) {
                 target = enemyTransform;
                 missile.GetComponent<HomingMissile>().SetTargetTransform(target);
             }

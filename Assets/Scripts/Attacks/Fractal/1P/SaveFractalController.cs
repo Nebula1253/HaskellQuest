@@ -40,6 +40,10 @@ public class SaveFractalController : AttackController
     public override void Trigger(bool result)
     {
         spawnedFractal = Instantiate(fractal, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, transform.parent).transform;
+        if (NetworkHelper.Instance.IsPlayerOne) {
+            spawnedFractal.GetComponent<NetworkObject>().Spawn(true);
+        }
+
         StartCoroutine(fireLasers(result));
     }
 

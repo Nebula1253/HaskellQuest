@@ -142,7 +142,7 @@ public class AllOutAttackController : AttackController
 
         while (!yValid) {
             yValid = true;
-            mineY = UnityEngine.Random.Range(minY, landmineMaxY);
+            mineY = UnityEngine.Random.Range(minY - 1f, landmineMaxY);
 
             foreach (var prevMine in landminePositions) {
                 var prevY = prevMine.y;

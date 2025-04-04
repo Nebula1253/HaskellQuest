@@ -22,10 +22,16 @@ set n = [Landmine (coordsGen i) (randomGen i) | i <- [1..n]]
 filterMissiles :: [Missile] -> [Missile]
 filterMissiles missiles = undefined -- INPUT HERE --
 
+-- keep the missile positions intact, though -- the Colonel's internal
+-- systems might notice if you don't!
+
 -- PLAYER 2 CODE
 -- write a function to isolate only the INACTIVE landmines!
 filterLandmines :: [Landmine] -> [Landmine]
 filterLandmines mines = undefined -- INPUT HERE --
+
+-- keep the mine positions intact, though -- the Colonel's internal
+-- systems might notice if you don't!
 
 -- TEST CODE
 randomGen :: Int -> Bool

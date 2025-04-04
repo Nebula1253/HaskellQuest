@@ -147,7 +147,7 @@ public class HomingFreezeMissileController : AttackController
                 var missile = InstantiateHomingMissile(transform.position, playerTransforms[whichPlayer]);
                 yield return new WaitForSecondsRealtime(0.5f);
 
-                if (retarget) {
+                if (retarget && missile != null) {
                     missile.GetComponent<HomingMissile>().SetTargetTransform(enemyTransform);
                 }
             }
