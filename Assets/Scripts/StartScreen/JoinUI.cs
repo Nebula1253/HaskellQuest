@@ -17,12 +17,15 @@ public class JoinUI : MonoBehaviour
     public TMP_InputField joinCodeInputField;
     public Button connectButton;
     public TMP_Text statusText;
+    private UnityTransport transport;
 
     // Start is called before the first frame update
     void Start()
     {
         connectButton.onClick.AddListener(async () => await ConnectToHost());
         joinCodeInputField.onValueChanged.AddListener(delegate {OnTextChange(); });
+
+        transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
     }
 
     async Task ConnectToHost() {
@@ -58,7 +61,14 @@ public class JoinUI : MonoBehaviour
         }
 
         var joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode: joinCode);
-        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(joinAllocation, "dtls"));
+
+        # if UNITY_WEBGL
+            transport.SetRelayServerData(new RelayServerData(joinAllocation, "wss"));
+            transport.UseWebSockets = true;
+        # else
+            transport.SetRelayServerData(new RelayServerData(joinAllocation, "dtls"));
+        # endif
+
         return !string.IsNullOrEmpty(joinCode) && NetworkManager.Singleton.StartClient();
     }
 

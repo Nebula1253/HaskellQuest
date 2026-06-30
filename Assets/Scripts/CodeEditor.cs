@@ -8,7 +8,7 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 using Unity.Netcode;
-using JDoodle;
+using HaskellPlayground;
 using UnityEngine.Networking;
 
 public class CodeEditor : NetworkBehaviour
@@ -292,7 +292,7 @@ public class CodeEditor : NetworkBehaviour
         }
         disableInteractAcksReceived = 0;
 
-        StartCoroutine(SubmitToJDoodle());
+        StartCoroutine(SubmitCompileRequest());
     }
 
     // functionality separated purely for the call in Start to make sense
@@ -413,7 +413,7 @@ public class CodeEditor : NetworkBehaviour
     }
 
     [Rpc(SendTo.Everyone)]
-    private void EnemyMoveTriggerRpc(bool result, string additionalConditions) {
+    private void EnemyMoveTriggerRpc(bool result, string additionalConditions = "") {
         if (GetComponent<HelpScreen>().helpScreenActive) {
             GetComponent<HelpScreen>().ImmediateDeactivate();
         }
@@ -469,71 +469,145 @@ public class CodeEditor : NetworkBehaviour
         errorDisplay.text = error;
     }
 
-    private void EvaluateResult(string output) {
-        string additional = "";
-        Debug.Log(output);
-        if (output != null && output.Contains("Additional: ")) {
-            additional = output.Split('\n')[3].Remove(0,13);
-            additional = additional.Remove(additional.Length - 1, 1);
-        }
+    // private void EvaluateResult(string output) {
+    //     string additional = "";
+    //     Debug.Log(output);
+    //     if (output != null && output.Contains("Additional: ")) {
+    //         additional = output.Split('\n')[3].Remove(0,13);
+    //         additional = additional.Remove(additional.Length - 1, 1);
+    //     }
         
-        if (output.Contains("Timeout") || string.IsNullOrEmpty(output) || output.Equals("[1 of 1] Compiling Main             ( jdoodle.hs, jdoodle.o )\n")) {
+    //     if (output.Contains("Timeout") || string.IsNullOrEmpty(output) || output.Equals("[1 of 1] Compiling Main             ( jdoodle.hs, jdoodle.o )\n")) {
+    //         if (controllers[currentScript].IsRecursionHandled()) {
+
+    //             AddErrorToDisplayRpc("<color=#ff0000>Your code recurses infinitely!</color>\n");
+
+    //             EnemyMoveTriggerRpc(false, additional);
+    //         }
+    //         else {
+    //             // ask player to "try again - see if they've got an infinite loop": do nothing other than that, because 
+    //             // this could just be JDoodle screwing around
+                
+    //             AddErrorToDisplayRpc("<color=#ffff00>Your code timed out! Try again - see if you've got an infinite loop.</color>\n");
+
+    //             EnableInteractRpc();
+    //         }
+    //     }
+    //     else if (output.Contains("error") || output.Contains("Non-exhaustive")) {
+    //         var outputSplit = output.Split('\n');
+    //         string errMsg = "";
+
+    //         foreach (string line in outputSplit) {
+    //             string trimLine = line.Trim();
+    //             if (!trimLine.Contains("Additional: ") && 
+    //                 !line.Equals("[1 of 1] Compiling Main             ( jdoodle.hs, jdoodle.o )") &&
+    //                 !line.Equals("Linking jdoodle ...") &&
+    //                 !line.Equals(""))
+    //             {
+    //                 errMsg += line + '\n';
+    //             } 
+    //         }
+
+    //         errMsg = errMsg.Replace("\"", "");
+
+    //         AddErrorToDisplayRpc("<color=#ff0000>" + errMsg + "</color>\n");
+    //         EnemyMoveTriggerRpc(false, additional);
+    //     }
+    //     else {
+    //         // trigger enemy fire depending on whether the code passed the test
+    //         string result = output.Split('\n')[2].Replace("\"", "");
+    //         Debug.Log(result);
+
+    //         if (result == "True") {
+    //             AddErrorToDisplayRpc("<color=#00ff00>Test passed!</color>\n");
+    //         }
+    //         else if (result == "False") {
+    //             AddErrorToDisplayRpc("<color=#ff0000>Test failed!</color>\n");
+    //         }
+    //         // else if (result.Contains("error")) {
+    //         //     AddErrorToDisplayRpc("<color=#ff0000>" + result + "</color>\n");
+    //         // }
+
+    //         EnemyMoveTriggerRpc(result == "True", additional);
+    //     }
+    // }
+
+    private void ServerError(PlaygroundErrResponse response)
+    {
+        if (response.err == "timeout") {
             if (controllers[currentScript].IsRecursionHandled()) {
 
                 AddErrorToDisplayRpc("<color=#ff0000>Your code recurses infinitely!</color>\n");
-
-                EnemyMoveTriggerRpc(false, additional);
+                EnemyMoveTriggerRpc(false);
             }
             else {
                 // ask player to "try again - see if they've got an infinite loop": do nothing other than that, because 
                 // this could just be JDoodle screwing around
                 
                 AddErrorToDisplayRpc("<color=#ffff00>Your code timed out! Try again - see if you've got an infinite loop.</color>\n");
-
-                //EnableEditor here
                 EnableInteractRpc();
             }
         }
-        else if (output.Contains("error") || output.Contains("Non-exhaustive")) {
-            var outputSplit = output.Split('\n');
-            string errMsg = "";
-
-            foreach (string line in outputSplit) {
-                string trimLine = line.Trim();
-                if (!trimLine.Contains("Additional: ") && 
-                    !line.Equals("[1 of 1] Compiling Main             ( jdoodle.hs, jdoodle.o )") &&
-                    !line.Equals("Linking jdoodle ...") &&
-                    !line.Equals(""))
-                {
-                    errMsg += line + '\n';
-                } 
-            }
-
-            errMsg = errMsg.Replace("\"", "");
-
-            AddErrorToDisplayRpc("<color=#ff0000>" + errMsg + "</color>\n");
-            EnemyMoveTriggerRpc(false, additional);
-        }
         else {
-            // trigger enemy fire depending on whether the code passed the test
-            string result = output.Split('\n')[2].Replace("\"", "");
-            Debug.Log(result);
-
-            if (result == "True") {
-                AddErrorToDisplayRpc("<color=#00ff00>Test passed!</color>\n");
-            }
-            else if (result == "False") {
-                AddErrorToDisplayRpc("<color=#ff0000>Test failed!</color>\n");
-            }
-            // else if (result.Contains("error")) {
-            //     AddErrorToDisplayRpc("<color=#ff0000>" + result + "</color>\n");
-            // }
-
-            EnemyMoveTriggerRpc(result == "True", additional);
+            // backend error
+            AddErrorToDisplayRpc("<color=#ffff00>The Haskell compilation server has returned a backend error.</color>\n");
+            EnableInteractRpc();
         }
     }
 
-    IEnumerator SubmitToJDoodle() {
+    private void EvaluateResponse(PlaygroundResponse response)
+    {
+        if (response.ec == 0)
+        {
+            // program execution was a success - need to parse
+            string programOutput = response.sout.Replace("\"", "");
+
+            string mainResult = programOutput.Split('\n')[0];
+            string additional = "";
+
+            if (programOutput.Contains("Additional:" ))
+            {
+                additional = programOutput.Split('\n')[1].Remove(0,12);
+                Debug.Log(additional);
+            }
+
+            if (mainResult.Contains("error: ")) // manually-defined error messages in test code
+            {
+                AddErrorToDisplayRpc("<color=#ff0000>" + mainResult + "</color>\n");
+                EnemyMoveTriggerRpc(false, additional);
+            }
+            else
+            {
+                if (mainResult == "True") {
+                    AddErrorToDisplayRpc("<color=#00ff00>Test passed!</color>\n");
+                }
+                else if (mainResult == "False") {
+                    AddErrorToDisplayRpc("<color=#ff0000>Test failed!</color>\n");
+                }
+
+                EnemyMoveTriggerRpc(mainResult == "True", additional);
+            }
+        }
+        else
+        {
+            string ghcOutput;
+            // execution ran into some error
+            if (response.ghcout.ToLower().Contains("warning"))
+            {
+                ghcOutput = "<color=#ffff00>" + response.ghcout + "</color>\n";
+            }
+            else
+            {
+                ghcOutput = "<color=#ff0000>" + response.ghcout + "</color>\n";
+            }
+            AddErrorToDisplayRpc(ghcOutput + "<color=#ff0000>" + response.serr + "</color>\n");
+            EnemyMoveTriggerRpc(false);
+        }
+    }
+
+    IEnumerator SubmitCompileRequest() {
+        Debug.Log("COMPILE REQUEST SUBMITTED");
+
         string script = "{-# LANGUAGE ParallelListComp #-}\n" + CleanColorFormatting(nonEditableCode.text);
         if (NetworkHelper.Instance.IsMultiplayer) {
             script += CleanColorFormatting(codeField.text) + CleanColorFormatting(GetComponent<OtherPlayerCode>().GetText()) + testCode;
@@ -542,53 +616,36 @@ public class CodeEditor : NetworkBehaviour
             script += CleanColorFormatting(codeField.text) + testCode;
         }
 
-        string executeURL = useLocalCompiler ? "https://oxrush.tardis.ac/haskellquest/api/execute" : "https://api.jdoodle.com/v1/execute";
-        string creditsURL = "https://api.jdoodle.com/v1/credit-spent";
+        string executeURL = "https://play.haskell.org/submit?src=haskellquest-n-amonkar";
 
-        if (!useLocalCompiler) {
-            JDoodleCreditsRequest creditsRequest = new JDoodleCreditsRequest();
-            string creditsInput = JsonUtility.ToJson(creditsRequest);
+        PlaygroundRequest scriptRequest = new PlaygroundRequest(script);
+        string reqJSON = JsonUtility.ToJson(scriptRequest);
+        Debug.Log(reqJSON);
 
-            using (UnityWebRequest creditsWebRequest = UnityWebRequest.Post(creditsURL, creditsInput, "application/json")) {
-                yield return creditsWebRequest.SendWebRequest();
+        using (UnityWebRequest compileRequest = UnityWebRequest.Post(executeURL, reqJSON, "text/json"))
+        {
+            yield return compileRequest.SendWebRequest();
 
-                if (creditsWebRequest.result != UnityWebRequest.Result.Success) {
-                    AddErrorToDisplayRpc("<color=#ffff00>" + creditsWebRequest.error + "</color>\n");
-                    EnableInteractRpc();
-                    yield break;
-                }
-                Debug.Log(creditsWebRequest.downloadHandler.text);
-                JDoodleCreditsResponse creditsResponse = JsonUtility.FromJson<JDoodleCreditsResponse>(creditsWebRequest.downloadHandler.text);
-
-                if (creditsResponse.error != null) {
-                    AddErrorToDisplayRpc("<color=#ffff00>" + creditsResponse.error + "</color>\n");
-                    EnableInteractRpc();
-                    yield break;
-                }
-                else if (creditsResponse.used > CREDIT_LIMIT) {
-                    AddErrorToDisplayRpc("<color=#ffff00>There are no more compiler credits remaining today - please try again tomorrow.</color>\n");
-                    EnableInteractRpc();
-                    yield break;
-                }
-            }
-        }
-
-        JDoodleRequest inputRequest = new JDoodleRequest(script);
-        string input = JsonUtility.ToJson(inputRequest);
-
-        using (UnityWebRequest executeWebRequest = UnityWebRequest.Post(executeURL, input, "application/json")) {
-            yield return executeWebRequest.SendWebRequest();
-
-            if (executeWebRequest.result != UnityWebRequest.Result.Success) {
-                AddErrorToDisplayRpc("<color=#ffff00>" + executeWebRequest.error + "</color>\n");
+            if (compileRequest.result != UnityWebRequest.Result.Success)
+            {
+                AddErrorToDisplayRpc("<color=#ffff00>" + compileRequest.error + "</color>\n");
                 EnableInteractRpc();
-                yield break;         
+                yield break;
             }
 
-            Debug.Log(executeWebRequest.downloadHandler.text);
-            JDoodleResponse outputResponse = JsonUtility.FromJson<JDoodleResponse>(executeWebRequest.downloadHandler.text);
+            string responseJSON = compileRequest.downloadHandler.text;
+            Debug.Log(responseJSON);
 
-            EvaluateResult(outputResponse.output);
+            if (responseJSON.Contains("\"err\""))
+            {
+                PlaygroundErrResponse errResponse = JsonUtility.FromJson<PlaygroundErrResponse>(responseJSON);
+                ServerError(errResponse);
+            }
+            else
+            {
+                PlaygroundResponse resultResponse = JsonUtility.FromJson<PlaygroundResponse>(responseJSON);
+                EvaluateResponse(resultResponse);
+            }
         }
     } 
 }

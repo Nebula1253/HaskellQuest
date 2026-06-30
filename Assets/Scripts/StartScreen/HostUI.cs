@@ -67,8 +67,12 @@ public class HostUI : MonoBehaviour
 
         Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections);
         relayAllocationID = allocation.AllocationId;
-
+    # if UNITY_WEBGL
+        transport.SetRelayServerData(new RelayServerData(allocation, "wss"));
+        transport.UseWebSockets = true;
+    # else
         transport.SetRelayServerData(new RelayServerData(allocation, "dtls"));
+    # endif
         var joinCode = await RelayService.Instance.GetJoinCodeAsync(relayAllocationID);
         return NetworkManager.Singleton.StartHost() ? joinCode : null;
     }

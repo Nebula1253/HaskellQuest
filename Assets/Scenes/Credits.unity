@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -478,7 +477,7 @@ MonoBehaviour:
   creditsMusic: {fileID: 8300000, guid: 2c96870592e2ad64082a764f3d2f5b74, type: 3}
   creditsText: {fileID: 4900000, guid: 1c9f2268f56c2e74ca02674b4542100d, type: 3}
   scrollSpeed: 0.7
-  creditsEndY: 3300
+  creditsEndY: 3500
 --- !u!82 &1270265052
 AudioSource:
   m_ObjectHideFlags: 0

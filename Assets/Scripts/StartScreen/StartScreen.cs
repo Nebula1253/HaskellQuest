@@ -4,6 +4,8 @@ using System.Net;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport.Relay;
+using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -33,29 +35,37 @@ public class StartScreen : MonoBehaviour
     }
 
     IEnumerator StartGame(bool singleplayer) {
-        string url = "https://www.jdoodle.com/execute-haskell-online";
+        string url = "https://play.haskell.org/versions";
 
-        using (UnityWebRequest jdoodleRequest = UnityWebRequest.Get(url)) {
-            yield return jdoodleRequest.SendWebRequest();
+        using (UnityWebRequest haskellPlaygroundReq = UnityWebRequest.Get(url)) {
+            yield return haskellPlaygroundReq.SendWebRequest();
 
-            if (jdoodleRequest.result == UnityWebRequest.Result.Success) {
-                if (singleplayer) {
-                    Destroy(NetworkManager.Singleton.GetComponent<UnityTransport>());
-                    UnityTransport newTransport = NetworkManager.Singleton.gameObject.AddComponent<UnityTransport>();
-                    newTransport.SetConnectionData("127.0.0.1", 7777, "0.0.0.0");
-                    NetworkManager.Singleton.NetworkConfig.NetworkTransport = newTransport;
+            if (haskellPlaygroundReq.result == UnityWebRequest.Result.Success) {
+                if (haskellPlaygroundReq.downloadHandler.text.Contains("8.10.7"))
+                {
+                    if (singleplayer) {
+                        Destroy(NetworkManager.Singleton.GetComponent<UnityTransport>());
+                        UnityTransport newTransport = NetworkManager.Singleton.gameObject.AddComponent<UnityTransport>();
+                        newTransport.SetConnectionData("127.0.0.1", 7777, "0.0.0.0");
+                        NetworkManager.Singleton.NetworkConfig.NetworkTransport = newTransport;
 
-                    NetworkManager.Singleton.StartHost();
-                    NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(1), LoadSceneMode.Single);
+                        NetworkManager.Singleton.StartHost();
+                        NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(1), LoadSceneMode.Single);
+                    }
+                    else {
+                        setup2PUI.SetActive(true);
+                        startUI.SetActive(false);
+                    }
                 }
-                else {
-                    setup2PUI.SetActive(true);
-                    startUI.SetActive(false);
+                else
+                {
+                    statusText.color = Color.red;
+                    statusText.text = "The Haskell compilation service no longer offers the language version used.";
                 }
             }
             else {
                 statusText.color = Color.red;
-                statusText.text = "Cannot access the online compiler. Please try again later.\n" + jdoodleRequest.error;
+                statusText.text = "Cannot access the online compiler. Please try again later.\n" + haskellPlaygroundReq.error;
             }
         }
     }
