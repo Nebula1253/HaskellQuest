@@ -45,12 +45,13 @@ public class StartScreen : MonoBehaviour
                 {
                     if (singleplayer) {
                         Destroy(NetworkManager.Singleton.GetComponent<UnityTransport>());
-                        UnityTransport newTransport = NetworkManager.Singleton.gameObject.AddComponent<UnityTransport>();
-                        newTransport.SetConnectionData("127.0.0.1", 7777, "0.0.0.0");
+                        
+                        DoesNothingTransport newTransport = NetworkManager.Singleton.gameObject.AddComponent<DoesNothingTransport>();
                         NetworkManager.Singleton.NetworkConfig.NetworkTransport = newTransport;
 
                         NetworkManager.Singleton.StartHost();
                         NetworkManager.Singleton.SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(1), LoadSceneMode.Single);
+                    
                     }
                     else {
                         setup2PUI.SetActive(true);

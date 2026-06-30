@@ -51,7 +51,7 @@ public class HostUI : MonoBehaviour
             joinCodeText.text = joinCode;
         }
         catch (Exception e) {
-            connectStatus.text = e.GetType().ToString();
+            connectStatus.text = e.GetType().ToString() + e.Message;
         }
         
     }
@@ -64,15 +64,21 @@ public class HostUI : MonoBehaviour
         {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
         }
-
+    # if UNITY_WEBGL
+        Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections, "europe-west4");
+    # else
         Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections);
+    # endif
+
         relayAllocationID = allocation.AllocationId;
+
     # if UNITY_WEBGL
         transport.SetRelayServerData(new RelayServerData(allocation, "wss"));
         transport.UseWebSockets = true;
     # else
         transport.SetRelayServerData(new RelayServerData(allocation, "dtls"));
     # endif
+
         var joinCode = await RelayService.Instance.GetJoinCodeAsync(relayAllocationID);
         return NetworkManager.Singleton.StartHost() ? joinCode : null;
     }
